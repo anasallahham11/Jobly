@@ -5,7 +5,7 @@ import 'values_manager.dart';
 
 
 class ColorManager {
-  static Color primary = HexColor.fromHex("#3b4195");
+  static Color primary = Colors.white;
   static Color darkGrey = HexColor.fromHex("#525252");
   static Color grey = HexColor.fromHex("#737477");
   static Color lightGrey = HexColor.fromHex("#9E9E9E");

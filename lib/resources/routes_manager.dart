@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/core/onboarding/onboarding_view.dart';
 import 'package:jobly/resources/strings_manager.dart';
+
+import '../modules/core/splash/splash_view.dart';
 
 
 class Routes{
@@ -17,7 +20,9 @@ class RouteGenerator{
   static Route<dynamic> getRoute(RouteSettings routeSettings){
     switch (routeSettings.name){
       case Routes.splashRoute:
-        //return MaterialPageRoute(builder: (_)=>const SplashView());
+        return MaterialPageRoute(builder: (_)=>const SplashView());
+      case Routes.onBoardingRoute:
+        return MaterialPageRoute(builder: (_)=>const OnboardingView());
       default:
         return unDefinedRoute();
     }
