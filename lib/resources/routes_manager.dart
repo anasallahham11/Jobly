@@ -22,7 +22,7 @@ class RouteGenerator{
       case Routes.splashRoute:
         return MaterialPageRoute(builder: (_)=>const SplashView());
       case Routes.onBoardingRoute:
-        return MaterialPageRoute(builder: (_)=>const OnboardingView());
+        return MaterialPageRoute(builder: (_)=> OnboardingView());
       default:
         return unDefinedRoute();
     }

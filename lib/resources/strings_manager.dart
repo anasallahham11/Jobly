@@ -23,6 +23,17 @@ class AppStrings {
   static const String validPassword = 'Please enter a valid password';
 
 
+  //onboarding
+   static const String body1="find your self by finding your job";
+   static const String body2="Don't be confused, you will find your professional path and we will help you";
+   static const String body3="Search now via your mobile phone for the appropriate opportunity for you without effort";
+
+    static const String title1="Search";
+    static const String title2="Are you confused?";
+    static const String title3="Are you tired ? ";
+   
+
+
 
 
 
