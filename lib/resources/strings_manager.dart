@@ -31,8 +31,15 @@ class AppStrings {
     static const String title1="Search";
     static const String title2="Are you confused?";
     static const String title3="Are you tired from Searching all day out  ? ";
-   
 
+    //login 
+     static const String SIGNIN="SIGN IN";
+     
+      static const String Password="Password ";
+      static const String emaill="email ";
+      static const String titlel="Hire Fast Hire The Best";
+     
+      static const String account ="Don\'t have an account? REGISTER";
 
 
 

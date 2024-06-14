@@ -8,6 +8,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/style_manager.dart';
 import '../../../widgets/widgets.dart';
+import '../login/login_screen.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -51,7 +52,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
           TextButton(
             onPressed: ()
             {
-            //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ShopLoginScreen()),);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
 
             },
            child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
@@ -109,7 +110,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
                 {
                   if(islast)
                   {
-                   //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ShopLoginScreen()),);
+                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
                   }
                   boardcontroller.nextPage(
                     duration: const Duration(
