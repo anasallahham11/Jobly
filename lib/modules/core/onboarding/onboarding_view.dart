@@ -1,26 +1,13 @@
-// import 'package:flutter/material.dart';
 
-// class OnboardingView extends StatelessWidget {
-//   const OnboardingView({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold();
-//   }
-// }
 
 
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../resources/assets_manager.dart';
+import '../../../resources/font_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/style_manager.dart';
 import '../../../widgets/widgets.dart';
-
-
-
-
-
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -59,6 +46,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         actions: [
           TextButton(
             onPressed: ()
@@ -66,7 +54,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
             //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ShopLoginScreen()),);
 
             },
-           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple) )
+           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
            ),
            
         ],
@@ -103,7 +91,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
              SmoothPageIndicator(
               controller: boardcontroller, 
               effect:  const ExpandingDotsEffect(
-                
+                activeDotColor: Colors.purple, 
                 dotColor: Colors.grey,
                 dotHeight: 10,
                 expansionFactor: 4,
@@ -115,7 +103,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
               ),
              const Spacer(),
               FloatingActionButton(
-                
+                backgroundColor: Colors.purple,
                 onPressed: 
                 ()
                 {

@@ -30,7 +30,7 @@ class AppStrings {
 
     static const String title1="Search";
     static const String title2="Are you confused?";
-    static const String title3="Are you tired ? ";
+    static const String title3="Are you tired from Searching all day out  ? ";
    
 
 
