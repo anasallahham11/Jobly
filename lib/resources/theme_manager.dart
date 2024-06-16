@@ -11,10 +11,10 @@ ThemeData getApplicationTheme(){
   return ThemeData(
     ///main colors of the app
     primaryColor: ColorManager.primary,
-    primaryColorLight: ColorManager.primaryOpacity70,
+    primaryColorLight: ColorManager.primaryOpacity,
     primaryColorDark: ColorManager.darkPrimary,
     disabledColor: ColorManager.grey1,
-    splashColor: ColorManager.primaryOpacity70, //ripple effect
+    splashColor: ColorManager.primaryOpacity, //ripple effect
     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: ColorManager.grey),
 
     /// card view theme
@@ -28,7 +28,7 @@ ThemeData getApplicationTheme(){
       centerTitle: true,
       color: ColorManager.primary,
       elevation: AppSize.s4,
-      shadowColor: ColorManager.primaryOpacity70,
+      shadowColor: ColorManager.primaryOpacity,
       titleTextStyle: getRegularStyle(color:ColorManager.white,fontSize:FontSize.s16),
     ),
 
@@ -37,7 +37,7 @@ ThemeData getApplicationTheme(){
       shape: const StadiumBorder(),
       disabledColor: ColorManager.grey1,
       buttonColor: ColorManager.primary,
-      splashColor: ColorManager.primaryOpacity70
+      splashColor: ColorManager.primaryOpacity
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(

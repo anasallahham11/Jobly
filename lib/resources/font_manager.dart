@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class FontConstants{
-  static const String fontFamily="Nunito";
+  static const String fontFamily="Montserrat";
 
 }
 

@@ -2,7 +2,11 @@ const String IMAGE_PATH = "assets/images";
 
 class ImageAssets {
   static const String splashLogo = "$IMAGE_PATH/jobly_logo.jpeg";
-  
+  static const String whiteLogo = "$IMAGE_PATH/jobly_logo_white.png";
+  static const String purpleLogo = "$IMAGE_PATH/jobly_logo_purple.png";
+
+
+
 
 //onboarding
 static const String onboarding1 = "$IMAGE_PATH/on1.jpg";

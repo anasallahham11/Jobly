@@ -1,21 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'values_manager.dart';
 
 
 class ColorManager {
-  static Color primary = Colors.white;
+  //BASICS
+  static Color white = const Color(0xffffffff);
+  static Color black = const Color(0xff000000);
+
+  //PURPLE PALETTE
+  static Color purple1 = const Color(0xffd3caf1);
+  static Color purple2 = const Color(0xffc9bce7);
+  static Color purple3 = const Color(0xffaa96da);
+  static Color purple4 = const Color(0xff8b70cd);
+  static Color purple5 = const Color(0xff6639A6);
+  static Color purple6 = const Color(0xff43256d);
+
+  //LIGHT MODE
+  static Color primary = purple4;
   static Color darkGrey = HexColor.fromHex("#525252");
   static Color grey = HexColor.fromHex("#737477");
   static Color lightGrey = HexColor.fromHex("#9E9E9E");
-  static Color primaryOpacity70 = HexColor.fromHex("#B33b4195");
+  static Color primaryOpacity = purple3;
 
-  static Color darkPrimary = HexColor.fromHex("#0b1b24");
+  //DARK MODE
+  static Color darkPrimary = purple6;
   static Color grey1 = HexColor.fromHex("#707070");
   static Color grey2 = HexColor.fromHex("#797979");
-  static Color white = HexColor.fromHex("#FFFFFF");
+
+
+  //STATUS
   static Color error = const Color(0xffe61f34);
+  static Color success = const Color(0xff5cb85c);
+  static Color pending = const Color(0xffffc14e);
+
+
 }
 
 extension HexColor on Color{
@@ -46,13 +65,13 @@ Color chooseToastColor(ToastStates state) {
   Color color;
   switch (state) {
     case ToastStates.SUCCESS:
-      color = Colors.green;
+      color = ColorManager.success;
       break;
     case ToastStates.ERROR:
-      color = Colors.red;
+      color = ColorManager.error;
       break;
     case ToastStates.WARNING:
-      color = Colors.orange.shade900;
+      color = ColorManager.pending;
       break;
   }
   return color;
