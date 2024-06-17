@@ -4,6 +4,7 @@ import 'package:jobly/modules/core/login/cubit/cubit.dart';
 import 'package:jobly/modules/core/login/cubit/states.dart';
 
 import '../../../resources/assets_manager.dart';
+import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
 import '../../../widgets/widgets.dart';
@@ -36,12 +37,15 @@ class LoginPage extends StatelessWidget {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromARGB(230, 85, 0, 121),
-                  Color.fromARGB(230, 181, 47, 239),
-                  Color.fromARGB(255, 142, 45, 226),
+                  // Color.fromARGB(230, 85, 0, 121),
+                  // Color.fromARGB(230, 181, 47, 239),
+                  // Color.fromARGB(255, 142, 45, 226),
+                  ColorManager.purple6,
+                  ColorManager.purple5,
+                  ColorManager.purple4,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -68,7 +72,7 @@ class LoginPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                       
-                                const Image(image: AssetImage(ImageAssets.splashLogo)),
+                                const Image(image: AssetImage(ImageAssets.purpleLogo)),
                                 const SizedBox(height: AppSize.s16),
                               
                                
@@ -96,7 +100,10 @@ class LoginPage extends StatelessWidget {
                                           final password = _passwordController.text;
                                           BlocProvider.of<LoginCubit>(context).userLogin(email: email, password: password);
                                         },
-                                        child: const Text(AppStrings.SIGNIN,style: TextStyle(color: Colors.purple),),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: ColorManager.white, // Set the button's background color to white
+                                          )      ,
+                                        child:  Text(AppStrings.SIGNIN,style: TextStyle(color:ColorManager.purple6,),),
                                       );
                                     },
                                   ),
@@ -107,7 +114,7 @@ class LoginPage extends StatelessWidget {
                                       
                                       // Handle register
                                     },
-                                    child: const Text(AppStrings.account,style: TextStyle(color: Colors.purple),),
+                                    child:  Text(AppStrings.account,style: TextStyle(color: ColorManager.purple6,),),
                                   ),
                                 ],
                               ),
@@ -120,17 +127,17 @@ class LoginPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.purple, // لون البوردير الشفاف
+                                color: ColorManager.purple6, // لون البوردير الشفاف
                                 width: 5.0, // عرض البوردير
                               ),
                             ),
-                            child:const CircleAvatar(
+                            child: CircleAvatar(
                               radius: 35,
-                              backgroundColor: Colors.white,
+                              backgroundColor: ColorManager.white,
                               child: Icon(
                                 Icons.person,
                                 size: 40,
-                                color: Colors.purple,
+                                color: ColorManager.purple6,
                               ),
                             ),
                           ),

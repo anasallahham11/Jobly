@@ -61,6 +61,7 @@ flutter:
     - assets/images/on1.jpg
     - assets/images/on2.jpg
     - assets/images/on3.jpg
+    - assets\images\jobly_logo_purple.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
