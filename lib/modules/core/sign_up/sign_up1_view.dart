@@ -1,16 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/core/login/cubit/cubit.dart';
 import 'package:jobly/modules/core/login/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/cubit/cubit.dart';
+import 'package:jobly/modules/core/sign_up/cubit/states.dart';
 
 import '../../../resources/assets_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
 import '../../../widgets/widgets.dart';
-import '../sign_up/sign_up1_view.dart';
 
 
-class LoginPage extends StatelessWidget {
+class SignUpPage1 extends StatelessWidget {
   final TextEditingController _mobileNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -19,13 +22,13 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
      
       body: BlocProvider(
-        create: (context) => LoginCubit(),
-        child: BlocListener<LoginCubit, LoginStates>(
+        create: (context) => SignUpCubit(),
+        child: BlocListener<SignUpCubit, SignupStates>(
           listener: (context, state) {
-            if (state is LoginErorrStates) {
+            if (state is SignupErorrStates) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Login Failed: ${state.erorr}'),
+                  content: Text('SignUp Failed: ${state.erorr}'),
                 ),
               );
             } else if (state is LoginSuccessStates) {
@@ -64,14 +67,11 @@ class LoginPage extends StatelessWidget {
                             width: 300, // العرض
                             height: 500, // الطول
                             padding: const EdgeInsets.all(16),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child:  Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                      
-                                const Image(image: AssetImage(ImageAssets.splashLogo)),
-                                const SizedBox(height: AppSize.s16),
-                              
-                               
+                                Image(image: AssetImage(ImageAssets.splashLogo)),
+                                SizedBox(height: AppSize.s16),
                                   const Text(
                                     AppStrings.titlel,
                                     style: TextStyle(
@@ -79,36 +79,63 @@ class LoginPage extends StatelessWidget {
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
-                                  const SizedBox(height: AppSize.s32),
-                                  TextFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),true),
-                                  const SizedBox(height: AppSize.s16),
-                                  TextFieldComponant( _passwordController,AppStrings.Password,const OutlineInputBorder(),true),
-                                 const  SizedBox(height: 16),
-                                  BlocBuilder<LoginCubit, LoginStates>(
-                                    builder: (context, state) {
-                                      if (state is LoginLoadingStates) {
-                                        return const CircularProgressIndicator();
-                                      }
-                              
-                                      return ElevatedButton(
-                                        onPressed: () {
-                                          final email = _mobileNumberController.text;
-                                          final password = _passwordController.text;
-                                          BlocProvider.of<LoginCubit>(context).userLogin(email: email, password: password);
-                                        },
-                                        child: const Text(AppStrings.SIGNIN,style: TextStyle(color: Colors.purple),),
-                                      );
-                                    },
+                                  
+                                  Divider(),
+
+                                  SizedBox(height: AppSize.s12,),
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+
+                                  FloatingActionButton(
+                                    backgroundColor: Colors.purple,
+                                    onPressed: (){},
+                                  child: Column(
+                                    children: [
+                                      const Icon(Icons.home_work_rounded,size: AppSize.s40,),
+                                   Expanded(
+                                     child: const Text(
+                                          "COMPANY",
+                                          style: TextStyle(
+                                          fontSize: AppSize.s8,
+                                          fontStyle: FontStyle.italic,
+                                           ),
+                                          ),
+                                   ),
+                                    ],
+                                  ),),
+                                  
+
+
+                                  SizedBox(
+                                    width: AppSize.s18,
                                   ),
-                                  const Divider(),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SignUpPage1()));
-                                      
-                                      // Handle register
-                                    },
-                                    child: const Text(AppStrings.account,style: TextStyle(color: Colors.purple),),
-                                  ),
+
+                                   FloatingActionButton(
+                                    backgroundColor: Colors.purple,
+                                    onPressed: (){},
+                                   child: Column(
+                                     children: [
+                                   
+                                       const Icon(Icons.work_outline_rounded,size: AppSize.s40,),
+                                   
+                                                Expanded(
+                                                  child: const Text(
+                                                             "EMPLOYEE",
+                                                               style: TextStyle(
+                                                               fontSize: AppSize.s8,
+                                                                fontStyle: FontStyle.italic,
+                                                              ),
+                                                              ),
+                                                )
+                                   
+                                     ],
+                                   ),),
+                                    ],
+
+                                    
+                                  )
                                 ],
                               ),
                             ),
