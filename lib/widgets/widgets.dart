@@ -42,3 +42,85 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
                                   );
 }
 
+
+PreferredSizeWidget myAppBar(context, String title, bool searchVisible) {
+  return AppBar(
+    shadowColor: Colors.white,
+    forceMaterialTransparency: true,
+    iconTheme: const IconThemeData(
+      color: Color.fromARGB(255, 164, 78, 179), // Change the color to red
+    ),
+    actions: [
+      if (searchVisible)
+        IconButton(
+          icon: const Icon(Icons.search,
+              color: Color.fromARGB(255, 164, 78, 179)),
+          onPressed: () {
+            // navigateTo(context, const SearchScreen());
+          },
+        ),
+    ],
+    backgroundColor: Colors.white,
+    title: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: const TextStyle(color: Color.fromARGB(255, 164, 78, 179)),
+    ),
+  );
+}
+
+
+
+Widget myDrawer(BuildContext context) {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 115, 1, 115),
+          ),
+          child: Text(
+            'Menu',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text('Profile'),
+          onTap: () {
+            // Handle the home tap
+            Navigator.of(context).pop(); // Close the drawer
+          },
+        ),
+        const Divider(
+          indent: 10,
+          endIndent: 10,
+        ),
+        ListTile(
+          leading: const Icon(Icons.settings),
+          title: const Text('Settings'),
+          onTap: () {
+            // Handle the company list tap
+            Navigator.of(context).pop(); // Close the drawer
+          },
+        ),
+        const Divider(
+          indent: 10,
+          endIndent: 10,
+        ),
+        ListTile(
+          leading: const Icon(Icons.assignment),
+          title: const Text('job applications'),
+          onTap: () {
+            // Handle the company list tap
+            Navigator.of(context).pop(); // Close the drawer
+          },
+        ),
+      ],
+    ),
+  );
+}
