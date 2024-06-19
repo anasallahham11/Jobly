@@ -21,5 +21,11 @@ static const String onboarding3 = "$IMAGE_PATH/on3.jpg";
   static const String leftArrowIc = "$IMAGE_PATH/left_arrow_ic.svg";
   static const String rightArrowIc = "$IMAGE_PATH/right_arrow_ic.svg";
   static const String solidCircleIc = "$IMAGE_PATH/solid_circle_ic.svg";
-  
+  static const String upArrowIc = "$IMAGE_PATH/up-arrow.png";
+  static const String answersIc = "$IMAGE_PATH/answers.png";
+  static const String employeeIc = "$IMAGE_PATH/employee.png";
+  static const String trendingIc = "$IMAGE_PATH/fire.png";
+
+
+
 }

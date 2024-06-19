@@ -23,7 +23,7 @@ class _SplashViewState extends State<SplashView> {
     _timer=Timer(const Duration(seconds: AppConstants.splashDelay),_goNext);
   }
   _goNext() {
-    Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+    Navigator.pushReplacementNamed(context, Routes.questionRoute);
   }
   @override
   void initState() {
@@ -35,8 +35,8 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.primary,
-      body: const Center(child: Image(image: AssetImage(ImageAssets.splashLogo))),
+      backgroundColor: ColorManager.purple5,
+      body: const Center(child: Image(image: AssetImage(ImageAssets.whiteLogo))),
     );
   }
 
