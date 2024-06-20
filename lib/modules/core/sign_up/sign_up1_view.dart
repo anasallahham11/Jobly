@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jobly/modules/core/sign_up/sign_up2_view.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
@@ -52,13 +53,6 @@ class _SignUpPage1State extends State<SignUpPage1> {
                             children: [
                               const Image(image: AssetImage(ImageAssets.purpleLogo)),
                               const SizedBox(height: AppSize.s16),
-                              const Text(
-                                AppStrings.titlel,
-                                style: TextStyle(
-                                  fontSize: AppSize.s16,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
                               const Divider(),
                               const SizedBox(height: AppSize.s12,),
                               Row(
@@ -68,7 +62,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                     backgroundColor: ColorManager.purple6,
                                     onPressed: () {
                                       setState(() {
-                                        _companyText = "if you want to creat company acount viste our website";
+                                        _companyText = AppStrings.companySignup;
                                       });
                                     },
                                     child: const Column(
@@ -76,7 +70,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                         Icon(Icons.home_work_rounded, size: AppSize.s40,),
                                         Expanded(
                                           child: Text(
-                                            "COMPANY",
+                                            AppStrings.company,
                                             style: TextStyle(
                                               fontSize: AppSize.s8,
                                               fontStyle: FontStyle.italic,
@@ -89,13 +83,15 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                   const SizedBox(width: AppSize.s18,),
                                   FloatingActionButton(
                                     backgroundColor: ColorManager.purple6,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployee()));
+                                    },
                                     child: const Column(
                                       children: [
                                         Icon(Icons.work_outline_rounded, size: AppSize.s40,),
                                         Expanded(
                                           child: Text(
-                                            "EMPLOYEE",
+                                            AppStrings.employee,
                                             style: TextStyle(
                                               fontSize: AppSize.s8,
                                               fontStyle: FontStyle.italic,
@@ -137,7 +133,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                             backgroundColor: ColorManager.white,
                             child: Icon(
                               Icons.person,
-                              size: 40,
+                              size: AppSize.s40,
                               color: ColorManager.purple6,
                             ),
                           ),

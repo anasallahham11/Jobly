@@ -34,13 +34,14 @@ class AppStrings {
 
     //login 
      static const String SIGNIN="SIGN IN";
-     
       static const String Password="Password ";
       static const String emaill="email ";
-      static const String titlel="Hire Fast Hire The Best";
-     
       static const String account ="Don\'t have an account? REGISTER";
-
+    //signup
+    static const String employee="EMPLOYEE";
+    static const String company="COMPANY";
+    static const String companySignup="if you want to creat company acount viste our website";
+    
 
 
 

@@ -78,15 +78,7 @@ class LoginPage extends StatelessWidget {
                                       
                                 const Image(image: AssetImage(ImageAssets.purpleLogo)),
                                 const SizedBox(height: AppSize.s16),
-                              
-                               
-                                  const Text(
-                                    AppStrings.titlel,
-                                    style: TextStyle(
-                                      fontSize: AppSize.s16,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
+    
                                   const SizedBox(height: AppSize.s32),
                                   textFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),false),
                                   const SizedBox(height: AppSize.s16),
