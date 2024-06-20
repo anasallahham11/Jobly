@@ -4,6 +4,7 @@ import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
 import '../modules/regular/job_details/job_details_view';
+
 import '../modules/regular/jobs/jobs_cubit.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
@@ -799,115 +800,115 @@ final List<Map<String, String>> companyData = [
 
 
 
-//most used widget
-Widget jobVacancyWidget(
-  context,
-  String image,
-  String title,
-  String tag,
-  String experience,
-  String type,
-  String salary,
-  String company,
-  String location,
-) {
-  return InkWell(
-    onTap: () => navigateTo(
-        context,
-        JobDetailsScreen(
-            companyName: company, imageUrl: image, salary: salary)),
-    child: Container(
-      margin: const EdgeInsets.all(15),
-      padding: const EdgeInsets.all(8),
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 249, 249, 249),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(200),
-                ),
-                elevation: 0,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: MediaQuery.of(context).size.width * 0.05,
-                  backgroundImage: NetworkImage(image),
-                ),
-              ),
-              //company logo
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title),
-                    Text(
-                      '$company - $location',
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 115, 1, 115)),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    tag,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 115, 1, 115)),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              highlightedText(
-                  type, const Color.fromARGB(255, 201, 231, 255), Colors.blue),
-              highlightedText(experience,
-                  const Color.fromARGB(255, 196, 255, 205), Colors.green),
-              const Expanded(child: SizedBox()),
-              Text(salary),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
+// //most used widget
+// Widget jobVacancyWidget(
+//   context,
+//   String image,
+//   String title,
+//   String tag,
+//   String experience,
+//   String type,
+//   String salary,
+//   String company,
+//   String location,
+// ) {
+//   return InkWell(
+//     onTap: () => navigateTo(
+//         context,
+//         JobDetailsScreen(
+//             companyName: company, imageUrl: image, salary: salary)),
+//     child: Container(
+//       margin: const EdgeInsets.all(15),
+//       padding: const EdgeInsets.all(8),
+//       height: MediaQuery.of(context).size.height * 0.15,
+//       width: double.infinity,
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(10),
+//         color: const Color.fromARGB(255, 249, 249, 249),
+//       ),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.spaceAround,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             children: [
+//               Card(
+//                 color: Colors.white,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(200),
+//                 ),
+//                 elevation: 0,
+//                 child: CircleAvatar(
+//                   backgroundColor: Colors.white,
+//                   radius: MediaQuery.of(context).size.width * 0.05,
+//                   backgroundImage: NetworkImage(image),
+//                 ),
+//               ),
+//               //company logo
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(title),
+//                     Text(
+//                       '$company - $location',
+//                       style: const TextStyle(
+//                           color: Color.fromARGB(255, 115, 1, 115)),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               Column(
+//                 children: [
+//                   Text(
+//                     tag,
+//                     style: const TextStyle(
+//                         color: Color.fromARGB(255, 115, 1, 115)),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//           Row(
+//             children: [
+//               highlightedText(
+//                   type, const Color.fromARGB(255, 201, 231, 255), Colors.blue),
+//               highlightedText(experience,
+//                   const Color.fromARGB(255, 196, 255, 205), Colors.green),
+//               const Expanded(child: SizedBox()),
+//               Text(salary),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
 
 
 
-//list of jobs
-Widget jobsList(List<Map<String, String>> jobs) {
-  return Expanded(
-    child: ListView.builder(
-      itemCount: jobs.length,
-      itemBuilder: (context, index) {
-        final job = jobs[index];
-        return jobVacancyWidget(
-          context,
-          job['image']!,
-          job['title']!,
-          job['tag']!,
-          job['experience']!,
-          job['type']!,
-          job['salary']!,
-          job['company']!,
-          job['location']!,
-        );
-      },
-    ),
-  );
-}
+// //list of jobs
+// Widget jobsList(List<Map<String, String>> jobs) {
+//   return Expanded(
+//     child: ListView.builder(
+//       itemCount: jobs.length,
+//       itemBuilder: (context, index) {
+//         final job = jobs[index];
+//         return jobVacancyWidget(
+//           context,
+//           job['image']!,
+//           job['title']!,
+//           job['tag']!,
+//           job['experience']!,
+//           job['type']!,
+//           job['salary']!,
+//           job['company']!,
+//           job['location']!,
+//         );
+//       },
+//     ),
+//   );
+// }
 
 
 Widget highlightedText(String text, Color background, Color textColor) {

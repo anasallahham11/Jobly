@@ -7,6 +7,7 @@ import 'package:jobly/modules/core/login/cubit/states.dart';
 
 import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/dio_helper.dart';
+import '../login_modle.dart';
 
 
 
@@ -29,6 +30,8 @@ class LoginCubit extends Cubit<LoginStates> {
     ).then((value) {
       print("rami");
       print(value?.data);
+      var dataResponse= LoginModle.fromJson(value?.data);
+      print(dataResponse.message.toString());
       emit(LoginSuccessStates());
     }).catchError((error) {
       emit(LoginErorrStates(error.toString()));

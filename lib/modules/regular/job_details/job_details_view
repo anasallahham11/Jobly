@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../shared/components/components.dart';
-import '../search/search_screen.dart';
+//import '../../../shared/components/components.dart';
+//import '../search/search_screen.dart';
 
 class JobDetailsScreen extends StatelessWidget {
   final String imageUrl;

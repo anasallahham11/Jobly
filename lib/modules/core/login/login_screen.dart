@@ -84,7 +84,7 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: AppSize.s32),
-                                  textFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),true),
+                                  textFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),false),
                                   const SizedBox(height: AppSize.s16),
                                   textFieldComponant( _passwordController,AppStrings.Password,const OutlineInputBorder(),true),
                                  const  SizedBox(height: 16),
