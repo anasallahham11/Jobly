@@ -8,6 +8,7 @@ import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
 import '../../../widgets/widgets.dart';
+import '../../home/home_layout_view.dart';
 import '../sign_up/sign_up1_view.dart';
 
 
@@ -30,8 +31,11 @@ class LoginPage extends StatelessWidget {
                 ),
               );
             } else if (state is LoginSuccessStates) {
+                 SnackBar(
+                  content: Text('Login sucssec'),
+                );
               // Navigate to another screen
-             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayout()));
             }
           },
           child: Container(

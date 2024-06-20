@@ -5,7 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/core/login/cubit/states.dart';
 
+import '../../../../utils/constants.dart';
 import '../../../../utils/end_points.dart';
+import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
 import '../login_modle.dart';
 
@@ -20,6 +22,7 @@ class LoginCubit extends Cubit<LoginStates> {
     required String email,
     required String password,
   }) {
+    CacheHelper.init();
     emit(LoginLoadingStates());
     DioHelper.postData(
       url: LOGIN,
@@ -31,7 +34,11 @@ class LoginCubit extends Cubit<LoginStates> {
       print("rami");
       print(value?.data);
       var dataResponse= LoginModle.fromJson(value?.data);
-      print(dataResponse.message.toString());
+      token = dataResponse.data?.token;
+      
+      CacheHelper.saveData(key: 'token', value:token );
+     print( CacheHelper.getData(key: 'token'));
+
       emit(LoginSuccessStates());
     }).catchError((error) {
       emit(LoginErorrStates(error.toString()));
