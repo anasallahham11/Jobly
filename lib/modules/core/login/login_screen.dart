@@ -35,7 +35,7 @@ class LoginPage extends StatelessWidget {
                   content: Text('Login sucssec'),
                 );
               // Navigate to another screen
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayout()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
             }
           },
           child: Container(
