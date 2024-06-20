@@ -81,7 +81,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
                   });
                 }
               },
-              itemBuilder:(context,index)=> BulidBoardingItem(boarding[index]),
+              itemBuilder:(context,index)=> bulidBoardingItem(boarding[index]),
               itemCount: boarding.length ,
               ),
             ),

@@ -84,9 +84,9 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: AppSize.s32),
-                                  TextFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),true),
+                                  textFieldComponant(  _mobileNumberController,AppStrings.emaill,const OutlineInputBorder(),true),
                                   const SizedBox(height: AppSize.s16),
-                                  TextFieldComponant( _passwordController,AppStrings.Password,const OutlineInputBorder(),true),
+                                  textFieldComponant( _passwordController,AppStrings.Password,const OutlineInputBorder(),true),
                                  const  SizedBox(height: 16),
                                   BlocBuilder<LoginCubit, LoginStates>(
                                     builder: (context, state) {

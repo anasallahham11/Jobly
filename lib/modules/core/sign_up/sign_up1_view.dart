@@ -50,8 +50,8 @@ class _SignUpPage1State extends State<SignUpPage1> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(image: AssetImage(ImageAssets.purpleLogo)),
-                              SizedBox(height: AppSize.s16),
+                              const Image(image: AssetImage(ImageAssets.purpleLogo)),
+                              const SizedBox(height: AppSize.s16),
                               const Text(
                                 AppStrings.titlel,
                                 style: TextStyle(
@@ -59,8 +59,8 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
-                              Divider(),
-                              SizedBox(height: AppSize.s12,),
+                              const Divider(),
+                              const SizedBox(height: AppSize.s12,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -71,11 +71,11 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                         _companyText = "if you want to creat company acount viste our website";
                                       });
                                     },
-                                    child: Column(
+                                    child: const Column(
                                       children: [
-                                        const Icon(Icons.home_work_rounded, size: AppSize.s40,),
+                                        Icon(Icons.home_work_rounded, size: AppSize.s40,),
                                         Expanded(
-                                          child: const Text(
+                                          child: Text(
                                             "COMPANY",
                                             style: TextStyle(
                                               fontSize: AppSize.s8,
@@ -86,15 +86,15 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(width: AppSize.s18,),
+                                  const SizedBox(width: AppSize.s18,),
                                   FloatingActionButton(
                                     backgroundColor: ColorManager.purple6,
                                     onPressed: () {},
-                                    child: Column(
+                                    child: const Column(
                                       children: [
-                                        const Icon(Icons.work_outline_rounded, size: AppSize.s40,),
+                                        Icon(Icons.work_outline_rounded, size: AppSize.s40,),
                                         Expanded(
-                                          child: const Text(
+                                          child: Text(
                                             "EMPLOYEE",
                                             style: TextStyle(
                                               fontSize: AppSize.s8,
@@ -107,7 +107,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: AppSize.s16),
+                              const SizedBox(height: AppSize.s16),
                               if (_companyText.isNotEmpty) // عرض النص عند وجوده
                                 Text(
                                   _companyText,

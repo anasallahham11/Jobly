@@ -1,9 +1,10 @@
-  import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:jobly/modules/community/cubit/community_states.dart';
+import 'package:jobly/modules/home/home_layout_cubit.dart';
 import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
+import '../modules/regular/job_details/job_details_view';
+import '../modules/regular/jobs/jobs_cubit.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
 
@@ -20,15 +21,15 @@ class BoardingModle{
   });
 } 
 
-Widget BulidBoardingItem(BoardingModle modle)=>Column(
+Widget bulidBoardingItem(BoardingModle modle)=>Column(
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          Expanded(child: Image(image:AssetImage('${modle.image}'))),
+          Expanded(child: Image(image:AssetImage(modle.image))),
           const SizedBox(height: 30,),
-          Text('${modle.title}',style: getBoldStyle(color: Colors.black,fontSize: FontSize.s22),),
+          Text(modle.title,style: getBoldStyle(color: Colors.black,fontSize: FontSize.s22),),
            const SizedBox(height: 15,),
-          Text('${modle.body}',style:getRegularStyle(color: Colors.black,fontSize:FontSize.s14),),
+          Text(modle.body,style:getRegularStyle(color: Colors.black,fontSize:FontSize.s14),),
           const   SizedBox(height: 15,),
         ],
       );
@@ -36,7 +37,7 @@ Widget BulidBoardingItem(BoardingModle modle)=>Column(
 
 //text from feld
 
-Widget TextFieldComponant(TextEditingController _passwordController, String AppStrings,InputBorder? border,bool obscureText){
+Widget textFieldComponant(TextEditingController _passwordController, String AppStrings,InputBorder? border,bool obscureText){
                    return TextField(
                      controller: _passwordController,
                        decoration: InputDecoration(
@@ -143,8 +144,8 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children:  const [
+                    const Row(
+                      children:  [
                         Text(
                           "Anas Allahham",
                           //'${question.publisher}',
@@ -250,8 +251,8 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children:  const [
+                    const Row(
+                      children:  [
                         Text(
                           "Anas Allahham",
                           //'${question.publisher}',
@@ -357,8 +358,8 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: const [
+                    const Row(
+                      children: [
                         Text(
                           "Anas Allahham",
                           //'${question.publisher}',
@@ -481,8 +482,8 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       "Anas Allahham",
                       //'${question.publisher}',
@@ -585,18 +586,18 @@ Widget TextFieldComponant(TextEditingController _passwordController, String AppS
       ),
     ],),
   );
-  Widget questionsBuilder(questions,cubit, context, state) => ConditionalBuilder(
-    condition: state is! CommunityLoadingState && questions != null,
-    builder: (context) => ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) =>
-            buildQuestionItem(questions[index],context,cubit,state),
-        separatorBuilder: (context,index) => const SizedBox(height: AppSize.s8,),
-        itemCount: questions.length
-    ),
-    fallback: (context) => const Center(child: CircularProgressIndicator()),
-  );
+  // Widget questionsBuilder(questions,cubit, context, state) => ConditionalBuilder(
+  //   condition: state is! CommunityLoadingState && questions != null,
+  //   builder: (context) => ListView.separated(
+  //       shrinkWrap: true,
+  //       physics: const NeverScrollableScrollPhysics(),
+  //       itemBuilder: (context, index) =>
+  //           buildQuestionItem(questions[index],context,cubit,state),
+  //       separatorBuilder: (context,index) => const SizedBox(height: AppSize.s8,),
+  //       itemCount: questions.length
+  //   ),
+  //   fallback: (context) => const Center(child: CircularProgressIndicator()),
+  // );
 
 
 ///Layout
@@ -678,3 +679,316 @@ Widget myDrawer(BuildContext context) {
     ),
   );
 }
+
+
+//jobs screen
+
+
+
+Widget circularImage(context, String imageUrl, double radius) {
+  return Card(
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(200),
+    ),
+    elevation: 0,
+    child: CircleAvatar(
+      backgroundColor: Colors.white,
+      radius: radius,
+      backgroundImage: NetworkImage(
+        imageUrl,
+      ),
+    ),
+  );
+}
+
+
+//the company widget in the all jobs screen
+Widget companyWidget(
+  context,
+  String imageUrl,
+  String text,
+) {
+  return InkWell(
+    onTap: () {
+      // Navigate to CompanyProfileScreen and pass data
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          //it shhould lead to the company profile screen 
+          builder: (context) => const CoursesScreen(
+            // imageUrl: imageUrl,
+            // companyName: text,
+          ),
+        ),
+      );
+    },
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            circularImage(
+              context,
+              imageUrl,
+              MediaQuery.of(context).size.width * 0.07,
+            ),
+            Text(
+              text,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+
+//holds the company widgets in it
+Widget companyHolder(context) {
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 0.15,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: companyData.length,
+      itemBuilder: (context, index) {
+        final company = companyData[index];
+        return companyWidget(
+          context,
+          company['image']!,
+          company['text']!,
+        );
+      },
+    ),
+  );
+}
+
+// Dummy company JSON Data
+final List<Map<String, String>> companyData = [
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfF0wZy7mQfdYr7u_rBgFUpF1-XYBJ6Alr5w&s",
+    "text": "Syriatel"
+  },
+  {
+    "image":
+        "https://static.wixstatic.com/media/d2252d_4c1a1bda6a774bd68f789c0770fd16e5~mv2.png",
+    "text": "Amazon"
+  },
+  {
+    "image":
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+    "text": "Google"
+  },
+  {
+    "image":
+        "https://play-lh.googleusercontent.com/DIQzLQuHuupEoCe8TfpUdrsYDicq2cSE_WTsrZ-Ys6ppLHKdc7m5dbyqmQqiJi0JfQ",
+    "text": "Burger King"
+  },
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-oTCfJdO8zwDoyHB7j5tktdQq31w6t31GsA&s",
+    "text": "Lego"
+  }
+];
+
+
+
+//most used widget
+Widget jobVacancyWidget(
+  context,
+  String image,
+  String title,
+  String tag,
+  String experience,
+  String type,
+  String salary,
+  String company,
+  String location,
+) {
+  return InkWell(
+    onTap: () => navigateTo(
+        context,
+        JobDetailsScreen(
+            companyName: company, imageUrl: image, salary: salary)),
+    child: Container(
+      margin: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(8),
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromARGB(255, 249, 249, 249),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(200),
+                ),
+                elevation: 0,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: MediaQuery.of(context).size.width * 0.05,
+                  backgroundImage: NetworkImage(image),
+                ),
+              ),
+              //company logo
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title),
+                    Text(
+                      '$company - $location',
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 115, 1, 115)),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    tag,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 115, 1, 115)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              highlightedText(
+                  type, const Color.fromARGB(255, 201, 231, 255), Colors.blue),
+              highlightedText(experience,
+                  const Color.fromARGB(255, 196, 255, 205), Colors.green),
+              const Expanded(child: SizedBox()),
+              Text(salary),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+
+//list of jobs
+Widget jobsList(List<Map<String, String>> jobs) {
+  return Expanded(
+    child: ListView.builder(
+      itemCount: jobs.length,
+      itemBuilder: (context, index) {
+        final job = jobs[index];
+        return jobVacancyWidget(
+          context,
+          job['image']!,
+          job['title']!,
+          job['tag']!,
+          job['experience']!,
+          job['type']!,
+          job['salary']!,
+          job['company']!,
+          job['location']!,
+        );
+      },
+    ),
+  );
+}
+
+
+Widget highlightedText(String text, Color background, Color textColor) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 5),
+    padding: const EdgeInsets.all(5),
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        color: textColor,
+      ),
+    ),
+  );
+}
+
+Widget highlightedIcon(Color background, Color iconColor, IconData icon) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 5),
+    padding: const EdgeInsets.all(5),
+    decoration: BoxDecoration(
+      color: background,
+      borderRadius: BorderRadius.circular(200),
+    ),
+    child: Icon(
+      icon,
+      color: iconColor,
+      size: 30,
+    ),
+  );
+}
+
+Widget companyListTile(context, String imageUrl, String companyName) {
+  return ListTile(
+      onTap: () {
+        navigateTo(context,
+            const CoursesScreen(
+              //imageUrl: imageUrl, companyName: companyName,
+              )
+              );
+      },
+      subtitle: const Text('⭐4.2 | 400 Reviews'),
+      title: Text(companyName),
+      leading: circularImage(
+        context,
+        imageUrl,
+        MediaQuery.of(context).size.width * 0.05,
+      ));
+}
+
+
+
+Widget squareButton(context) {
+  return Positioned(
+    bottom: 5,
+    right: 5,
+    child: FloatingActionButton(
+      onPressed: () {},
+      child: PopupMenuButton<String>(
+        offset: const Offset(0, -100),
+        onSelected: JobsCubit.get(context).changeIndex,
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          const PopupMenuItem<String>(
+            value: 'For You',
+            child: Text('For You'),
+          ),
+          const PopupMenuItem<String>(
+            value: 'All',
+            child: Text('All'),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+//functions
+
+void navigateTo(context, widget) =>
+    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));

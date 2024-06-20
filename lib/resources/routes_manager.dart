@@ -27,7 +27,7 @@ class RouteGenerator{
       case Routes.splashRoute:
         return MaterialPageRoute(builder: (_)=>const SplashView());
       case Routes.onBoardingRoute:
-        return MaterialPageRoute(builder: (_)=> OnboardingView());
+        return MaterialPageRoute(builder: (_)=> const OnboardingView());
       //case Routes.communityRoute:
        // return MaterialPageRoute(builder: (_)=> CommunityView());
       //case Routes.questionRoute:
