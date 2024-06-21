@@ -41,7 +41,8 @@ class AppStrings {
     static const String employee="EMPLOYEE";
     static const String company="COMPANY";
     static const String companySignup="if you want to creat company acount viste our website";
-    
+    static const String name="name";
+    static const String next="next";
 
 
 

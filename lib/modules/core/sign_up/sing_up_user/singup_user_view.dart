@@ -1,41 +1,43 @@
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/core/login/cubit/cubit.dart';
-import 'package:jobly/modules/core/login/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/sing_up_user/cubit/cubit.dart';
+import 'package:jobly/modules/core/sign_up/sing_up_user/cubit/states.dart';
+import 'package:jobly/resources/strings_manager.dart';
 
-import '../../../resources/assets_manager.dart';
-import '../../../resources/color_manager.dart';
-import '../../../resources/strings_manager.dart';
-import '../../../resources/values_manager.dart';
-import '../../../widgets/widgets.dart';
-import '../../home/home_layout_view.dart';
-import '../sign_up/sign_up1_view.dart';
+import '../../../../resources/assets_manager.dart';
+import '../../../../resources/color_manager.dart';
+import '../../../../resources/values_manager.dart';
+import '../../../../widgets/widgets.dart';
 
-
-class LoginPage extends StatelessWidget {
-  final TextEditingController _mobileNumberController = TextEditingController();
+class SingupUser extends StatelessWidget {
+  final TextEditingController _emailNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
      
       body: BlocProvider(
-        create: (context) => LoginCubit(),
-        child: BlocListener<LoginCubit, LoginStates>(
+        create: (context) => SignUpUserCubit(),
+        child: BlocListener<SignUpUserCubit, SignupUserStates>(
           listener: (context, state) {
-            if (state is LoginErorrStates) {
+            if (state is SignupErorrStates) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Login Failed: ${state.erorr}'),
                 ),
               );
-            } else if (state is LoginSuccessStates) {
+            } else if (state is SignupSuccessStates) {
                  SnackBar(
                   content: Text('Login sucssec'),
                 );
               // Navigate to another screen
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
+            //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
             }
           },
           child: Container(
@@ -44,7 +46,7 @@ class LoginPage extends StatelessWidget {
             decoration:  BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-            
+
                   ColorManager.purple6,
                   ColorManager.purple5,
                   ColorManager.purple4,
@@ -77,39 +79,36 @@ class LoginPage extends StatelessWidget {
                                 const Image(image: AssetImage(ImageAssets.purpleLogo)),
                                 const SizedBox(height: AppSize.s16),
     
-                                  defaultFormField(controller: _mobileNumberController, type:TextInputType.emailAddress, label: AppStrings.emaill,prefix: Icons.email),
+                                  const SizedBox(height: AppSize.s32),
+                              
+                                  defaultFormField(controller: _nameController, type:TextInputType.text, label: AppStrings.name,prefix: Icons.person),
+                                  const SizedBox(height: AppSize.s16),
+                                  defaultFormField(controller: _emailNumberController, type:TextInputType.emailAddress, label: AppStrings.emaill,prefix: Icons.email),
                                   const SizedBox(height: AppSize.s16),
                                   defaultFormField(controller: _passwordController, type:TextInputType.text, label: AppStrings.password,isPassword: true,prefix: Icons.password),
                                   const SizedBox(height: AppSize.s16),
                                  const  SizedBox(height: 16),
-                                  BlocBuilder<LoginCubit, LoginStates>(
+                                  BlocBuilder<SignUpUserCubit, SignupUserStates>(
                                     builder: (context, state) {
-                                      if (state is LoginLoadingStates) {
+                                      if (state is SignupLoadingStates) {
                                         return const CircularProgressIndicator();
                                       }
                               
                                       return ElevatedButton(
                                         onPressed: () {
-                                          final email = _mobileNumberController.text;
+                                          final email = _emailNumberController.text;
                                           final password = _passwordController.text;
-                                          BlocProvider.of<LoginCubit>(context).userLogin(email: email, password: password);
+                                          final name = _nameController.text;
+                                          BlocProvider.of<SignUpUserCubit>(context).userSignUp(email: email, password: password,name: name);
                                         },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white, // Set the button's background color to white
                                           )      ,
-                                        child:  Text(AppStrings.SIGNIN,style: TextStyle(color:ColorManager.purple6,),),
+                                        child:  Text(AppStrings.next,style: TextStyle(color:ColorManager.purple6,),),
                                       );
                                     },
                                   ),
-                                  const Divider(),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SignUpPage1()));
-                                      
-                                      // Handle register
-                                    },
-                                    child:  Text(AppStrings.account,style: TextStyle(color: ColorManager.purple6,),),
-                                  ),
+
                                 ],
                               ),
                             ),
