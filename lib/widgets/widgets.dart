@@ -719,16 +719,24 @@ PreferredSizeWidget myAppBar(
   bool searchVisible,
 ) {
   return AppBar(
-    shadowColor: ColorManager.white,
+        elevation: 0,
+    shadowColor: Colors.transparent,
+    foregroundColor: ColorManager.white,
+    surfaceTintColor: ColorManager.white,
+    // shadowColor: ColorManager.white,
     //forceMaterialTransparency: true,
-    iconTheme: const IconThemeData(
-      color: Color.fromARGB(255, 164, 78, 179), // Change the color to red
+    iconTheme: IconThemeData(
+      color: ColorManager.primary,
+      //color: Color.fromARGB(255, 164, 78, 179), // Change the color to red
     ),
     actions: [
       if (searchVisible)
         IconButton(
-          icon: const Icon(Icons.search,
-              color: Color.fromARGB(255, 164, 78, 179)),
+          icon: Icon(
+            Icons.search,
+            color: ColorManager.primary,
+          ),
+          //color: Color.fromARGB(255, 164, 78, 179)),
           onPressed: () {
             // navigateTo(context, const SearchScreen());
           },
@@ -738,7 +746,11 @@ PreferredSizeWidget myAppBar(
     title: Text(
       title,
       textAlign: TextAlign.center,
-      style: const TextStyle(color: Color.fromARGB(255, 164, 78, 179)),
+      style: TextStyle(
+        color: ColorManager.primary,
+
+        // color: Color.fromARGB(255, 164, 78, 179),
+      ),
     ),
   );
 }
@@ -748,14 +760,14 @@ Widget myDrawer(BuildContext context) {
     child: ListView(
       padding: EdgeInsets.zero,
       children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
+         DrawerHeader(
+          decoration: const BoxDecoration(
             color: Color.fromARGB(255, 115, 1, 115),
           ),
           child: Text(
             'Menu',
             style: TextStyle(
-              color: Colors.white,
+              color: ColorManager.white,
               fontSize: 24,
             ),
           ),
@@ -805,13 +817,13 @@ Widget circularImage(
   double radius,
 ) {
   return Card(
-    color: Colors.white,
+    color: ColorManager.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(200),
     ),
     elevation: 0,
     child: CircleAvatar(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorManager.white,
       radius: radius,
       backgroundImage: NetworkImage(
         imageUrl,
@@ -944,13 +956,13 @@ Widget jobVacancyWidget(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Card(
-                color: Colors.white,
+                color: ColorManager.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(200),
                 ),
                 elevation: 0,
                 child: CircleAvatar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: ColorManager.white,
                   radius: MediaQuery.of(context).size.width * 0.05,
                   backgroundImage: NetworkImage(image),
                 ),
