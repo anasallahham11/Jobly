@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/core/sign_up/Sing_up_employy/singup_employy_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
@@ -52,7 +53,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
           TextButton(
             onPressed: ()
             {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SingupEmployy()),);
 
             },
            child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )

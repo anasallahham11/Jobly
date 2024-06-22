@@ -43,6 +43,19 @@ class AppStrings {
     static const String companySignup="if you want to creat company acount viste our website";
     static const String name="name";
     static const String next="next";
+    static const String age="age";
+    static const String lastname="last name";
+    static const String experience="experience ";
+    static const String education="education";
+    static const String portfolio="portfolio";
+    static const String phone_number="phone_number";
+    static const String work_status="work_status";
+    static const String graduation_status="graduation_status";
+    static const String PickImage="Pick Image";
+
+    
+   
+    
 
 
 

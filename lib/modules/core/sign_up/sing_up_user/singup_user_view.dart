@@ -11,6 +11,7 @@ import '../../../../resources/assets_manager.dart';
 import '../../../../resources/color_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
+import '../Sing_up_employy/singup_employy_view.dart';
 
 class SingupUser extends StatelessWidget {
   final TextEditingController _emailNumberController = TextEditingController();
@@ -37,7 +38,7 @@ class SingupUser extends StatelessWidget {
                   content: Text('Login sucssec'),
                 );
               // Navigate to another screen
-            //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
+             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
             }
           },
           child: Container(

@@ -47,6 +47,12 @@ Widget bulidBoardingItem(
       ],
     );
 
+
+
+
+
+    
+
 //text from feld
 
 Widget textFieldComponant(
