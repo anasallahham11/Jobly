@@ -255,7 +255,7 @@ class _SingupEmployyState extends State<SingupEmployy> {
                                             final image = _image;
                                             
                                          
-                                            BlocProvider.of<SignUpEmployyCubit>(context).userSignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number, work_status: "" , graduation_status:"" ,file_path:_image  );
+                                            BlocProvider.of<SignUpEmployyCubit>(context).userSignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:_image  );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white,

@@ -19,15 +19,18 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
 
   static SignUpEmployyCubit get(context) => BlocProvider.of(context);
 
+  String? graduationStatus;
+  String? workingStatus;
 
-   void changeGraduationStatus(bool isGraduated) {
-    final status = isGraduated ? 'Graduated' : 'Not Graduated';
-    emit(GraduationStatusState(graduationStatus: status));
+
+  void changeGraduationStatus(bool isGraduated) {
+    graduationStatus = isGraduated ? 'Graduated' : 'Not Graduated';
+    emit(GraduationStatusState(graduationStatus: graduationStatus!));
   }
 
-
-    void changeWorkingStatus(String workingStatus) {
-    emit(WorkingStatusState(workingStatus: workingStatus));
+  void changeWorkingStatus(String status) {
+    workingStatus = status;
+    emit(WorkingStatusState(workingStatus: workingStatus!));
   }
 
     
@@ -43,8 +46,6 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
     required String education,
      var  portfolio,
     required String phone_number,
-    required String work_status,
-    required String graduation_status,
      var file_path,
   
     
@@ -63,8 +64,8 @@ var data = FormData.fromMap({
   'education': education,
   'portfolio': portfolio,
   'phone_number': phone_number,
-  'work_status': work_status,
-  'graduation_status': graduation_status
+  'work_status': workingStatus,
+  'graduation_status': graduationStatus
 });
 
 var dio = Dio();
