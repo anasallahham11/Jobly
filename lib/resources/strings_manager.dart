@@ -43,7 +43,7 @@ class AppStrings {
     static const String companySignup="if you want to creat company acount viste our website";
     static const String name="name";
     static const String next="next";
-    static const String age="age";
+    static const String age="age 2002-06-05";
     static const String lastname="last name";
     static const String experience="experience ";
     static const String education="education";

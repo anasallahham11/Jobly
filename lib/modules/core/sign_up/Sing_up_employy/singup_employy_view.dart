@@ -27,21 +27,41 @@ class _SingupEmployyState extends State<SingupEmployy> {
   final TextEditingController _phone_numberController = TextEditingController();
   final List<String> workingStatusOptions = ['working', 'student', 'not working'];
 
-  File? _image;
+  // File? _image;
+   String? filePath;
   String _imageName = '';
 
-  Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
+  // Future<void> _pickImage(ImageSource source) async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: source);
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-        _imageName = pickedFile.name; // Get the name of the picked file
-      });
-      // TODO: Handle image file (_image) as needed (uploading, displaying, etc.)
-    }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //       _imageName = pickedFile.name; // Get the name of the picked file
+  //     });
+  //     // TODO: Handle image file (_image) as needed (uploading, displaying, etc.)
+  //   }
+  // }
+
+
+
+
+
+Future<void> pickImage(ImageSource camera) async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+  if (pickedFile != null) {
+    // This is the correct way to get the file path as a String
+     filePath = pickedFile.path;
+
+    // Now you can call your userSignUp method with the correct file path
+
+  } else {
+    print('No image selected.');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -211,15 +231,9 @@ class _SingupEmployyState extends State<SingupEmployy> {
                                       },
                                     ),
                                     const SizedBox(height: AppSize.s16),
-                                    _image != null
+                                    filePath != null
                                         ? Column(
                                             children: [
-                                              Image.file(
-                                                _image!,
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.cover,
-                                              ),
                                               const SizedBox(height: 8),
                                               Text(
                                                 _imageName,
@@ -252,10 +266,10 @@ class _SingupEmployyState extends State<SingupEmployy> {
                                             final education = _educationController.text;
                                             final portfolio = _portfolioController.text;
                                             final phone_number = _phone_numberController.text;
-                                            final image = _image;
+                                            final image = filePath;
                                             
                                          
-                                            BlocProvider.of<SignUpEmployyCubit>(context).userSignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:_image  );
+                                            BlocProvider.of<SignUpEmployyCubit>(context).userSignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:filePath  );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white,
@@ -319,7 +333,7 @@ class _SingupEmployyState extends State<SingupEmployy> {
                 leading: Icon(Icons.photo_library),
                 title: Text('Photo Library'),
                 onTap: () {
-                  _pickImage(ImageSource.gallery);
+                  pickImage(ImageSource.gallery);
                   Navigator.of(context).pop();
                 },
               ),
@@ -327,7 +341,7 @@ class _SingupEmployyState extends State<SingupEmployy> {
                 leading: Icon(Icons.photo_camera),
                 title: Text('Camera'),
                 onTap: () {
-                  _pickImage(ImageSource.camera);
+                  pickImage(ImageSource.camera);
                   Navigator.of(context).pop();
                 },
               ),

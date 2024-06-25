@@ -13,6 +13,7 @@ import 'package:jobly/utils/constants.dart';
 import '../../../../../utils/end_points.dart';
 import '../../../../../utils/helpers/cache_helper.dart';
 import '../../../../../utils/helpers/dio_helper.dart';
+import '../signup_modle_employy.dart';
 
 class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
   SignUpEmployyCubit() : super(SignUpEmployyInitial());
@@ -34,11 +35,6 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
   }
 
     
-
-
-
-
-
   Future<void> userSignUp({
     required String age,
     required String resume,
@@ -56,7 +52,7 @@ var headers = {
 };
 var data = FormData.fromMap({
   'files': [
-    await MultipartFile.fromFile(file_path, filename: 'image')
+    await MultipartFile.fromFile(file_path,)
   ],
   'age': age,
   'resume': resume,
@@ -76,7 +72,13 @@ var response = await dio.request(
     headers: headers,
   ),
   data: data,
-);
+).then((value) {
+      var dataResponse= SignUpEmployyModlee.fromJson(value?.data);
+      print(dataResponse.data?.phoneNumber);
+      emit(SignUpEmployySuccess());
+} ).catchError((error) {
+      emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
+    });
 
 if (response.statusCode == 200) {
   print(json.encode(response.data));
