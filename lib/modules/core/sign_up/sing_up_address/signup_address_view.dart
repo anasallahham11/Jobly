@@ -9,7 +9,9 @@ import 'package:jobly/modules/core/sign_up/sing_up_address/cubit/states.dart';
 
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/color_manager.dart';
+import '../../../../resources/font_manager.dart';
 import '../../../../resources/strings_manager.dart';
+import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
 
@@ -22,6 +24,21 @@ class SingupAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorManager.white.withOpacity(0.0),
+        elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: ()
+            {
+             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+
+            },
+           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
+           ),
+           
+        ],
+      ),
      
       body: BlocProvider(
         create: (context) => SignUpAddressCubit(),
