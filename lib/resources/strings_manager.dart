@@ -52,7 +52,9 @@ class AppStrings {
     static const String work_status="work_status";
     static const String graduation_status="graduation_status";
     static const String PickImage="Pick Image";
-
+    static const String county="county";
+    static const String city="city";
+    static const String Governorate="Governorate";
     
    
     

@@ -54,7 +54,7 @@ var data = FormData.fromMap({
   'files': [
     await MultipartFile.fromFile(file_path,)
   ],
-  'age': age,
+  'date_of_birth': age,
   'resume': resume,
   'experience': experience,
   'education': education,

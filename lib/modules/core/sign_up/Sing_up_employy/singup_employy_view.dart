@@ -12,6 +12,7 @@ import '../../../../resources/font_manager.dart';
 import '../../../../resources/strings_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
+import '../sing_up_address/signup_address_view.dart';
 
 class SingupEmployy extends StatefulWidget {
   @override
@@ -83,7 +84,7 @@ Future<void> pickImage(ImageSource camera) async {
                 ),
               );
               // Navigate to another screen
-              // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupAddress()));
             }
           },
           child: Container(
