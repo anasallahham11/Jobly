@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:jobly/modules/core/sign_up/sing_up_user/singup_user_view.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
@@ -37,69 +37,66 @@ class _SignUpPage1State extends State<SignUpPage1> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: AppSize.s100,),
+                const SizedBox(height: AppSize.s100),
                 Center(
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
                       Card(
                         child: Container(
-                          width: 300, // العرض
-                          height: 500, // الطول
+                          width: 300, // Width
+                          height: 500, // Height
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const Image(image: AssetImage(ImageAssets.purpleLogo)),
                               const SizedBox(height: AppSize.s16),
-                              const Text(
-                                AppStrings.titlel,
-                                style: TextStyle(
-                                  fontSize: AppSize.s16,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
                               const Divider(),
-                              const SizedBox(height: AppSize.s12,),
+                              const SizedBox(height: AppSize.s12),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   FloatingActionButton(
+                                    heroTag: 'companyButton', // Unique heroTag
                                     backgroundColor: ColorManager.purple6,
                                     onPressed: () {
                                       setState(() {
-                                        _companyText = "if you want to creat company acount viste our website";
+                                        _companyText = AppStrings.companySignup;
                                       });
                                     },
-                                    child: const Column(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.home_work_rounded, size: AppSize.s40,),
-                                        Expanded(
-                                          child: Text(
-                                            "COMPANY",
-                                            style: TextStyle(
-                                              fontSize: AppSize.s8,
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                        Icon(Icons.home_work_rounded, size: AppSize.s40),
+                                        Text(
+                                          AppStrings.company,
+                                          style: TextStyle(
+                                            fontSize: AppSize.s8,
+                                            fontStyle: FontStyle.italic,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: AppSize.s18,),
+                                  const SizedBox(width: AppSize.s18),
                                   FloatingActionButton(
+                                    heroTag: 'employeeButton', // Unique heroTag
                                     backgroundColor: ColorManager.purple6,
-                                    onPressed: () {},
-                                    child: const Column(
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(builder: (_) => SingupUser())
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.work_outline_rounded, size: AppSize.s40,),
-                                        Expanded(
-                                          child: Text(
-                                            "EMPLOYEE",
-                                            style: TextStyle(
-                                              fontSize: AppSize.s8,
-                                              fontStyle: FontStyle.italic,
-                                            ),
+                                        Icon(Icons.work_outline_rounded, size: AppSize.s40),
+                                        Text(
+                                          AppStrings.employee,
+                                          style: TextStyle(
+                                            fontSize: AppSize.s8,
+                                            fontStyle: FontStyle.italic,
                                           ),
                                         ),
                                       ],
@@ -108,7 +105,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                                 ],
                               ),
                               const SizedBox(height: AppSize.s16),
-                              if (_companyText.isNotEmpty) // عرض النص عند وجوده
+                              if (_companyText.isNotEmpty)
                                 Text(
                                   _companyText,
                                   style: TextStyle(
@@ -128,8 +125,8 @@ class _SignUpPage1State extends State<SignUpPage1> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: ColorManager.purple6, // لون البوردير الشفاف
-                              width: 5.0, // عرض البوردير
+                              color: ColorManager.purple6, // Border color
+                              width: 5.0, // Border width
                             ),
                           ),
                           child: CircleAvatar(
@@ -137,7 +134,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                             backgroundColor: ColorManager.white,
                             child: Icon(
                               Icons.person,
-                              size: 40,
+                              size: AppSize.s40,
                               color: ColorManager.purple6,
                             ),
                           ),

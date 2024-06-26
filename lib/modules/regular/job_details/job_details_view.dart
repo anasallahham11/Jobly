@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../../shared/components/components.dart';
-import '../search/search_screen.dart';
 
-class JobDetailsScreen extends StatelessWidget {
+import '../../../widgets/widgets.dart';
+
+
+class JobDetailsView extends StatelessWidget {
   final String imageUrl;
   final String companyName;
   final String salary;
 
-  const JobDetailsScreen({
+  const JobDetailsView({
     super.key,
     required this.salary,
     required this.companyName,

@@ -34,13 +34,30 @@ class AppStrings {
 
     //login 
      static const String SIGNIN="SIGN IN";
-     
       static const String Password="Password ";
       static const String emaill="email ";
-      static const String titlel="Hire Fast Hire The Best";
-     
       static const String account ="Don\'t have an account? REGISTER";
-
+    //signup
+    static const String employee="EMPLOYEE";
+    static const String company="COMPANY";
+    static const String companySignup="if you want to creat company acount viste our website";
+    static const String name="name";
+    static const String next="next";
+    static const String age="age 2002-06-05";
+    static const String lastname="last name";
+    static const String experience="experience ";
+    static const String education="education";
+    static const String portfolio="portfolio";
+    static const String phone_number="phone_number";
+    static const String work_status="work_status";
+    static const String graduation_status="graduation_status";
+    static const String PickImage="Pick Image";
+    static const String county="county";
+    static const String city="city";
+    static const String Governorate="Governorate";
+    
+   
+    
 
 
 
