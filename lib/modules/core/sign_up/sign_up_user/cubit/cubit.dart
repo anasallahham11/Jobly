@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/core/sign_up/sing_up_user/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_user/cubit/states.dart';
 
 import '../../../../../utils/constants.dart';
 import '../../../../../utils/end_points.dart';

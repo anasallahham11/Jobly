@@ -6,7 +6,7 @@
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/core/sign_up/sing_up_address/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_address/cubit/states.dart';
 
 import '../../../../../utils/end_points.dart';
 import '../../../../../utils/helpers/cache_helper.dart';

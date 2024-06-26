@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jobly/modules/core/sign_up/Sing_up_employy/cubit/cubit.dart';
-import 'package:jobly/modules/core/sign_up/Sing_up_employy/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/cubit.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/states.dart';
 
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/color_manager.dart';
@@ -12,7 +12,7 @@ import '../../../../resources/font_manager.dart';
 import '../../../../resources/strings_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
-import '../sing_up_address/signup_address_view.dart';
+import '../sign_up_address/signup_address_view.dart';
 
 class SingupEmployy extends StatefulWidget {
   @override
@@ -28,11 +28,11 @@ class _SingupEmployyState extends State<SingupEmployy> {
   final TextEditingController _phone_numberController = TextEditingController();
   final List<String> workingStatusOptions = ['working', 'student', 'not working'];
 
-  // File? _image;
+   //File? _image;
    String? filePath;
   String _imageName = '';
 
-  // Future<void> _pickImage(ImageSource source) async {
+  // Future<void> pickImage(ImageSource source) async {
   //   final picker = ImagePicker();
   //   final pickedFile = await picker.pickImage(source: source);
 
@@ -56,7 +56,7 @@ Future<void> pickImage(ImageSource camera) async {
   if (pickedFile != null) {
     // This is the correct way to get the file path as a String
      filePath = pickedFile.path;
-
+      _imageName= pickedFile.name;
     // Now you can call your userSignUp method with the correct file path
 
   } else {
@@ -268,9 +268,10 @@ Future<void> pickImage(ImageSource camera) async {
                                             final portfolio = _portfolioController.text;
                                             final phone_number = _phone_numberController.text;
                                             final image = filePath;
-                                            
+                                            String imagename=_imageName;
+                                            print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+filePath!+"**"+imagename+"**"}");
                                          
-                                            BlocProvider.of<SignUpEmployyCubit>(context).userSignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:filePath  );
+                                            BlocProvider.of<SignUpEmployyCubit>(context).employySignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:filePath,imagename: _imageName  );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white,

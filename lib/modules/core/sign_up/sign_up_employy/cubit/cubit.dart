@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/core/sign_up/Sing_up_employy/cubit/states.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/states.dart';
 import 'package:jobly/utils/constants.dart';
 
 import '../../../../../utils/end_points.dart';
@@ -35,44 +35,43 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
   }
 
     
-  Future<void> userSignUp({
+  Future<void> employySignUp({
     required String age,
     required String resume,
     required String experience,
     required String education,
      var  portfolio,
     required String phone_number,
-     var file_path,
-  
-    
+     String? file_path,
+     String? imagename,
   }) async {
-var headers = {
-  'Accept': 'application/json',
-  'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'
-};
+   // print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+workingStatus!+"**"+graduationStatus!+"**"}");
+   print("************************************+$file_path+*********+$imagename");
+emit(SignUpEmployyLoading());
 var data = FormData.fromMap({
-  'files': [
-    await MultipartFile.fromFile(file_path,)
-  ],
-  'date_of_birth': age,
-  'resume': resume,
-  'experience': experience,
-  'education': education,
-  'portfolio': portfolio,
-  'phone_number': phone_number,
-  'work_status': workingStatus,
-  'graduation_status': graduationStatus
+  'date_of_birth': '2006-06-05',
+  'resume': 'resume',
+  'experience': 'experience',
+  'education': 'education',
+  'portfolio': 'portfolio',
+  'phone_number': '0988795032',
+  'work_status': 'working',
+  'graduation_status': 'Graduated',
+  'photo': await MultipartFile.fromFile(file_path!,filename: imagename)
 });
 
 var dio = Dio();
-var response = await dio.request(
+dio.post(
   '$baseUrl/employee/create/employee',
   options: Options(
-    method: 'POST',
-    headers: headers,
-  ),
-  data: data,
-).then((value) {
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'}
+  )
+  
+)
+.then((value) {
+      print(value.data);
       var dataResponse= SignUpEmployyModlee.fromJson(value?.data);
       print(dataResponse.data?.phoneNumber);
       emit(SignUpEmployySuccess());
@@ -80,13 +79,7 @@ var response = await dio.request(
       emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
     });
 
-if (response.statusCode == 200) {
-  print(json.encode(response.data));
-}
-else {
-  print(response.statusMessage);
-}
-  }
+
 
 
 
@@ -125,4 +118,4 @@ else {
   //     emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
   //   });
   // }
-}
+  }}

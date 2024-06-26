@@ -1,44 +1,61 @@
 
 
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/core/sign_up/sing_up_user/cubit/cubit.dart';
-import 'package:jobly/modules/core/sign_up/sing_up_user/cubit/states.dart';
-import 'package:jobly/resources/strings_manager.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_address/cubit/cubit.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_address/cubit/states.dart';
 
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/color_manager.dart';
+import '../../../../resources/font_manager.dart';
+import '../../../../resources/strings_manager.dart';
+import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
-import '../Sing_up_employy/singup_employy_view.dart';
 
-class SingupUser extends StatelessWidget {
-  final TextEditingController _emailNumberController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+class SingupAddress extends StatelessWidget {
+  final TextEditingController _countyController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _GovernorateController = TextEditingController();
   
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorManager.white.withOpacity(0.0),
+        elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: ()
+            {
+             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+
+            },
+           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
+           ),
+           
+        ],
+      ),
      
       body: BlocProvider(
-        create: (context) => SignUpUserCubit(),
-        child: BlocListener<SignUpUserCubit, SignupUserStates>(
+        create: (context) => SignUpAddressCubit(),
+        child: BlocListener<SignUpAddressCubit, SignupAddressStates>(
           listener: (context, state) {
-            if (state is SignupErorrStates) {
+            if (state is SignupAddressErorrStates) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Login Failed: ${state.erorr}'),
+                  content: Text('signup Failed: ${state.erorr}'),
                 ),
               );
-            } else if (state is SignupSuccessStates) {
+            } else if (state is SignupAddressSuccessStates) {
                  SnackBar(
-                  content: Text('Login sucssec'),
+                  content: Text('signup sucssec'),
                 );
               // Navigate to another screen
-             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
+             //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
             }
           },
           child: Container(
@@ -82,25 +99,25 @@ class SingupUser extends StatelessWidget {
     
                                   const SizedBox(height: AppSize.s32),
                               
-                                  defaultFormField(controller: _nameController, type:TextInputType.text, label: AppStrings.name,prefix: Icons.person),
+                                  defaultFormField(controller: _countyController, type:TextInputType.text, label: AppStrings.county,prefix: Icons.location_on_outlined),
                                   const SizedBox(height: AppSize.s16),
-                                  defaultFormField(controller: _emailNumberController, type:TextInputType.emailAddress, label: AppStrings.emaill,prefix: Icons.email),
+                                  defaultFormField(controller: _cityController, type:TextInputType.emailAddress, label: AppStrings.city,prefix: Icons.location_city_rounded),
                                   const SizedBox(height: AppSize.s16),
-                                  defaultFormField(controller: _passwordController, type:TextInputType.text, label: AppStrings.password,isPassword: true,prefix: Icons.password),
+                                  defaultFormField(controller: _GovernorateController, type:TextInputType.text, label: AppStrings.Governorate),
                                   const SizedBox(height: AppSize.s16),
                                  const  SizedBox(height: 16),
-                                  BlocBuilder<SignUpUserCubit, SignupUserStates>(
+                                  BlocBuilder<SignUpAddressCubit, SignupAddressStates>(
                                     builder: (context, state) {
-                                      if (state is SignupLoadingStates) {
+                                      if (state is SignupAddressLoadingStates) {
                                         return const CircularProgressIndicator();
                                       }
                               
                                       return ElevatedButton(
                                         onPressed: () {
-                                          final email = _emailNumberController.text;
-                                          final password = _passwordController.text;
-                                          final name = _nameController.text;
-                                          BlocProvider.of<SignUpUserCubit>(context).userSignUp(email: email, password: password,name: name);
+                                          final county = _countyController.text;
+                                          final city = _cityController.text;
+                                          final Governorate = _GovernorateController.text;
+                                          BlocProvider.of<SignUpAddressCubit>(context).AddressSignUp(county: county, city: city,Governorate: Governorate);
                                         },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white, // Set the button's background color to white

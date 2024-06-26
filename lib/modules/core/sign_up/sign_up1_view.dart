@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jobly/modules/core/sign_up/sing_up_user/singup_user_view.dart';
+import 'package:jobly/modules/core/sign_up/sign_up_user/singup_user_view.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
