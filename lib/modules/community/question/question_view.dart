@@ -6,8 +6,8 @@ import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/font_manager.dart';
 import 'package:jobly/resources/style_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
-import 'package:jobly/widgets/widgets.dart';
 
+import '../../../widgets/anas_widgets.dart';
 import 'cubit/question_cubit.dart';
 import 'cubit/question_states.dart';
 

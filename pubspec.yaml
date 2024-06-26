@@ -28,18 +28,18 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  bloc: null
-  conditional_builder_null_safety: null
+  bloc:
+  conditional_builder_null_safety:
   cupertino_icons: ^1.0.2
-  dio: null
+  dio:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_bloc: null
-  flutter_svg: null
-  fluttertoast: null
-  image_picker: ^1.1.2
-  shared_preferences: null
+  flutter_bloc:
+  flutter_svg:
+  fluttertoast:
+  image_picker:
+  shared_preferences:
   smooth_page_indicator: ^1.1.0
 
 dev_dependencies:

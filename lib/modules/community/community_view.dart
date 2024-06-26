@@ -7,6 +7,7 @@ import 'package:jobly/resources/font_manager.dart';
 import 'package:jobly/resources/style_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
 
+import '../../widgets/anas_widgets.dart';
 import '../../widgets/widgets.dart';
 import 'cubit/community_cubit.dart';
 import 'cubit/community_states.dart';

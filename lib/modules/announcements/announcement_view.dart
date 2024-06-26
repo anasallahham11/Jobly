@@ -38,11 +38,11 @@ class AnnouncementsView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            buildAnnouncementItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAnnouncementItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAnnouncementItem(null, context, cubit, state),
+                            // buildAnnouncementItem(null, context, cubit, state),
+                            // const SizedBox(height: 20),
+                            // buildAnnouncementItem(null, context, cubit, state),
+                            // const SizedBox(height: 20),
+                            // buildAnnouncementItem(null, context, cubit, state),
 
                           ],
                         ),
