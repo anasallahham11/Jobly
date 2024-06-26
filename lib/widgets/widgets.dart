@@ -184,7 +184,7 @@ Widget buildAnswerItem(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                       Row(
                         children: [
                           Text(
                             "Anas Allahham",
@@ -311,7 +311,7 @@ Widget buildAdviceItem(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                       Row(
                         children: [
                           Text(
                             "Anas Allahham",
@@ -438,7 +438,7 @@ Widget buildQuestionItem(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                       Row(
                         children: [
                           Text(
                             "Anas Allahham",
@@ -582,7 +582,7 @@ Widget buildDetailedQuestionItem(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                     Row(
                       children: [
                         Text(
                           "Anas Allahham",
