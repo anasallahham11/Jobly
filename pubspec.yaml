@@ -67,6 +67,7 @@ flutter:
     - assets/images/answers.png
     - assets/images/employee.png
     - assets/images/fire.png
+    - assets/images/tradinos.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:jobly/modules/community/community_view.dart';
-//import 'package:jobly/modules/community/question/question_view.dart';
+import 'package:jobly/modules/announcements/announcement_view.dart';
+import 'package:jobly/modules/community/community_view.dart';
+import 'package:jobly/modules/community/question/question_view.dart';
 import 'package:jobly/modules/core/onboarding/onboarding_view.dart';
 import 'package:jobly/resources/strings_manager.dart';
 
@@ -17,6 +18,8 @@ class Routes{
 
   static const String communityRoute = "/community";
   static const String questionRoute = "/question";
+  static const String announcementsRoute = "/question";
+
 
 
 
@@ -28,10 +31,12 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_)=>const SplashView());
       case Routes.onBoardingRoute:
         return MaterialPageRoute(builder: (_)=> const OnboardingView());
-      //case Routes.communityRoute:
-       // return MaterialPageRoute(builder: (_)=> CommunityView());
-      //case Routes.questionRoute:
-        //return MaterialPageRoute(builder: (_)=> QuestionView());
+      case Routes.communityRoute:
+       return MaterialPageRoute(builder: (_)=> CommunityView());
+      case Routes.questionRoute:
+        return MaterialPageRoute(builder: (_)=> QuestionView());
+      case Routes.announcementsRoute:
+        return MaterialPageRoute(builder: (_)=> const AnnouncementsView());
       default:
         return unDefinedRoute();
     }
