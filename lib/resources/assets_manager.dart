@@ -4,6 +4,7 @@ class ImageAssets {
   static const String splashLogo = "$IMAGE_PATH/jobly_logo.jpeg";
   static const String whiteLogo = "$IMAGE_PATH/jobly_logo_white.png";
   static const String purpleLogo = "$IMAGE_PATH/jobly_logo_purple.png";
+  static const String tradinos = "$IMAGE_PATH/tradinos.jpeg";
 
 
 
