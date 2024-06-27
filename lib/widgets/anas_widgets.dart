@@ -86,7 +86,7 @@ Widget animatedTabBarItem(
     );
 
 Widget buildAnswerItem(
-  question,
+  answer,
   context,
   cubit,
   state,
@@ -111,7 +111,7 @@ Widget buildAnswerItem(
                   radius: AppSize.s20,
                   backgroundColor: ColorManager.white,
                   backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                  //backgroundImage: question.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
+                  //backgroundImage: answer.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -124,13 +124,13 @@ Widget buildAnswerItem(
                         children: [
                           Text(
                             "Anas Allahham",
-                            //'${question.publisher}',
+                            //'${answer.publisher}',
                             style: TextStyle(height: AppSize.s1_5),
                           ),
                           SizedBox(
                             width: AppSize.s8,
                           ),
-                          //question.publisher.verified ?
+                          //answer.publisher.verified ?
                           1 == 1
                               ? Icon(
                                   Icons.verified,
@@ -143,7 +143,7 @@ Widget buildAnswerItem(
                         ],
                       ),
                       Text("13h ago",
-                          //'${question.date}',
+                          //'${answer.date}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -158,7 +158,7 @@ Widget buildAnswerItem(
             ),
             Text(
               "First step to be a good employee.....mmm I guess you'll never be.",
-              //'${question.body}',
+              //'${answer.body}',
               style: getSemiBoldStyle(color: ColorManager.black),
             ),
             const SizedBox(
@@ -171,17 +171,17 @@ Widget buildAnswerItem(
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        // if(question.isLiked==false) {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount + 1;
-                        //   question.isLiked = !question.isLiked;
+                        // if(answer.isLiked==false) {
+                        //   print(answer.answerId);
+                        //   cubit.Like(answer.answerId);
+                        //   answer.likesCount = answer.likesCount + 1;
+                        //   answer.isLiked = !answer.isLiked;
                         // }else
                         // {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount - 1;
-                        //   question.isLiked = !question.isLiked;
+                        //   print(answer.answerId);
+                        //   cubit.Like(answer.answerId);
+                        //   answer.likesCount = answer.likesCount - 1;
+                        //   answer.isLiked = !answer.isLiked;
                         // }
                       },
                       child: Row(
@@ -198,7 +198,7 @@ Widget buildAnswerItem(
                           ),
                           Text(
                             "101 votes",
-                            //'${question.likesCount} Votes',
+                            //'${answer.likesCount} Votes',
                             style: getSemiBoldStyle(color: ColorManager.purple6)
                                 .copyWith(fontSize: FontSize.s14),
                           )
@@ -215,7 +215,7 @@ Widget buildAnswerItem(
     );
 
 Widget buildAdviceItem(
-  question,
+  advice,
   context,
   cubit,
   state,
@@ -238,7 +238,7 @@ Widget buildAdviceItem(
                   radius: AppSize.s20,
                   backgroundColor: ColorManager.white,
                   backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                  //backgroundImage: question.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
+                  //backgroundImage: advice.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -251,13 +251,13 @@ Widget buildAdviceItem(
                         children: [
                           Text(
                             "Anas Allahham",
-                            //'${question.publisher}',
+                            //'${advice.publisher}',
                             style: TextStyle(height: AppSize.s1_5),
                           ),
                           SizedBox(
                             width: AppSize.s8,
                           ),
-                          //question.publisher.verified ?
+                          //advice.publisher.verified ?
                           1 == 1
                               ? Icon(
                                   Icons.verified,
@@ -270,7 +270,7 @@ Widget buildAdviceItem(
                         ],
                       ),
                       Text("13h ago",
-                          //'${question.date}',
+                          //'${advice.date}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
@@ -285,7 +285,7 @@ Widget buildAdviceItem(
             ),
             Text(
               "First step to be a good employee...is to suck my dick.",
-              //'${question.body}',
+              //'${advice.body}',
               style: getSemiBoldStyle(color: ColorManager.black),
             ),
             const SizedBox(
@@ -298,17 +298,17 @@ Widget buildAdviceItem(
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        // if(question.isLiked==false) {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount + 1;
-                        //   question.isLiked = !question.isLiked;
+                        // if(advice.isLiked==false) {
+                        //   print(advice.adviceId);
+                        //   cubit.Like(advice.adviceId);
+                        //   advice.likesCount = advice.likesCount + 1;
+                        //   advice.isLiked = !advice.isLiked;
                         // }else
                         // {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount - 1;
-                        //   question.isLiked = !question.isLiked;
+                        //   print(advice.adviceId);
+                        //   cubit.Like(advice.adviceId);
+                        //   advice.likesCount = advice.likesCount - 1;
+                        //   advice.isLiked = !advice.isLiked;
                         // }
                       },
                       child: Row(
@@ -325,7 +325,7 @@ Widget buildAdviceItem(
                           ),
                           Text(
                             "101 votes",
-                            //'${question.likesCount} Votes',
+                            //'${advice.likesCount} Votes',
                             style: getSemiBoldStyle(color: ColorManager.purple6)
                                 .copyWith(fontSize: FontSize.s14),
                           )
@@ -648,3 +648,140 @@ Widget questionsBuilder(questions, cubit, context, state) => ConditionalBuilder(
           itemCount: questions.length),
       fallback: (context) => const Center(child: CircularProgressIndicator()),
     );
+
+///ANNOUNCEMENT
+Widget buildAnnouncementItem(announcement, context, cubit, state) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
+    child: Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: ColorManager.white,
+            border: Border.all(color: ColorManager.purple4, width: AppSize.s2),
+            borderRadius: BorderRadius.circular(AppSize.s20),
+            boxShadow: [
+              BoxShadow(
+                color: ColorManager.purple2,
+                offset: const Offset(2, 2),
+                blurRadius: AppSize.s5,
+                spreadRadius: AppSize.s2,
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSize.s14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: AppSize.s20,
+                      backgroundColor: ColorManager.white,
+                      backgroundImage: const AssetImage(ImageAssets.tradinos),
+                    ),
+                    const SizedBox(width: AppSize.s14),
+                    Expanded(
+                      child: Row(
+                        children: const [
+                          Text(
+                            "Tradinos",
+                            style: TextStyle(height: AppSize.s1_5),
+                          ),
+                          SizedBox(width: AppSize.s8),
+                          Icon(Icons.verified, color: Colors.lightBlue, size: AppSize.s16),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSize.s10),
+                Text(
+                  "Flutter Development Course:",
+                  style: getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s16),
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_month_outlined, color: ColorManager.purple5),
+                              const SizedBox(width: AppSize.s5),
+                              const Text("Month"),
+                            ],
+                          ),
+                          const SizedBox(height: AppSize.s8),
+                          Row(
+                            children: [
+                              Icon(Icons.access_time, color: ColorManager.purple5),
+                              const SizedBox(width: AppSize.s5),
+                              const Text("Sun - Thu"),
+                            ],
+                          ),
+                          const SizedBox(height: AppSize.s8),
+                          Row(
+                            children: [
+                              Icon(Icons.person_outline, color: ColorManager.purple5),
+                              const SizedBox(width: AppSize.s5),
+                              const Text("Mr. Anas Allahham"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSize.s10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text("Start at : 22/06/2024"),
+                          SizedBox(height: AppSize.s14),
+                          Text("From 1 to 4"),
+                          SizedBox(height: AppSize.s16),
+                          Text("TBD"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  children: [
+                    Icon(Icons.attach_money, color: ColorManager.pending),
+                    const SizedBox(width: AppSize.s5),
+                    const Text("Price : 400,000 SYP"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: AppSize.s0,
+          right: AppSize.s0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s5),
+            decoration: BoxDecoration(
+              color: ColorManager.purple4,
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(AppSize.s20),
+                bottomLeft: Radius.circular(AppSize.s20),
+              ),
+            ),
+            child: Text(
+              "Course",
+              style: getSemiBoldStyle(color: ColorManager.white,fontSize: FontSize.s14),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

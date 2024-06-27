@@ -29,7 +29,7 @@ class _SingupEmployyState extends State<SingupEmployy> {
   final List<String> workingStatusOptions = ['working', 'student', 'not working'];
 
    //File? _image;
-   String? filePath;
+   String? _filePath;
   String _imageName = '';
 
   // Future<void> pickImage(ImageSource source) async {
@@ -55,7 +55,7 @@ Future<void> pickImage(ImageSource camera) async {
 
   if (pickedFile != null) {
     // This is the correct way to get the file path as a String
-     filePath = pickedFile.path;
+     _filePath = pickedFile.path;
       _imageName= pickedFile.name;
     // Now you can call your userSignUp method with the correct file path
 
@@ -232,7 +232,7 @@ Future<void> pickImage(ImageSource camera) async {
                                       },
                                     ),
                                     const SizedBox(height: AppSize.s16),
-                                    filePath != null
+                                    _filePath != null
                                         ? Column(
                                             children: [
                                               const SizedBox(height: 8),
@@ -267,11 +267,11 @@ Future<void> pickImage(ImageSource camera) async {
                                             final education = _educationController.text;
                                             final portfolio = _portfolioController.text;
                                             final phone_number = _phone_numberController.text;
-                                            final image = filePath;
+                                            final image = _filePath;
                                             String imagename=_imageName;
-                                            print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+filePath!+"**"+imagename+"**"}");
+                                            print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+_filePath!+"**"+imagename+"**"}");
                                          
-                                            BlocProvider.of<SignUpEmployyCubit>(context).employySignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,file_path:filePath,imagename: _imageName  );
+                                            BlocProvider.of<SignUpEmployyCubit>(context).employySignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,filePath:_filePath,imagename: _imageName  );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white,

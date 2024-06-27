@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/font_manager.dart';
 import 'package:jobly/resources/style_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
 
+import '../../widgets/anas_widgets.dart';
 import '../../widgets/widgets.dart';
 import 'cubit/announcements_cubit.dart';
 import 'cubit/announcements_states.dart';
@@ -38,11 +40,10 @@ class AnnouncementsView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            // buildAnnouncementItem(null, context, cubit, state),
-                            // const SizedBox(height: 20),
-                            // buildAnnouncementItem(null, context, cubit, state),
-                            // const SizedBox(height: 20),
-                            // buildAnnouncementItem(null, context, cubit, state),
+                            buildAnnouncementItem(null, context, cubit, state),
+                            const SizedBox(height: 20),
+                            buildAnnouncementItem(null, context, cubit, state),
+                            const SizedBox(height: 20),
 
                           ],
                         ),

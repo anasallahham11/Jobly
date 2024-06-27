@@ -19,7 +19,7 @@ class Routes{
 
   static const String communityRoute = "/community";
   static const String questionRoute = "/question";
-  static const String announcementsRoute = "/question";
+  static const String announcementsRoute = "/announcements";
 
 
   static const String homeRoute = "/home";

@@ -42,11 +42,11 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
     required String education,
      var  portfolio,
     required String phone_number,
-     String? file_path,
+      String? filePath,
      String? imagename,
   }) async {
    // print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+workingStatus!+"**"+graduationStatus!+"**"}");
-   print("************************************+$file_path+*********+$imagename");
+   print("*********'Bearer ${CacheHelper.getData(key: 'token')}'**************************+$filePath+*********+$imagename");
 emit(SignUpEmployyLoading());
 var data = FormData.fromMap({
   'date_of_birth': '2006-06-05',
@@ -56,24 +56,22 @@ var data = FormData.fromMap({
   'portfolio': 'portfolio',
   'phone_number': '0988795032',
   'work_status': 'working',
-  'graduation_status': 'Graduated',
-  'photo': await MultipartFile.fromFile(file_path!,filename: imagename)
+  'graduation_status': 'graduated',
+  'photo': await MultipartFile.fromFile(filePath!,filename: imagename)
 });
 
 var dio = Dio();
 dio.post(
   '$baseUrl/employee/create/employee',
+  data: data,
   options: Options(
     headers: {
-      'Accept': 'application/json',
       'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'}
   )
   
 )
 .then((value) {
       print(value.data);
-      var dataResponse= SignUpEmployyModlee.fromJson(value?.data);
-      print(dataResponse.data?.phoneNumber);
       emit(SignUpEmployySuccess());
 } ).catchError((error) {
       emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
