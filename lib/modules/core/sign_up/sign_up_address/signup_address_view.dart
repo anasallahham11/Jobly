@@ -14,6 +14,7 @@ import '../../../../resources/strings_manager.dart';
 import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
+import '../../../home/home_layout_view.dart';
 
 class SingupAddress extends StatelessWidget {
   final TextEditingController _countyController = TextEditingController();
@@ -25,16 +26,16 @@ class SingupAddress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorManager.white.withOpacity(0.0),
+        backgroundColor: ColorManager.purple6,
         elevation: 0,
         actions: [
           TextButton(
             onPressed: ()
             {
-             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeLayoutView()),);
 
             },
-           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
+           child: Text(AppStrings.skip,style:getBoldStyle(color: ColorManager.white,fontSize: FontSize.s20) )
            ),
            
         ],
@@ -103,7 +104,7 @@ class SingupAddress extends StatelessWidget {
                                   const SizedBox(height: AppSize.s16),
                                   defaultFormField(controller: _cityController, type:TextInputType.emailAddress, label: AppStrings.city,prefix: Icons.location_city_rounded),
                                   const SizedBox(height: AppSize.s16),
-                                  defaultFormField(controller: _GovernorateController, type:TextInputType.text, label: AppStrings.Governorate),
+                                  defaultFormField(controller: _GovernorateController, type:TextInputType.text, label: AppStrings.Governorate,prefix: Icons.location_city_rounded),
                                   const SizedBox(height: AppSize.s16),
                                  const  SizedBox(height: 16),
                                   BlocBuilder<SignUpAddressCubit, SignupAddressStates>(

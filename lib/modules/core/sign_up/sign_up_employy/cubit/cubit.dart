@@ -25,7 +25,7 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
 
 
   void changeGraduationStatus(bool isGraduated) {
-    graduationStatus = isGraduated ? 'Graduated' : 'Not Graduated';
+    graduationStatus = isGraduated ? 'graduated' : 'Not graduated';
     emit(GraduationStatusState(graduationStatus: graduationStatus!));
   }
 
@@ -49,14 +49,14 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
    print("*********'Bearer ${CacheHelper.getData(key: 'token')}'**************************+$filePath+*********+$imagename");
 emit(SignUpEmployyLoading());
 var data = FormData.fromMap({
-  'date_of_birth': '2006-06-05',
-  'resume': 'resume',
-  'experience': 'experience',
-  'education': 'education',
-  'portfolio': 'portfolio',
-  'phone_number': '0988795032',
-  'work_status': 'working',
-  'graduation_status': 'graduated',
+  'date_of_birth': age,
+  'resume': resume,
+  'experience': experience,
+  'education': education,
+  'portfolio': portfolio,
+  'phone_number': phone_number,
+  'work_status': workingStatus,
+  'graduation_status': graduationStatus,
   'photo': await MultipartFile.fromFile(filePath!,filename: imagename)
 });
 

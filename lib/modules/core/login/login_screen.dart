@@ -9,7 +9,8 @@ import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
 import '../../../widgets/widgets.dart';
 import '../../home/home_layout_view.dart';
-import '../sign_up/sign_up1_view.dart';
+import '../sign_up/sign_up_user/singup_user_view.dart';
+
 
 
 class LoginPage extends StatelessWidget {
@@ -104,7 +105,7 @@ class LoginPage extends StatelessWidget {
                                   const Divider(),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SignUpPage1()));
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupUser()));
                                       
                                       // Handle register
                                     },
