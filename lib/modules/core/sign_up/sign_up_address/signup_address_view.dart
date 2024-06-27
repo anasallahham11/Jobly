@@ -15,6 +15,7 @@ import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/widgets.dart';
 import '../../../home/home_layout_view.dart';
+import '../sign_up_skills/sign_up_skills_view.dart';
 
 class SingupAddress extends StatelessWidget {
   final TextEditingController _countyController = TextEditingController();
@@ -56,7 +57,7 @@ class SingupAddress extends StatelessWidget {
                   content: Text('signup sucssec'),
                 );
               // Navigate to another screen
-             //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
+             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupSkill()));
             }
           },
           child: Container(

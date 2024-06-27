@@ -3,5 +3,6 @@ const LOGOUT = 'logout';
 const SIGHNUPUSER = 'create/user';
 const SIGHNUPEMPLOYY = 'employee/create/employee';
 const SIGHNUPADDRESS= 'address/create';
+const SIGHNUPSKILL= 'employee/create/skill';
 
 

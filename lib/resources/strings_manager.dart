@@ -55,6 +55,8 @@ class AppStrings {
     static const String county="county";
     static const String city="city";
     static const String Governorate="Governorate";
+    static const String skill="add skill";
+
     
    
     
