@@ -40,7 +40,7 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
     required String resume,
     required String experience,
     required String education,
-     var  portfolio,
+     var  portfolio=";k;jhk",
     required String phone_number,
       String? filePath,
      String? imagename,
