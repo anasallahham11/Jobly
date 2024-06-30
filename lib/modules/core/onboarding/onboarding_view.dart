@@ -10,6 +10,7 @@ import '../../../resources/strings_manager.dart';
 import '../../../resources/style_manager.dart';
 import '../../../widgets/widgets.dart';
 import '../login/login_screen.dart';
+import '../sign_up/sign_up_fav/signup_fav_view.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -53,7 +54,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
           TextButton(
             onPressed: ()
             {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SignupFav()),);
 
             },
            child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )

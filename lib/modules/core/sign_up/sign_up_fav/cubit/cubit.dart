@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_fav/cubit/states.dart';
+import 'package:jobly/utils/constants.dart';
 
 import '../../../../../utils/end_points.dart';
 import '../../../../../utils/helpers/cache_helper.dart';
@@ -9,6 +10,7 @@ import '../../../../../utils/helpers/dio_helper.dart';
 import '../signup_fav_modle.dart';
 import '../signup_getcat_modle.dart';
 import '../signup_getsubcat_modle.dart';
+
 
 class SignUpFavCubit extends Cubit<SignupFavStates> {
   SignUpFavCubit() : super(SignupIntFavStates());
@@ -24,7 +26,7 @@ class SignUpFavCubit extends Cubit<SignupFavStates> {
       data: {
         'job_section_id': favid,    
       },
-      token: CacheHelper.getData(key: 'token')
+      token: token
     ).then((value) {
       print("rami");
       
@@ -41,51 +43,59 @@ class SignUpFavCubit extends Cubit<SignupFavStates> {
 
 
 
- List<dynamic> cat=[];
-  void getCat(){
-    emit(SignupFavLoadingStates());
-    if(cat.length==0)
-    {
-      DioHelper.getData(
+List<MyData> cat = [];
+
+
+void getCat() {
+  emit(SignupFavLoadingStates());
+
+  if (cat.isEmpty) {
+    DioHelper.getData(
       url: SIGHNUPGETCAT,
-      token: CacheHelper.getData(key: 'token'),
-      ).then((value) {
-              cat=value?.data['data'];
-              print(cat);
-              var dataResponse= GetCat.fromJson(value?.data);
-              print(dataResponse.data?[0].category);
-              emit(SignupFavSuccessStates());
-      })
-      .catchError((error)
-              {
-                print(error.toString());
-                emit(SignupFavErorrStates(error.toString()));
-                });
+      token: token,
+    ).then((value) {
+      print(value);
+      // print(type)
+      // cat = value?.data['data'];
+    
+      cat=GetCat.fromJson(value?.data).data!;
+      // print(cat)
+      var dataResponse = GetCat.fromJson(value?.data);
+    print('rami');
 
-
-    }else{
-        emit(SignupFavSuccessStates());
-      }
+      print(cat);
+      
+      emit(SignupFavSuccessStates());
+    }).catchError((error) {
+      print(error.toString());
+      emit(SignupFavErorrStates(error.toString()));
+    });
+  } else {
+    emit(SignupFavSuccessStates());
   }
+}
 
 
 
 
- List<dynamic> sub_cat=[];
- var id;
-  void getSubCat(){
+
+ List<JopsSection> sub_cat=[];
+ List<SubData> data=[];
+  void getSubCat(var id){
     emit(SignupFavLoadingStates());
-    if(sub_cat.length==0)
-    {
+    print("h");
+    
+      print('m');
       DioHelper.getData(
       url:'$SIGHNUPGETSUBCAT$id',
-
-      token: CacheHelper.getData(key: 'token'),
+      token: token,
       ).then((value) {
-              cat=value?.data['data'];
-              print(cat);
+        print('s');
+        data=SubCatModle.fromJson(value?.data).data!;
+        sub_cat=data[0].jopsSection!;
+        print(sub_cat);
               var dataResponse= SubCatModle.fromJson(value?.data);
-              print(dataResponse.data?[0].jopsSection?[0].section);
+              
               emit(SignupFavSuccessStates());
       })
       .catchError((error)
@@ -94,10 +104,6 @@ class SignUpFavCubit extends Cubit<SignupFavStates> {
                 emit(SignupFavErorrStates(error.toString()));
                 });
 
-
-    }else{
-        emit(SignupFavSuccessStates());
-      }
   }
 
 

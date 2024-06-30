@@ -1,13 +1,13 @@
 class SubCatModle {
-  List<Data>? data;
+  List<SubData>? data;
 
   SubCatModle({this.data});
 
   SubCatModle.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <SubData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new SubData.fromJson(v));
       });
     }
   }
@@ -21,21 +21,21 @@ class SubCatModle {
   }
 }
 
-class Data {
+class SubData {
   int? id;
   String? category;
   String? createdAt;
   String? updatedAt;
   List<JopsSection>? jopsSection;
 
-  Data(
+  SubData(
       {this.id,
       this.category,
       this.createdAt,
       this.updatedAt,
       this.jopsSection});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  SubData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     category = json['category'];
     createdAt = json['created_at'];

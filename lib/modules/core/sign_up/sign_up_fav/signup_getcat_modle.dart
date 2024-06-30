@@ -1,14 +1,14 @@
 //getcat 
 class GetCat {
-  List<Data>? data;
+  List<MyData>? data;
 
   GetCat({this.data});
 
   GetCat.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <MyData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new MyData.fromJson(v));
       });
     }
   }
@@ -22,15 +22,15 @@ class GetCat {
   }
 }
 
-class Data {
+class MyData {
   int? id;
   String? category;
   String? createdAt;
   String? updatedAt;
 
-  Data({this.id, this.category, this.createdAt, this.updatedAt});
+  MyData({this.id, this.category, this.createdAt, this.updatedAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  MyData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     category = json['category'];
     createdAt = json['created_at'];
