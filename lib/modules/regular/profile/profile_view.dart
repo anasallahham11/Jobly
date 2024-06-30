@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../widgets/widgets.dart';
@@ -21,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SafeArea(child: SizedBox()),
+                 SafeArea(child: Container(color: Colors.black,)),
                 CompanyProfileHeader(
                   context: context,
                   profileImage:

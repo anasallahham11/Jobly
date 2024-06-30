@@ -17,8 +17,7 @@ class HomeLayoutView extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             drawer:  myDrawer(context),
-            backgroundColor: ColorManager.white,
-            appBar: myAppBar(context,'              JOBLY',true),
+            backgroundColor: ColorManager.white,   
             bottomNavigationBar: myNavBar(context),
             body: HomeCubit.get(context)
                 .screens[HomeCubit.get(context).currentIndex],

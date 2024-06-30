@@ -17,8 +17,11 @@ class JobsView extends StatelessWidget {
           return Stack(
             children: [
               Column(
+
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+               myAppBar(context,'JOBLY',true),
+
                   companyHolder(context),
                   jobsVertical(JobsCubit.get(context).getCurrentList()),
                 ],
