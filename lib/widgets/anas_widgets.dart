@@ -3,9 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
+import 'package:jobly/widgets/widgets.dart';
 import '../modules/community/cubit/community_states.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
+
+Widget highlightedContainer(color, radius, text)=>Container(
+  padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s5),
+  decoration: BoxDecoration(
+    color: color.withOpacity(0.3),
+    borderRadius:  BorderRadius.only(
+      topRight: Radius.circular(radius),
+      bottomLeft: Radius.circular(radius),
+    ),
+  ),
+  child: Text(
+    text,
+    style: getSemiBoldStyle(color: color,fontSize: FontSize.s14),
+  ),
+);
 
 Widget defaultFormField({
   required TextEditingController controller,
@@ -50,14 +66,7 @@ Widget defaultFormField({
         ));
 
 ///COMMUNITY
-Widget animatedTabBarItem(
-  cubit,
-  index,
-  height,
-  width,
-  color,
-) =>
-    AnimatedContainer(
+Widget animatedTabBarItem(cubit, index, height, width, color,) => AnimatedContainer(
       duration: const Duration(milliseconds: DurationConstant.d100),
       margin: const EdgeInsets.all(AppMargin.m5),
       width: AppSize.s165,
@@ -85,13 +94,7 @@ Widget animatedTabBarItem(
       ),
     );
 
-Widget buildAnswerItem(
-  answer,
-  context,
-  cubit,
-  state,
-) =>
-    Card(
+Widget buildAnswerItem(answer, context, cubit, state,) => Card(
       color: ColorManager.purple0,
       shadowColor: ColorManager.purple0,
       shape: RoundedRectangleBorder(
@@ -214,13 +217,7 @@ Widget buildAnswerItem(
       ),
     );
 
-Widget buildAdviceItem(
-  advice,
-  context,
-  cubit,
-  state,
-) =>
-    Card(
+Widget buildAdviceItem(advice, context, cubit, state,) => Card(
       shape: RoundedRectangleBorder(
         borderRadius:
             BorderRadius.circular(AppSize.s28), // Change the radius here
@@ -341,13 +338,7 @@ Widget buildAdviceItem(
       ),
     );
 
-Widget buildQuestionItem(
-  question,
-  context,
-  cubit,
-  state,
-) =>
-    Card(
+Widget buildQuestionItem(question, context, cubit, state,) => Card(
       shape: RoundedRectangleBorder(
         borderRadius:
             BorderRadius.circular(AppSize.s28), // Change the radius here
@@ -493,13 +484,7 @@ Widget buildQuestionItem(
       ),
     );
 
-Widget buildDetailedQuestionItem(
-  question,
-  context,
-  cubit,
-  state,
-) =>
-    Padding(
+Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
       child: Column(
         children: [
@@ -782,6 +767,94 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
           ),
         ),
       ],
+    ),
+  );
+}
+
+///APPLICATIONS
+Widget buildApplicationItem(job, context, cubit, state) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
+    child: Stack(
+      children: [
+        Container(
+        padding: const EdgeInsets.symmetric(vertical: AppPadding.p10,horizontal: AppPadding.p10),
+        height: AppSize.s80,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSize.s20),
+          color: ColorManager.white,
+          boxShadow: [
+            BoxShadow(
+              color: ColorManager.grey.withOpacity(0.5),
+              offset: const Offset(2, 2),
+              blurRadius: AppSize.s5,
+              spreadRadius: AppSize.s2,
+            ),
+          ],
+        ),
+
+        child: Row(
+          children: [
+            Container(
+              width: AppSize.s60,
+              height: AppSize.s60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: ColorManager.purple4,
+                  width: AppSize.s2,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: AppSize.s350,
+                backgroundColor: ColorManager.purple4,
+                backgroundImage: const AssetImage(ImageAssets.tradinos),
+              ),
+            ),
+            const SizedBox(width: AppSize.s16,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Flutter Developer ",style: getSemiBoldStyle(color: ColorManager.black,fontSize: FontSize.s14),),
+                const Spacer(),
+                Text("Tradinos",style: getMediumStyle(color: ColorManager.grey),),
+                const Spacer(),
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined,size: AppSize.s16,color: ColorManager.grey,),
+                    Text("Damascus",style: getMediumStyle(color: ColorManager.grey),),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+        Positioned(
+          top: AppSize.s0,
+          right: AppSize.s0,
+          child: highlightedContainer(ColorManager.success, AppSize.s20, "Accepted"),
+        ),
+        Positioned(
+          bottom: AppSize.s0,
+          right: AppSize.s0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s0),
+            decoration: BoxDecoration(
+              color: ColorManager.grey.withOpacity(0.2),
+              borderRadius:  const BorderRadius.only(
+                bottomRight: Radius.circular(AppSize.s20),
+                topLeft: Radius.circular(AppSize.s20),
+              ),
+            ),
+            child: Text(
+              "sent 1d ago",
+              style: getRegularStyle(color: ColorManager.grey,fontSize: FontSize.s12),
+            ),
+          ),
+        ),
+      ]
     ),
   );
 }
