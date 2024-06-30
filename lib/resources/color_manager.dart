@@ -6,7 +6,7 @@ import 'values_manager.dart';
 class ColorManager {
   //BASICS
   static Color white = const Color(0xffffffff);
-  static Color offWhite = const Color(0xffF9F9F9);
+  static Color offWhite = const Color.fromARGB(255, 245, 245, 245);
   static Color black = const Color(0xff000000);
 
 

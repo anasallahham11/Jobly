@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../resources/color_manager.dart';
 import '../../../widgets/widgets.dart';
 
 
@@ -46,7 +47,7 @@ class JobDetailsView extends StatelessWidget {
 
     return Scaffold(
       appBar: myAppBar(context, '          Job Details', false),
-      backgroundColor: Colors.white,
+      backgroundColor: ColorManager.white, 
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -89,8 +90,8 @@ class JobDetailsView extends StatelessWidget {
               context,
               'Apply',
               () {},
-              Colors.white,
-              const Color.fromARGB(255, 84, 0, 99),
+              ColorManager.white, 
+              ColorManager.purple5, 
               double.infinity,
             ),
           ],
