@@ -8,13 +8,14 @@ import '../../../../../utils/helpers/cache_helper.dart';
 import '../../../../../utils/helpers/dio_helper.dart';
 import '../signup_fav_modle.dart';
 import '../signup_getcat_modle.dart';
+import '../signup_getsubcat_modle.dart';
 
 class SignUpFavCubit extends Cubit<SignupFavStates> {
   SignUpFavCubit() : super(SignupIntFavStates());
 
   static SignUpFavCubit get(context) => BlocProvider.of(context);
 
-  void AddressSignUp({
+  void FavSignUp({
     required String favid,
   }) {
     DioHelper.postData(
@@ -70,31 +71,34 @@ class SignUpFavCubit extends Cubit<SignupFavStates> {
 
 
 
-//  List<dynamic> sub_cat=[];
-//   void getSubCat(){
-//     emit(SignupFavLoadingStates());
-//     if(sub_cat.length==0)
-//     {
-//       DioHelper.getData(
-//       url:SIGHNUPGETSUBCAT,
+ List<dynamic> sub_cat=[];
+ var id;
+  void getSubCat(){
+    emit(SignupFavLoadingStates());
+    if(sub_cat.length==0)
+    {
+      DioHelper.getData(
+      url:'$SIGHNUPGETSUBCAT$id',
 
-//       token: CacheHelper.getData(key: 'token'),
-//       ).then((value) {
-//               cat=value?.data['data'];
-//               print(cat);
-//               emit(SignupFavSuccessStates());
-//       })
-//       .catchError((error)
-//               {
-//                 print(error.toString());
-//                 emit(SignupFavErorrStates(error.toString()));
-//                 });
+      token: CacheHelper.getData(key: 'token'),
+      ).then((value) {
+              cat=value?.data['data'];
+              print(cat);
+              var dataResponse= SubCatModle.fromJson(value?.data);
+              print(dataResponse.data?[0].jopsSection?[0].section);
+              emit(SignupFavSuccessStates());
+      })
+      .catchError((error)
+              {
+                print(error.toString());
+                emit(SignupFavErorrStates(error.toString()));
+                });
 
 
-//     }else{
-//         emit(SignupFavSuccessStates());
-//       }
-//   }
+    }else{
+        emit(SignupFavSuccessStates());
+      }
+  }
 
 
 
