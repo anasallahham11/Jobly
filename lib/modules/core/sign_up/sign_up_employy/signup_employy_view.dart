@@ -29,8 +29,8 @@ class _SingupEmployyState extends State<SingupEmployy> {
   final List<String> workingStatusOptions = ['working', 'student', 'not working'];
 
    //File? _image;
-   String? _filePath;
-  String _imageName = '';
+   String? _filePath="Jobly/assets/images/jobly_logo_purple.png";
+  String _imageName = 'jobly';
 
   // Future<void> pickImage(ImageSource source) async {
   //   final picker = ImagePicker();

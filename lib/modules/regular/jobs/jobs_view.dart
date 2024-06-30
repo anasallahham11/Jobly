@@ -20,10 +20,14 @@ class JobsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   companyHolder(context),
-                  jobsList(JobsCubit.get(context).getCurrentList()),
+                  jobsVertical(JobsCubit.get(context).getCurrentList()),
                 ],
               ),
-              squareButton(context),
+               squareButton(
+                context,
+             const ['For You', 'All'],
+             JobsCubit.get(context).changeIndex,
+          ) ,
             ],
           );
         },
