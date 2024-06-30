@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jobly/modules/home/home_layout_cubit.dart';
 import 'package:jobly/modules/regular/job_details/job_details_view.dart';
-import 'package:jobly/resources/assets_manager.dart';
+import 'package:jobly/modules/regular/profile/profile_view.dart';
 import 'package:jobly/resources/color_manager.dart';
-import 'package:jobly/resources/values_manager.dart';
+import '../modules/regular/company_profile/company_profile_view.dart';
+import '../modules/regular/company_profile/cubit/company_profile_cubit.dart';
 import '../modules/regular/jobs/jobs_cubit.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
@@ -115,118 +116,169 @@ Widget defaultFormField({
 
 
 
-///Layout
-PreferredSizeWidget myAppBar(
-  context,
+
+// //the company widget in the all jobs screen
+// Widget companyWidget(
+//   context,
+//   String imageUrl,
+//   String text,
+// ) {
+//   return InkWell(
+//     onTap: () {
+//       // Navigate to CompanyProfileScreen and pass data
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           //it shhould lead to the company profile screen
+//           builder: (context) => const CoursesScreen(
+//               // imageUrl: imageUrl,
+//               // companyName: text,
+//               ),
+//         ),
+//       );
+//     },
+//     child: Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: SizedBox(
+//         width: MediaQuery.of(context).size.width * 0.2,
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             circularImage(
+//               context,
+//               imageUrl,
+//               MediaQuery.of(context).size.width * 0.07,
+//             ),
+//             Text(
+//               text,
+//               softWrap: true,
+//               textAlign: TextAlign.center,
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
+
+
+// //list of jobs
+// Widget jobsList(List<Map<String, String>> jobs) {
+//   return Expanded(
+//     child: ListView.builder(
+//       itemCount: jobs.length,
+//       itemBuilder: (context, index) {
+//         final job = jobs[index];
+//         return jobVacancyWidget(
+//           context,
+//           job['image']!,
+//           job['title']!,
+//           job['tag']!,
+//           job['experience']!,
+//           job['type']!,
+//           job['salary']!,
+//           job['company']!,
+//           job['location']!,
+//         );
+//       },
+//     ),
+//   );
+// }
+
+// Widget companyListTile(context, String imageUrl, String companyName) {
+//   return ListTile(
+//       onTap: () {
+//         navigateTo(
+//             context,
+//             const CoursesScreen(
+//                 //imageUrl: imageUrl, companyName: companyName,
+//                 ));
+//       },
+//       subtitle: const Text('⭐4.2 | 400 Reviews'),
+//       title: Text(companyName),
+//       leading: circularImage(
+//         context,
+//         imageUrl,
+//         MediaQuery.of(context).size.width * 0.05,
+//       ));
+// }
+
+
+
+
+Widget customListTile(
+  Color backgroundColor,
+  Color iconColor,
+  IconData icon,
   String title,
-  bool searchVisible,
+  String subtitle,
+  bool isSubtitle,
 ) {
-  return AppBar(
-        elevation: 0,
-    shadowColor: Colors.transparent,
-    foregroundColor: ColorManager.white,
-    surfaceTintColor: ColorManager.white,
-    // shadowColor: ColorManager.white,
-    //forceMaterialTransparency: true,
-    iconTheme: IconThemeData(
-      color: ColorManager.primary,
-      //color: Color.fromARGB(255, 164, 78, 179), // Change the color to red
-    ),
-    actions: [
-      if (searchVisible)
-        IconButton(
-          icon: Icon(
-            Icons.search,
-            color: ColorManager.primary,
+  if (isSubtitle == true) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        children: <Widget>[
+          highlightedIcon(
+            backgroundColor,
+            iconColor,
+            icon,
+            30,
           ),
-          //color: Color.fromARGB(255, 164, 78, 179)),
-          onPressed: () {
-            // navigateTo(context, const SearchScreen());
-          },
-        ),
-    ],
-    backgroundColor: ColorManager.white,
-    title: Text(
-      title,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: ColorManager.primary,
-
-        // color: Color.fromARGB(255, 164, 78, 179),
+          // const Color.fromARGB(255, 255, 180, 231),
+          // const Color.fromARGB(255, 156, 0, 164),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(subtitle),
+            ],
+          ),
+        ],
       ),
-    ),
-  );
-}
-
-Widget myDrawer(BuildContext context) {
-  return Drawer(
-    child: ListView(
-      padding: EdgeInsets.zero,
-      children: [
-         DrawerHeader(
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 115, 1, 115),
+    );
+  }
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: Row(
+      children: <Widget>[
+        highlightedIcon(
+          backgroundColor,
+          iconColor,
+          icon,
+          30,
+        ),
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
           ),
-          child: Text(
-            'Menu',
-            style: TextStyle(
-              color: ColorManager.white,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.person),
-          title: const Text('Profile'),
-          onTap: () {
-            // Handle the home tap
-            Navigator.of(context).pop(); // Close the drawer
-          },
-        ),
-        const Divider(
-          indent: 10,
-          endIndent: 10,
-        ),
-        ListTile(
-          leading: const Icon(Icons.settings),
-          title: const Text('Settings'),
-          onTap: () {
-            // Handle the company list tap
-            Navigator.of(context).pop(); // Close the drawer
-          },
-        ),
-        const Divider(
-          indent: 10,
-          endIndent: 10,
-        ),
-        ListTile(
-          leading: const Icon(Icons.assignment),
-          title: const Text('job applications'),
-          onTap: () {
-            // Handle the company list tap
-            Navigator.of(context).pop(); // Close the drawer
-          },
         ),
       ],
     ),
   );
 }
 
-//jobs screen
 
-Widget circularImage(
-  context,
-  String imageUrl,
-  double radius,
-) {
+
+
+
+//reused widgets(mini widgets)
+Widget circularImage(context, String imageUrl, double radius) {
   return Card(
-    color: ColorManager.white,
+    color: Colors.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(200),
     ),
     elevation: 0,
     child: CircleAvatar(
-      backgroundColor: ColorManager.white,
+      backgroundColor: Colors.white,
       radius: radius,
       backgroundImage: NetworkImage(
         imageUrl,
@@ -235,210 +287,14 @@ Widget circularImage(
   );
 }
 
-//the company widget in the all jobs screen
-Widget companyWidget(
-  context,
-  String imageUrl,
-  String text,
-) {
-  return InkWell(
-    onTap: () {
-      // Navigate to CompanyProfileScreen and pass data
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          //it shhould lead to the company profile screen
-          builder: (context) => const CoursesScreen(
-              // imageUrl: imageUrl,
-              // companyName: text,
-              ),
-        ),
-      );
-    },
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            circularImage(
-              context,
-              imageUrl,
-              MediaQuery.of(context).size.width * 0.07,
-            ),
-            Text(
-              text,
-              softWrap: true,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    ),
+Widget smallTitle(String title) {
+  return Text(
+    title,
+    style: const TextStyle(fontWeight: FontWeight.bold),
   );
 }
-
-//holds the company widgets in it
-Widget companyHolder(context) {
-  return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.15,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: companyData.length,
-      itemBuilder: (context, index) {
-        final company = companyData[index];
-        return companyWidget(
-          context,
-          company['image']!,
-          company['text']!,
-        );
-      },
-    ),
-  );
-}
-
-// Dummy company JSON Data
-final List<Map<String, String>> companyData = [
-  {
-    "image":
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfF0wZy7mQfdYr7u_rBgFUpF1-XYBJ6Alr5w&s",
-    "text": "Syriatel"
-  },
-  {
-    "image":
-        "https://static.wixstatic.com/media/d2252d_4c1a1bda6a774bd68f789c0770fd16e5~mv2.png",
-    "text": "Amazon"
-  },
-  {
-    "image":
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
-    "text": "Google"
-  },
-  {
-    "image":
-        "https://play-lh.googleusercontent.com/DIQzLQuHuupEoCe8TfpUdrsYDicq2cSE_WTsrZ-Ys6ppLHKdc7m5dbyqmQqiJi0JfQ",
-    "text": "Burger King"
-  },
-  {
-    "image":
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-oTCfJdO8zwDoyHB7j5tktdQq31w6t31GsA&s",
-    "text": "Lego"
-  }
-];
-
-//most used widget
-
-Widget jobVacancyWidget(
-  context,
-  String image,
-  String title,
-  String tag,
-  String experience,
-  String type,
-  String salary,
-  String company,
-  String location,
-) {
-  return InkWell(
-    onTap: () => navigateTo(context,
-        JobDetailsView(companyName: company, imageUrl: image, salary: salary)),
-    child: Container(
-      margin: const EdgeInsets.all(15),
-      padding: const EdgeInsets.all(8),
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: const Color.fromARGB(255, 249, 249, 249),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Card(
-                color: ColorManager.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(200),
-                ),
-                elevation: 0,
-                child: CircleAvatar(
-                  backgroundColor: ColorManager.white,
-                  radius: MediaQuery.of(context).size.width * 0.05,
-                  backgroundImage: NetworkImage(image),
-                ),
-              ),
-              //company logo
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title),
-                    Text(
-                      '$company - $location',
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 115, 1, 115)),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    tag,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 115, 1, 115)),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              highlightedText(
-                  type, const Color.fromARGB(255, 201, 231, 255), Colors.blue),
-              highlightedText(experience,
-                  const Color.fromARGB(255, 196, 255, 205), Colors.green),
-              const Expanded(child: SizedBox()),
-              Text(salary),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-//list of jobs
-Widget jobsList(List<Map<String, String>> jobs) {
-  return Expanded(
-    child: ListView.builder(
-      itemCount: jobs.length,
-      itemBuilder: (context, index) {
-        final job = jobs[index];
-        return jobVacancyWidget(
-          context,
-          job['image']!,
-          job['title']!,
-          job['tag']!,
-          job['experience']!,
-          job['type']!,
-          job['salary']!,
-          job['company']!,
-          job['location']!,
-        );
-      },
-    ),
-  );
-}
-
-Widget highlightedText(
-  String text,
-  Color background,
-  Color textColor,
-) {
+// 
+Widget highlightedText(String text, Color background, Color textColor) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 5),
     padding: const EdgeInsets.all(5),
@@ -455,7 +311,28 @@ Widget highlightedText(
   );
 }
 
-Widget highlightedIcon(Color background, Color iconColor, IconData icon) {
+Widget numberAndText(context, int number, String text) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width * 0.2,
+    child: Column(
+      children: [
+        Text(
+          '$number',
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 15,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+// 
+Widget highlightedIcon(Color background, Color iconColor, IconData icon,double size) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 5),
     padding: const EdgeInsets.all(5),
@@ -466,30 +343,97 @@ Widget highlightedIcon(Color background, Color iconColor, IconData icon) {
     child: Icon(
       icon,
       color: iconColor,
-      size: 30,
+      size: size,
+      
     ),
   );
 }
 
-Widget companyListTile(context, String imageUrl, String companyName) {
-  return ListTile(
-      onTap: () {
-        navigateTo(
-            context,
-            const CoursesScreen(
-                //imageUrl: imageUrl, companyName: companyName,
-                ));
-      },
-      subtitle: const Text('⭐4.2 | 400 Reviews'),
-      title: Text(companyName),
-      leading: circularImage(
-        context,
-        imageUrl,
-        MediaQuery.of(context).size.width * 0.05,
-      ));
+Widget seeAll(context, String text, Widget page) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextButton(
+          onPressed: () {
+            navigateTo(context, page);
+          },
+          child: const Text('See All'),
+        ),
+      ],
+    ),
+  );
 }
 
-Widget squareButton(context) {
+Widget dividerVertical(BuildContext context) {
+  return SizedBox(
+    height: 80,
+    child: VerticalDivider(
+      width: MediaQuery.of(context).size.width * 0.2,
+      thickness: 2,
+      indent: 5,
+      endIndent: 5,
+      color: Theme.of(context).colorScheme.secondary,
+    ),
+  );
+}
+
+Widget jobDescription(context, String title, String description) {
+  return Column(
+    children: [
+      ListTile(
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(description),
+      ),
+    ],
+  );
+}
+//functions
+void navigateTo(context, widget) =>
+    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
+
+//buttons
+Widget myButton(
+  BuildContext context,
+  String buttonText,
+  VoidCallback onPressed,
+  Color textColor,
+  Color backgroundColor,
+  double width,
+) {
+  return MaterialButton(
+    splashColor: Colors.transparent,
+    onPressed: onPressed,
+    child: Container(
+      width: width,
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: backgroundColor,
+      ),
+      child: Text(
+        buttonText,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: textColor),
+      ),
+    ),
+  );
+}
+// 
+Widget squareButton(
+  context,
+  List<String> items,
+  Function(String) onSelected,
+) {
   return Positioned(
     bottom: 5,
     right: 5,
@@ -497,22 +441,85 @@ Widget squareButton(context) {
       onPressed: () {},
       child: PopupMenuButton<String>(
         offset: const Offset(0, -100),
-        onSelected: JobsCubit.get(context).changeIndex,
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem<String>(
-            value: 'For You',
-            child: Text('For You'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'All',
-            child: Text('All'),
-          ),
-        ],
+        onSelected: onSelected,
+        itemBuilder: (BuildContext context) {
+          return items.map((String item) {
+            return PopupMenuItem<String>(
+              value: item,
+              child: Text(item),
+            );
+          }).toList();
+        },
       ),
     ),
   );
 }
 
+Widget backButtonrounded(BuildContext context) {
+  return InkWell(
+            onTap: () {
+          Navigator.pop(context);
+        },
+    child: Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: highlightedIcon(Colors.transparent, Theme.of(context).primaryColor,  Icons.arrow_back,25),
+    ),
+  );
+}
+// 
+
+//lists
+//holds the company widgets in it
+Widget companyHolder(context) {
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 0.13,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: companyData.length,
+      itemBuilder: (context, index) {
+        final company = companyData[index];
+        return companyWidget(
+          context,
+          company['image']!,
+          company['text']!,
+        );
+      },
+    ),
+  );
+}
+//job vacancy widget
+Widget jobsVertical(List<Job> jobs) {
+  return Expanded(
+    child: ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: jobs.length,
+      itemBuilder: (context, index) {
+        final job = jobs[index];
+        return jobVacancyWidget(context, job);
+      },
+    ),
+  );
+}
+//job vacancy widget
+Widget jobsHorizontal(BuildContext context, List<Job> jobs) {
+  return Column(
+    children: [
+      SizedBox(
+        width: 400,
+        height: MediaQuery.of(context).size.height * 0.15,
+        child: PageView.builder(
+          controller: PageController(viewportFraction: 1),
+          itemCount: jobs.length,
+          itemBuilder: (BuildContext context, int index) {
+            final job = jobs[index];
+            return jobVacancyWidget(context, job);
+          },
+        ),
+      ),
+    ],
+  );
+}
+//
 Widget buildGridView(
     List items,
     Widget Function(Color, Color, IconData, String, String, bool)
@@ -547,7 +554,117 @@ Widget buildGridView(
     ),
   );
 }
+//
+Widget reviews(BuildContext context, String image) {
+  return Column(
+    children: [
+      SizedBox(
+        height: MediaQuery.of(context).size.height * 0.15,
+        child: PageView.builder(
+          // physics: ,
+          controller: PageController(viewportFraction: 1),
+          itemCount: CompanyProfileCubit.get(context).dummyComments.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CommentItem(
+              commentId: CompanyProfileCubit.get(context)
+                  .dummyComments[index]
+                  .commentId,
+              commentWriter: CompanyProfileCubit.get(context)
+                  .dummyComments[index]
+                  .commentWriter,
+              commentText: CompanyProfileCubit.get(context)
+                  .dummyComments[index]
+                  .commentText,
+              commentWriterProfile: CompanyProfileCubit.get(context)
+                  .dummyComments[index]
+                  .commentWriterProfile,
+            );
+          },
+        ),
+      ),
+      const Padding(padding: EdgeInsets.all(10)),
+    ],
+  );
+}
+// 
 
+
+//tiles
+Widget settingsTileSwitch(
+  BuildContext context,
+  IconData icon,
+  String title,
+  String status,
+  Color background,
+  Color iconColor,
+  Widget widget,
+  bool isSwitch,
+  bool isSwitchOn,
+  Function(bool)? switchFunction, // Parameter for switch function
+) {
+  return Container(
+    margin: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: ListTile(
+      tileColor: Colors.white,
+      leading: highlightedIcon(background, iconColor, icon,30),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          smallTitle(title),
+          Text(status),
+        ],
+      ),
+      trailing: isSwitch
+          ? Switch(
+              onChanged: switchFunction,
+              value: isSwitchOn,
+            )
+          : InkWell(
+              onTap: switchFunction == null
+                  ? () {}
+                  : () {
+                      navigateTo(context, widget);
+                    },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 245, 245, 245),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded, // Right arrow icon
+                  color: Colors.black, // Icon color
+                ),
+              ),
+            ),
+    ),
+  );
+}
+
+Widget companyListTile(context, String imageUrl, String companyName) {
+  return ListTile(
+      onTap: () {
+        navigateTo(context,
+            CompanyProfileScreen(imageUrl: imageUrl, companyName: companyName));
+      },
+      subtitle: const Text('⭐4.2 | 400 Reviews'),
+      title: Text(companyName),
+      leading: circularImage(
+        context,
+        imageUrl,
+        MediaQuery.of(context).size.width * 0.05,
+      ));
+}
+
+
+
+
+
+//needs modification
 Widget titleAndDescription(context) {
   return Column(
     children: [
@@ -593,108 +710,491 @@ Widget titleAndDescription(context) {
   );
 }
 
-Widget myButton(
-  BuildContext context,
-  String buttonText,
-  VoidCallback onPressed,
-  Color textColor,
-  Color backgroundColor,
-  double width,
+
+
+//the company widget in the all jobs screen
+Widget companyWidget(
+  context,
+  String imageUrl,
+  String text,
 ) {
-  return MaterialButton(
-    onPressed: onPressed,
-    child: Container(
-      width: width,
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: backgroundColor,
-      ),
-      child: Text(
-        buttonText,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: textColor),
+  return InkWell(
+    onTap: () {
+      // Navigate to CompanyProfileScreen and pass data
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CompanyProfileScreen(
+            imageUrl: imageUrl,
+            companyName: text,
+          ),
+        ),
+      );
+    },
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            circularImage(
+              context,
+              imageUrl,
+              MediaQuery.of(context).size.width * 0.07,
+            ),
+            Text(
+              text,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     ),
   );
 }
-
-Widget jobDescription(context, String title, String description) {
-  return Column(
-    children: [
-      ListTile(
-        title: Text(title),
-        subtitle: Text(description),
-      ),
-    ],
-  );
-}
-
-Widget smallTitle(String title) {
-  return Text(
-    title,
-    style: const TextStyle(fontWeight: FontWeight.bold),
-  );
-}
-
-Widget customListTile(
-  Color backgroundColor,
-  Color iconColor,
-  IconData icon,
-  String title,
-  String subtitle,
-  bool isSubtitle,
+// uses object
+Widget jobVacancyWidget(
+  context,
+  Job job,
 ) {
-  if (isSubtitle == true) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Row(
-        children: <Widget>[
-          highlightedIcon(
-            backgroundColor,
-            iconColor,
-            icon,
-          ),
-          // const Color.fromARGB(255, 255, 180, 231),
-          // const Color.fromARGB(255, 156, 0, 164),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+  return InkWell(
+    onTap: () => navigateTo(
+        context,
+        JobDetailsView(
+            companyName: job.company, imageUrl: job.image, salary: job.salary)),
+    child: Container(
+      margin: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(8),
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromARGB(255, 249, 249, 249),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(200),
+                ),
+                elevation: 0,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: MediaQuery.of(context).size.width * 0.05,
+                  backgroundImage: NetworkImage(job.image),
                 ),
               ),
-              Text(subtitle),
+              //company logo
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(job.title),
+                    Text(
+                      '${job.company} - ${job.location}',
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 115, 1, 115)),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    job.tag,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 115, 1, 115)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              highlightedText(job.type,
+                  const Color.fromARGB(255, 201, 231, 255), Colors.blue),
+              highlightedText(job.experience,
+                  const Color.fromARGB(255, 196, 255, 205), Colors.green),
+              const Expanded(child: SizedBox()),
+              Text(job.salary),
             ],
           ),
         ],
       ),
-    );
-  }
-  return Padding(
-    padding: const EdgeInsets.all(10),
-    child: Row(
-      children: <Widget>[
-        highlightedIcon(
-          backgroundColor,
-          iconColor,
-          icon,
+    ),
+  );
+}
+//all jobs/for you jobs filter button
+
+PreferredSizeWidget myAppBar(context, String title, bool searchVisible) {
+  return AppBar(
+    elevation: 0,
+    shadowColor: Colors.transparent,
+    foregroundColor: Colors.transparent,
+    surfaceTintColor: Colors.transparent,
+    //forceMaterialTransparency: true,
+    iconTheme: const IconThemeData(
+      color: Color.fromARGB(255, 164, 78, 179), // Change the color to red
+    ),
+    actions: [
+      if (searchVisible)
+        IconButton(
+          icon: const Icon(Icons.search,
+              color: Color.fromARGB(255, 164, 78, 179)),
+          onPressed: () {
+            // navigateTo(context, const SearchScreen());
+          },
         ),
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+    ],
+    backgroundColor: Colors.white,
+    title: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: const TextStyle(color: Color.fromARGB(255, 164, 78, 179)),
+    ),
+  );
+}
+
+Widget myDrawer(BuildContext context) {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 115, 1, 115),
           ),
+          child: Text(
+            'Menu',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text('Profile'),
+          onTap: () {
+            navigateTo(context, const ProfileScreen());
+            // Handle the home tap
+            //  Navigator.push(context, MaterialPageRoute(builder: (context) =>  const ProfileScreen()));
+            // Navigator.of(context).pop(); // Close the drawer
+          },
+        ),
+        const Divider(
+          indent: 10,
+          endIndent: 10,
+        ),
+        ListTile(
+          leading: const Icon(Icons.settings),
+          title: const Text('Settings'),
+          onTap: () {
+            // Handle the company list tap
+            Navigator.of(context).pop(); // Close the drawer
+          },
+        ),
+        const Divider(
+          indent: 10,
+          endIndent: 10,
+        ),
+        ListTile(
+          leading: const Icon(Icons.assignment),
+          title: const Text('job applications'),
+          onTap: () {
+            // Handle the company list tap
+            Navigator.of(context).pop(); // Close the drawer
+          },
         ),
       ],
     ),
   );
 }
 
-//functions
+class CompanyProfileHeader extends StatelessWidget {
+  final BuildContext context;
+  final String profileImage;
+  final String backgroundImage;
+  final String name;
+  final bool isProfile;
 
-void navigateTo(context, widget) =>
-    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
+  const CompanyProfileHeader({
+    super.key,
+    required this.context,
+    required this.profileImage,
+    required this.backgroundImage,
+    required this.name,
+    this.isProfile = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // Background Image
+        SizedBox(
+          height: isProfile
+              ? MediaQuery.of(context).size.height * 0.5
+              : MediaQuery.of(context).size.height * 0.45,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Image.network(
+              backgroundImage,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: isProfile
+                  ? MediaQuery.of(context).size.height * 0.35
+                  : MediaQuery.of(context).size.height * 0.4,
+            ),
+          ),
+        ),
+        // Optional Rounded Border
+        if (!isProfile)
+          Positioned(
+            bottom: 30,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 20,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+              ),
+            ),
+          ),
+        // Profile or Company Image
+        isProfile
+            ? Positioned(
+                left: MediaQuery.of(context).size.width * 0.3,
+                bottom: 0,
+                top: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(
+                            profileImage,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 20),
+                    ),
+                  ],
+                ),
+              )
+            : Positioned(
+                bottom: -4,
+                left: 10,
+                child: circularImage(context, profileImage, 50),
+              ),
+
+        // Optional Back Button
+        isProfile ? const Text('') : backButtonrounded(context),
+        // Company Name for Company Header
+        if (!isProfile)
+          Positioned(
+            left: MediaQuery.of(context).size.width * 0.4,
+            bottom: 10,
+            child: Text(
+              name,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
+          ),
+        isProfile
+            ? Positioned(
+                bottom: 45,
+                right: MediaQuery.of(context).size.width * 0.25,
+                child: InkWell(
+                    child: highlightedIcon(Theme.of(context).primaryColor,
+                        Colors.white, Icons.play_arrow_rounded,30)))
+            : const Text(''),
+      ],
+    );
+  }
+}
+
+class CommentItem extends StatelessWidget {
+  final int commentId;
+  final String commentWriter;
+  final String commentText;
+  final String commentWriterProfile;
+
+  const CommentItem({
+    super.key,
+    required this.commentId,
+    required this.commentWriter,
+    required this.commentText,
+    required this.commentWriterProfile,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPressStart: (details) => CompanyProfileCubit.get(context)
+          .showContextMenu(context, details.globalPosition),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {},
+                  child: circularImage(
+                    context,
+                    commentWriterProfile,
+                    MediaQuery.of(context).size.width * 0.05,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color.fromARGB(255, 249, 249, 249),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        commentWriter,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      // ReadMoreText(
+                      //  commentText,
+                      //   trimMode: TrimMode.Line,
+                      //   trimLines: 2,
+                      //   colorClickableText: Colors.pink,
+                      //   trimCollapsedText: 'Show more',
+                      //   trimExpandedText: 'Show less',
+                      //   moreStyle: TextStyle(
+                      //       fontSize: 14, fontWeight: FontWeight.bold),
+                      // )
+                      seeMoreText(context, commentText, commentWriter,
+                          commentWriterProfile, 99),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 10,
+            bottom: -13,
+            child: IconButton(
+              splashColor: Colors.transparent,
+              splashRadius: 1,
+              onPressed: () {},
+              icon: Icon(
+                Icons.thumb_up_alt_rounded,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          const Positioned(
+            right: 50,
+            bottom: -5,
+            child: Text(
+              '28',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+//
+Widget seeMoreText(
+  BuildContext context,
+  String text,
+  String commentWriter,
+  String commentWriterProfile,
+  int maxLength,
+) {
+  final String truncatedText = CompanyProfileCubit.get(context)
+      .truncateTextToFit(text, maxLength, context);
+  return SizedBox(
+    width: 400,
+    child: RichText(
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: truncatedText,
+            style: const TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          if (text.length >= maxLength)
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  minimumSize: const Size(0, 0),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => CompanyProfileCubit.get(context)
+                    .showFullComment(
+                        context, commentWriter, text, commentWriterProfile),
+                child: const Text(
+                  'See More',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 156, 0, 164),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
+}
+// Dummy company JSON Data
+final List<Map<String, String>> companyData = [
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfF0wZy7mQfdYr7u_rBgFUpF1-XYBJ6Alr5w&s",
+    "text": "Syriatel"
+  },
+  {
+    "image":
+        "https://static.wixstatic.com/media/d2252d_4c1a1bda6a774bd68f789c0770fd16e5~mv2.png",
+    "text": "Amazon"
+  },
+  {
+    "image":
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+    "text": "Google"
+  },
+  {
+    "image":
+        "https://play-lh.googleusercontent.com/DIQzLQuHuupEoCe8TfpUdrsYDicq2cSE_WTsrZ-Ys6ppLHKdc7m5dbyqmQqiJi0JfQ",
+    "text": "Burger King"
+  },
+  {
+    "image":
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-oTCfJdO8zwDoyHB7j5tktdQq31w6t31GsA&s",
+    "text": "Lego"
+  }
+];

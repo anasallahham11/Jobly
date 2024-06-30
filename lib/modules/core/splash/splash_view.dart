@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/home/home_layout_view.dart';
 
 
 import '../../../resources/assets_manager.dart';
@@ -23,7 +24,9 @@ class _SplashViewState extends State<SplashView> {
     _timer=Timer(const Duration(seconds: AppConstants.splashDelay),_goNext);
   }
   _goNext() {
-    Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+    Navigator.pushReplacementNamed(context, Routes.homeRoute);
+
+    // Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
   }
   @override
   void initState() {
