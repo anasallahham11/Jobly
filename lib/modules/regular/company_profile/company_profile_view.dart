@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../resources/color_manager.dart';
 import '../../../widgets/widgets.dart';
 import '../edit_profile/edit_profile_view.dart';
 import 'cubit/company_profile_cubit.dart';
@@ -26,7 +25,7 @@ class CompanyProfileScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: ColorManager.white,
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +49,7 @@ class CompanyProfileScreen extends StatelessWidget {
                   seeAll(context, 'What do people have to say about us ?',
                       const EditProfileScreen()),
                   reviews(context, imageUrl),
-                  myButton(context, 'Add a Review', () {}, Colors.white,
+                  myButton(context, 'Add a Review', () {}, ColorManager.white,
                       Theme.of(context).primaryColor, double.infinity)
                 ],
               ),

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../resources/color_manager.dart';
 import '../../../widgets/widgets.dart';
 import '../edit_profile/edit_profile_view.dart';
 import 'cubit/profile_cubit.dart';
 import 'cubit/profile_states.dart';
-
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                 SafeArea(child: Container(color: Colors.black,)),
+                const SafeArea(child: SizedBox()),
                 CompanyProfileHeader(
                   context: context,
                   profileImage:
@@ -89,17 +89,16 @@ Widget buildTextButton(context, String text, int index) {
       decoration: BoxDecoration(
         color: ProfileCubit.get(context).selectedIndex == index
             ? Theme.of(context).primaryColor
-            : Colors.white,
+            : ColorManager.white,
         borderRadius: BorderRadius.circular(30.0),
-        border: Border.all(
-            color: const Color.fromARGB(255, 132, 56, 145), width: 2),
+        border: Border.all(color: ColorManager.purple4, width: 2),
       ),
       child: Text(
         textAlign: TextAlign.center,
         text,
         style: TextStyle(
           color: ProfileCubit.get(context).selectedIndex == index
-              ? Colors.white
+              ? ColorManager.white
               : Colors.black,
         ),
       ),
@@ -112,9 +111,10 @@ Widget footer(context) {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 245, 245, 245),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+      decoration:  BoxDecoration(
+         color: ColorManager.offWhite,
+        // color: Color.fromARGB(255, 245, 245, 245),
+        // borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Column(
         children: [
@@ -219,7 +219,7 @@ Widget posts(context) {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
           child: Container(
-            color: Colors.white, // Example background color
+            color: ColorManager.white,  // Example background color
             height: 100,
             width: 100,
             child: Center(

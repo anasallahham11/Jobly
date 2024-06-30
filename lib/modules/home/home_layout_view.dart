@@ -31,8 +31,8 @@ class HomeLayoutView extends StatelessWidget {
 
 Widget myNavBar(context) {
   return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      selectedItemColor: const Color.fromARGB(255, 115, 1, 115),
+      backgroundColor: ColorManager.white, 
+      selectedItemColor: ColorManager.purple6, 
       type: BottomNavigationBarType.fixed,
       currentIndex: HomeCubit.get(context).currentIndex,
       onTap: (index) {
