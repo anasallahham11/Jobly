@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobly/modules/regular/jobs/company_model.dart';
+import 'package:jobly/utils/constants.dart';
+import 'package:jobly/utils/helpers/dio_helper.dart';
 import '../../../../widgets/widgets.dart';
 import '../../jobs/jobs_cubit.dart';
 import 'company_profile_states.dart';
+// ignore: constant_identifier_names
+const  GET_COMPANY_INFO="company/";
 
 class CompanyProfileCubit extends Cubit<CompanyProfileStates>{
   CompanyProfileCubit():super(CompanyProfileInitialState());
   
+// CompanyModel? companyModel;
+// void getCompanyInfo(){
+//   emit(CompanyLoadindState);
+//   DioHelper.getData(
+//     url: "GET_COMPANY_INFO$id",
+//     token: token,
+//     ).then((value){
+//       pr
+//     })
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
   static CompanyProfileCubit get(context) => BlocProvider.of(context);
 
 String truncateTextToFit(String text, int maxLength, BuildContext context) {
