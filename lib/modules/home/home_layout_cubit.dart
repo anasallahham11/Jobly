@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobly/modules/announcements/announcement_view.dart';
+import 'package:jobly/modules/applications/applications_view.dart';
 import 'package:jobly/modules/regular/jobs/jobs_view.dart';
 import 'package:jobly/modules/regular/profile/profile_view.dart';
+import '../community/community_view.dart';
 import 'home_layout_states.dart';
 
 class HomeCubit extends Cubit<HomeLayoutStates> {
@@ -11,9 +14,10 @@ class HomeCubit extends Cubit<HomeLayoutStates> {
 
   List<Widget> screens = [
     const JobsView(),
+    const ApplicationsView(),
+    const CommunityView(),
+    const AnnouncementsView(),
     const ProfileScreen(),
-    const CoursesScreen(),
-    const PostsScreen(),
   ];
 
   int currentIndex = 0;
@@ -28,19 +32,3 @@ class HomeCubit extends Cubit<HomeLayoutStates> {
 
 
 
-class CoursesScreen extends StatelessWidget {
-  const CoursesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-class PostsScreen extends StatelessWidget {
-  const PostsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}

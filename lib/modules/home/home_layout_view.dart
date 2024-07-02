@@ -15,12 +15,12 @@ class HomeLayoutView extends StatelessWidget {
       child: BlocConsumer<HomeCubit, HomeLayoutStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cubit = HomeCubit.get(context);
           return Scaffold(
             drawer:  myDrawer(context),
             backgroundColor: ColorManager.white,   
             bottomNavigationBar: myNavBar(context),
-            body: HomeCubit.get(context)
-                .screens[HomeCubit.get(context).currentIndex],
+            body: cubit.screens[cubit.currentIndex],
           );
         },
       ),
@@ -44,16 +44,20 @@ Widget myNavBar(context) {
           label: 'Jobs',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.assignment),
+          label: 'Applications',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.question_answer_outlined),
+          label: 'Community',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.announcement_outlined),
+          label: 'Announcements',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: 'Courses',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.forum),
-          label: 'Posts',
         ),
       ]);
 }

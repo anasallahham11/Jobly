@@ -1,13 +1,153 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:jobly/modules/home/home_layout_cubit.dart';
 import 'package:jobly/modules/regular/job_details/job_details_view.dart';
 import 'package:jobly/modules/regular/profile/profile_view.dart';
 import 'package:jobly/resources/color_manager.dart';
+import 'package:jobly/utils/constants.dart';
 import '../modules/regular/company_profile/company_profile_view.dart';
 import '../modules/regular/company_profile/cubit/company_profile_cubit.dart';
 import '../modules/regular/jobs/jobs_cubit.dart';
+import '../modules/regular/jobs/jobs_states.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
+
+Widget buildJobItem(
+    job,
+    context,
+    cubit,
+    ) {
+  return InkWell(
+    onTap: () => navigateTo(
+        context,
+        JobDetailsView(
+            companyName: job.companyName, imageUrl: job.publisherPhoto, salary: job.salaryRange)),
+    child: Container(
+      margin: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(8),
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: ColorManager.offWhite,
+        // color: const Color.fromARGB(255, 249, 249, 249),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              circularImage(context, 'http://192.168.1.8:8000/images/${job.publisherPhoto}', MediaQuery.of(context).size.width * 0.05,),
+              //company logo
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(job.description),
+                    Text(
+                      '${job.companyName} - ${job.location}',
+                      style:  TextStyle(
+                        color: ColorManager.purple5,),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                "#${job.vacancyId}",
+                style:  TextStyle(
+                  color: ColorManager.purple5,),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              highlightedText(job.jobType,
+                  const Color.fromARGB(255, 201, 231, 255), Colors.blue),
+              highlightedText(job.section,
+                  const Color.fromARGB(255, 196, 255, 205), Colors.green),
+              const Expanded(child: SizedBox()),
+              Text("${job.salaryRange}"),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+Widget jobsBuilder(jobs,cubit,context,state)=>ConditionalBuilder(
+  condition: state is! JobsLoadingState && jobs != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildJobItem(jobs[index], context, cubit),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 8,
+      ),
+      itemCount: jobs.length
+  ),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
+
+//the company widget in the all jobs screen
+Widget buildCompanyItem(
+    company,
+    context,
+    cubit
+    ) {
+  return InkWell(
+    onTap: () {},
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            circularImage(
+              context,
+              "${baseUrl}images/${company.companyImage}",
+              MediaQuery.of(context).size.width * 0.07,
+            ),
+            Text(
+              company.companyName,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+//holds the company widgets in it
+Widget companiesBuilder(companies,cubit,context,state)=>ConditionalBuilder(
+  condition: state is! CompaniesLoadingState && companies != null,
+  builder: (context) => Container(
+    width: double.infinity,
+    height: 130,
+    child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) =>
+            buildCompanyItem(companies[index], context, cubit),
+        separatorBuilder: (context, index) => const SizedBox(
+          width: 5,
+        ),
+        itemCount: companies.length
+    ),
+  ),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
+
+
+
+
 
 //onboarding
 class BoardingModle {
