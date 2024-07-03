@@ -12,6 +12,8 @@ const SIGHNUPGETSUBCAT= 'section/getSectionByCaateogry/';
 const GET_COMPANIES_JOBS="vacancy/index/companies";
 const GET_MY_JOBS="employee/vacancy/getFavorite";
 const GET_COMPANIES="company/index";
+const GET_JOB_DETAILS="vacancy/show";
+const APPLY_TO_JOB="vacancy/applyVacancy";
 
 
 
