@@ -18,10 +18,7 @@ Widget buildJobItem(
     cubit,
     ) {
   return InkWell(
-    onTap: () => navigateTo(
-        context,
-        JobDetailsView(
-            companyName: job.companyName, imageUrl: job.publisherPhoto, salary: job.salaryRange)),
+    onTap: () => navigateTo(context, JobDetailsView(id: job.vacancyId,)),
     child: Container(
       margin: const EdgeInsets.all(15),
       padding: const EdgeInsets.all(8),
@@ -900,10 +897,7 @@ Widget jobVacancyWidget(
   Job job,
 ) {
   return InkWell(
-    onTap: () => navigateTo(
-        context,
-        JobDetailsView(
-            companyName: job.company, imageUrl: job.image, salary: job.salary)),
+    onTap: () => {},
     child: Container(
       margin: const EdgeInsets.all(15),
       padding: const EdgeInsets.all(8),
