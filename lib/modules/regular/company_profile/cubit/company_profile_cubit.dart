@@ -12,16 +12,29 @@ const  GET_COMPANY_INFO="company/";
 class CompanyProfileCubit extends Cubit<CompanyProfileStates>{
   CompanyProfileCubit():super(CompanyProfileInitialState());
   
-// CompanyModel? companyModel;
-// void getCompanyInfo(){
-//   emit(CompanyLoadindState);
-//   DioHelper.getData(
-//     url: "GET_COMPANY_INFO$id",
-//     token: token,
-//     ).then((value){
-//       pr
-//     })
-// }
+CompanyModel? companyModel;
+   List<dynamic>? company;
+
+void getCompanyInfo(id){
+  emit(CompanyLoadingState());
+  DioHelper.getData(
+    url: "GET_COMPANY_INFO$id",
+    token: token,
+    ).then((value){
+      print(value?.data);
+      print(value?.data);
+      companyModel = CompanyModel.fromJson(value?.data);
+      print(companyModel?.status);
+      print(companyModel?.message);
+      print(companyModel?.data[0].companyName);
+      company = companyModel?.data;
+      emit(CompanySuccsssState());
+    }).catchError((error){
+      print(error.toString());
+      emit(CompanyErrorState(error.toString()));
+    });
+}
+
 
 
 

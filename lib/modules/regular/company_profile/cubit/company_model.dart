@@ -1,6 +1,6 @@
-import 'dart:convert';
 ///what is this ?
 // import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+import 'dart:convert';
 
 CompanyModel companyModelFromJson(String str) => CompanyModel.fromJson(json.decode(str));
 
@@ -9,7 +9,7 @@ String companyModelToJson(CompanyModel data) => json.encode(data.toJson());
 class CompanyModel{
    bool status;
   String message;
-  List<Datum> data;
+  Datum data;
 
 
   CompanyModel({
@@ -21,13 +21,14 @@ class CompanyModel{
   factory CompanyModel.fromJson(Map<String, dynamic> json) => CompanyModel(
     status: json["status"],
     message: json["message"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: Datum.fromJson(json["data"]),
+    // data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
     "message": message,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+    "data": data.toJson(),
   };
 
 
