@@ -10,7 +10,7 @@ import 'package:jobly/resources/strings_manager.dart';
 import '../../../../resources/assets_manager.dart';
 import '../../../../resources/color_manager.dart';
 import '../../../../resources/values_manager.dart';
-import '../../../../widgets/widgets.dart';
+import '../../../../widgets/anas_widgets.dart';
 import '../sign_up_employy/signup_employy_view.dart';
 
 class SingupUser extends StatelessWidget {

@@ -1,12 +1,65 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/regular/search/cubit/search_cubit.dart';
 import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
-import 'package:jobly/widgets/widgets.dart';
+import 'package:jobly/utils/constants.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import '../modules/applications/cubit/applications_states.dart';
 import '../modules/community/cubit/community_states.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
+
+///Tools
+Widget multiSelectionWidget({
+  required items,
+  required title,
+  required icon,
+  required buttonText,
+  required result
+})=>Padding(
+  padding: const EdgeInsets.all(AppPadding.p8),
+  child:   MultiSelectDialogField(
+    items: items,
+    dialogWidth: AppSize.s30,
+    title: Text(title),
+    selectedColor: ColorManager.darkPrimary,
+    decoration: BoxDecoration(
+      color: null,
+      borderRadius:
+      const BorderRadius.all(Radius.circular(AppSize.s40)),
+      border: Border.all(
+        color: ColorManager.primary,
+        width: AppSize.s1_5,
+      ),
+    ),
+    buttonIcon: Icon(
+      icon,
+      color: ColorManager.primary,
+    ),
+    buttonText: Text(
+      buttonText,
+      style: TextStyle(
+        color: ColorManager.primary,
+        fontSize: FontSize.s16,
+      ),
+    ),
+    onConfirm: (chosen) {
+      if(result==SearchCubit.selectedCities) {
+        SearchCubit.selectedCities = chosen;
+      }else if(result==SearchCubit.selectedTypes) {
+        SearchCubit.selectedTypes = chosen;
+      }else if(result==SearchCubit.selectedCategories) {
+        SearchCubit.selectedCategories = chosen;
+      } else if(result==SearchCubit.selectedSections) {
+        SearchCubit.selectedSections = chosen;
+      } else {
+        result = chosen;
+      }
+    },
+  ),
+);
 
 Widget highlightedContainer(color, radius, text)=>Container(
   padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s5),
@@ -620,7 +673,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
         ],
       ),
     );
-Widget questionsBuilder(questions, cubit, context, state) => ConditionalBuilder(
+Widget questionsBuilder(questions, context, cubit, state) => ConditionalBuilder(
       condition: state is! CommunityLoadingState && questions != null,
       builder: (context) => ListView.separated(
           shrinkWrap: true,
@@ -772,7 +825,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
 }
 
 ///APPLICATIONS
-Widget buildApplicationItem(job, context, cubit, state) {
+Widget buildApplicationItem(application, context, cubit, state) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
     child: Stack(
@@ -809,21 +862,21 @@ Widget buildApplicationItem(job, context, cubit, state) {
               child: CircleAvatar(
                 radius: AppSize.s350,
                 backgroundColor: ColorManager.purple4,
-                backgroundImage: const AssetImage(ImageAssets.tradinos),
+                backgroundImage: imageSelector(application.publisherPhoto)
               ),
             ),
             const SizedBox(width: AppSize.s16,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Flutter Developer ",style: getSemiBoldStyle(color: ColorManager.black,fontSize: FontSize.s14),),
+                Text(application.jobTitle,style: getSemiBoldStyle(color: ColorManager.black,fontSize: FontSize.s14),),
                 const Spacer(),
-                Text("Tradinos",style: getMediumStyle(color: ColorManager.grey),),
+                Text(application.publisherName,style: getMediumStyle(color: ColorManager.grey),),
                 const Spacer(),
                 Row(
                   children: [
                     Icon(Icons.location_on_outlined,size: AppSize.s16,color: ColorManager.grey,),
-                    Text("Damascus",style: getMediumStyle(color: ColorManager.grey),),
+                    Text(application.location??"No Location",style: getMediumStyle(color: ColorManager.grey),),
                   ],
                 ),
               ],
@@ -834,7 +887,7 @@ Widget buildApplicationItem(job, context, cubit, state) {
         Positioned(
           top: AppSize.s0,
           right: AppSize.s0,
-          child: highlightedContainer(ColorManager.success, AppSize.s20, "Accepted"),
+          child: highlightedContainer(statusColor(application.status), AppSize.s20, application.status),
         ),
         Positioned(
           bottom: AppSize.s0,
@@ -849,12 +902,136 @@ Widget buildApplicationItem(job, context, cubit, state) {
               ),
             ),
             child: Text(
-              "sent 1d ago",
+              "sent ${application.date}",
               style: getRegularStyle(color: ColorManager.grey,fontSize: FontSize.s12),
             ),
+          ),
+        ),
+        Positioned(
+          left: AppSize.s0,
+          top: AppSize.s0,
+          child: InkWell(
+              onTap: (){
+                showDialog<void>(
+                    context: context,
+                    builder: (context){
+                      return AlertDialog(
+                        title: const Text('Are you sure you want to cancel this job application ? '),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Delete'),
+                            onPressed: () {
+                              cubit.cancelApplication(application.vacancyId);
+                              cubit.getMyApplications();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                );
+                },
+              child: Icon(
+                Icons.remove_circle,
+                color: ColorManager.error,
+                size: AppSize.s18,
+              ),
+
           ),
         ),
       ]
     ),
   );
 }
+Widget applicationsBuilder(applications, context, cubit, state) => ConditionalBuilder(
+  condition: state is! ApplicationsLoadingState && applications != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildApplicationItem(applications[index], context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s8,
+      ),
+      itemCount: applications.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
+Color statusColor(status){
+  if(status=="pending") {
+    return ColorManager.pending;
+  } else if(status=="accepted") {
+    return ColorManager.success;
+  } else if(status=="rejected") {
+    return ColorManager.error;
+  }else {
+    return ColorManager.grey;
+  }
+}
+ImageProvider<Object> imageSelector(image){
+  if(image==null) {
+    return const AssetImage(ImageAssets.purpleLogo);
+  } else {
+    return NetworkImage("${baseUrl}images$image");
+  }
+}
+///FILTER
+Widget filterOptions(cubit,context)=>AlertDialog(
+  title: const Text('Filter Options:'),
+  content: SizedBox(
+    width: double.maxFinite,
+    child: Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            multiSelectionWidget(
+                items: cubit.typeItems,
+                title: "Job Types",
+                icon: Icons.access_time,
+                buttonText: "Choose Types",
+                result: SearchCubit.selectedTypes
+            ),
+            multiSelectionWidget(
+                items: cubit.cityItems,
+                title: "Cities",
+                icon: Icons.location_on_outlined,
+                buttonText: "Choose Cities",
+                result: SearchCubit.selectedCities
+            ),
+            multiSelectionWidget(
+                items: cubit.categoriesItems,
+                title: "Categories",
+                icon: Icons.category_outlined,
+                buttonText: "Choose Category",
+                result: SearchCubit.selectedCategories
+            ),
+            multiSelectionWidget(
+                items: cubit.sectionsItems,
+                title: "Sections",
+                icon: Icons.domain,
+                buttonText: "Choose Sections",
+                result: SearchCubit.selectedSections
+            )
+          ],
+        ),
+      ),
+    ),
+  ),
+  actions: <Widget>[
+    TextButton(
+      child: const Text('Apply'),
+      onPressed: () {
+        cubit.getFilter();
+        Navigator.of(context).pop();
+      },
+    ),
+  ],
+);
+
+
+

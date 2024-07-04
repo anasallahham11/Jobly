@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/font_manager.dart';
 import 'package:jobly/resources/style_manager.dart';
@@ -19,9 +18,13 @@ class ApplicationsView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BlocProvider(
-        create: (BuildContext context) => ApplicationsCubit(),
+        create: (BuildContext context) => ApplicationsCubit()..getMyApplications(),
         child: BlocConsumer<ApplicationsCubit, ApplicationsStates>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if(state is CancelApplicationSuccessState) {
+                showToast(text: "Application Canceled Successfully", state: ToastStates.SUCCESS);
+              }
+            },
             builder: (context, state) {
               var cubit = ApplicationsCubit.get(context);
               return Scaffold(
@@ -40,7 +43,7 @@ class ApplicationsView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            buildApplicationItem(null, context, cubit, state),
+                            applicationsBuilder(cubit.applications, context, cubit, state),
 
                           ],
                         ),

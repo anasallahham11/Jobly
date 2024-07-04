@@ -7,7 +7,7 @@ import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
-import '../../../widgets/widgets.dart';
+import '../../../widgets/anas_widgets.dart';
 import '../../home/home_layout_view.dart';
 import '../sign_up/sign_up_user/singup_user_view.dart';
 

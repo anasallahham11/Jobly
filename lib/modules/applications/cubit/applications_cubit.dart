@@ -1,6 +1,10 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobly/utils/end_points.dart';
 
+import '../../../utils/constants.dart';
+import '../../../utils/helpers/dio_helper.dart';
+import '../applications_model.dart';
 import 'applications_states.dart';
 
 
@@ -10,36 +14,44 @@ class ApplicationsCubit extends Cubit<ApplicationsStates>{
   static ApplicationsCubit get(context) => BlocProvider.of(context);
 
 
-
-  int currentIndex=0;
-  void changeTabBar(int index)
+  ///GET APPLICATIONS
+  MyApplicationsModel? myApplicationsModel;
+  List<dynamic>? applications;
+  void getMyApplications()
   {
-    currentIndex= index;
-    emit(ChangeTabBarState());
-  }
+  emit(ApplicationsLoadingState());
+  DioHelper.getData(
+    url: GET_APPLICATIONS,
+    token: token,
+  ).then((value) {
+    print(value?.data);
+    myApplicationsModel = MyApplicationsModel.fromJson(value?.data);
+    print(myApplicationsModel?.status);
+    print(myApplicationsModel?.message);
+    print(myApplicationsModel?.data[0].status);
+    applications = myApplicationsModel?.data;
+    emit(ApplicationsSuccessState());
+  }).catchError((error){
+    print(error.toString());
+    emit(ApplicationsErrorState(error.toString()));
+  });
+}
 
-///GET APPLICATIONS
-// PostsModel? postsModel;
-// List<dynamic>? posts;
-// void getPosts()
-// {
-//   emit(PostsLoadingState());
-//   DioHelper.getData(
-//     url: GETPOSTS,
-//     token: token,
-//   ).then((value) {
-//     print(value?.data);
-//     postsModel = PostsModel.fromJson(value?.data);
-//     print(postsModel?.status);
-//     print(postsModel?.message);
-//     print(postsModel?.data[0]);
-//     posts = postsModel?.data;
-//     emit(PostsSuccessState());
-//   }).catchError((error){
-//     print(error.toString());
-//     emit(PostsErrorState(error.toString()));
-//   });
-// }
+  ///CANCEL APPLICATIONS
+  void cancelApplication(id)
+  {
+    emit(CancelApplicationLoadingState());
+    DioHelper.postData(
+      url: "$CANCEL_APPLICATION/$id",
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      emit(CancelApplicationSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(CancelApplicationErrorState(error.toString()));
+    });
+  }
 
 
 

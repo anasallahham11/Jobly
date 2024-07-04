@@ -13,7 +13,7 @@ import '../../../../resources/font_manager.dart';
 import '../../../../resources/strings_manager.dart';
 import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
-import '../../../../widgets/widgets.dart';
+import '../../../../widgets/anas_widgets.dart';
 import '../../../home/home_layout_view.dart';
 import '../sign_up_skills/sign_up_skills_view.dart';
 

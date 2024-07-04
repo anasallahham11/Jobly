@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,7 @@ import '../../../../resources/color_manager.dart';
 import '../../../../resources/font_manager.dart';
 import '../../../../resources/strings_manager.dart';
 import '../../../../resources/values_manager.dart';
-import '../../../../widgets/widgets.dart';
+import '../../../../widgets/anas_widgets.dart';
 import '../sign_up_address/signup_address_view.dart';
 
 class SingupEmployy extends StatefulWidget {

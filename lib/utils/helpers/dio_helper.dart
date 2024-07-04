@@ -14,7 +14,8 @@ class DioHelper
   static Future<Response?> getData({
     required String url,
     Map<String,dynamic>? query,
-    String lang = 'ar',
+    Map<String,dynamic>? data,
+    String lang = 'en',
     String? token,
   })async
   {
@@ -23,7 +24,11 @@ class DioHelper
       'lang':lang,
       'Authorization': 'Bearer $token',
     };
-    return await dio.get(url, queryParameters:query, );
+    return await dio.get(
+      url,
+      queryParameters:query,
+      data: data,
+    );
   }
 
   static Future<Response?> postData({

@@ -11,7 +11,16 @@ class ApplicationsErrorState extends ApplicationsStates{
   final String error;
   ApplicationsErrorState(this.error);
 }
-class ChangeTabBarState extends ApplicationsStates{}
+
+class CancelApplicationLoadingState extends ApplicationsStates{}
+
+class CancelApplicationSuccessState extends ApplicationsStates{}
+
+class CancelApplicationErrorState extends ApplicationsStates{
+  final String error;
+  CancelApplicationErrorState(this.error);
+}
+
 
 
 

@@ -1,8 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:jobly/modules/home/home_layout_cubit.dart';
 import 'package:jobly/modules/regular/job_details/job_details_view.dart';
 import 'package:jobly/modules/regular/profile/profile_view.dart';
+import 'package:jobly/modules/regular/search/search_view.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/utils/constants.dart';
 import '../modules/regular/company_profile/company_profile_view.dart';
@@ -209,47 +209,6 @@ Widget textFieldComponant(
   );
 }
 
-Widget defaultFormField({
-  required TextEditingController controller,
-  required TextInputType type,
-  ValueChanged? onSubmit,
-  ValueChanged? onChange,
-  VoidCallback? suffixPressed,
-  FormFieldValidator? validate,
-  required String label,
-  IconData? prefix,
-  IconData? suffix,
-  bool isPassword = false,
-}) =>
-    TextFormField(
-        controller: controller,
-        keyboardType: type,
-        onFieldSubmitted: onSubmit,
-        onChanged: onChange,
-        validator: validate,
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(
-            prefix,
-            color: ColorManager.purple3,
-          ),
-          suffixIcon: suffix != null
-              ? IconButton(
-                  onPressed: suffixPressed,
-                  icon: Icon(suffix),
-                  color: ColorManager.purple6,
-                )
-              : null,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: ColorManager.lightGrey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: ColorManager.purple5),
-          ),
-        ));
 
 
 
@@ -983,7 +942,7 @@ PreferredSizeWidget myAppBar(context, String title, bool searchVisible) {
           icon: const Icon(Icons.search,
               color: Color.fromARGB(255, 164, 78, 179)),
           onPressed: () {
-            // navigateTo(context, const SearchScreen());
+            navigateTo(context, SearchView());
           },
         ),
     ],
