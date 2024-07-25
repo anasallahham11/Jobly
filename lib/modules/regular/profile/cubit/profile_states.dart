@@ -8,3 +8,21 @@ class DarkThemeState extends ProfileStates{}
 class LightThemeState extends ProfileStates{}
 
 class ChangeLanguageState extends ProfileStates{}
+
+
+
+class UploadVideoLodingState extends ProfileStates{}
+
+
+
+class UploadVideoSucsessState extends ProfileStates{}
+
+
+
+class UploadVideoErorrState extends ProfileStates
+{
+  final String erorr;
+
+  UploadVideoErorrState(this.erorr);
+}
+

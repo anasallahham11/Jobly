@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../../../utils/constants.dart';
+import '../../../../utils/helpers/cache_helper.dart';
+import '../../../../utils/helpers/dio_helper.dart';
 import '../profile_view.dart';
 import 'profile_states.dart';
 
@@ -61,7 +65,21 @@ bool isEnglish = false;  // Initial value of the switch
   
 
 
+     ImagePicker picker= ImagePicker();
+     void uploadVideo(){
+      print("sdddddddddddddddddddddddddddddddddddddd");
 
+      CacheHelper.init();
+      emit(UploadVideoLodingState());
+      DioHelper.uploadVideo(filePath: "$picker", token: '$token', endpoint: 'employee/upload/video').then((value) {
+      print("rami");
+      print(value?.data);
+
+      emit(UploadVideoSucsessState());
+    }).catchError((error) {
+      emit(UploadVideoErorrState(error.toString()));
+    });
+     }
 
 
 

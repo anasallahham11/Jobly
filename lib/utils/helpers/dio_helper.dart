@@ -8,7 +8,7 @@ class DioHelper
   static init(){
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://127.0.0.1:8000/api/',
+        baseUrl: 'http://192.168.1.105:8000/api/',
         receiveDataWhenStatusError: true,
       ),
     );
@@ -56,39 +56,29 @@ class DioHelper
 
 
 
- static Future<void> uploadVideo({
+ static Future<Response?> uploadVideo({
     required String filePath,
     required String token,
     required String endpoint,
   }) async {
-    var headers = {
+    dio.options.headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     };
-
     var data = FormData.fromMap({
       'files': [
         await MultipartFile.fromFile(filePath, filename: filePath.split('/').last)
       ],
     });
-
-    dio.options.headers = headers;
-
-    try {
-      var response = await dio.post(
+      return dio.post(
         endpoint,
         data: data,
       );
 
-      if (response.statusCode == 200) {
-        print(json.encode(response.data));
-      } else {
-        print(response.statusMessage);
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+
   }
+
+
 
 
 
