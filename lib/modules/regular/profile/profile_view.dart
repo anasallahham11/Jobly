@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../../resources/color_manager.dart';
 import '../../../widgets/widgets.dart';
 import '../edit_profile/edit_profile_view.dart';
@@ -126,6 +126,32 @@ Widget footer(context) {
     ),
   );
 }
+
+
+  final ImagePicker _picker = ImagePicker();
+
+
+  Widget showUploadDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('Upload Video'),
+      content: Text('Press the button below to upload a video.'),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Upload Video'),
+          onPressed: () async {
+            final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+            if (video != null) {
+              print('Video selected: ${video.path}');
+
+              
+            }
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
 
 Widget aboutMe(context) {
   return Column(
@@ -288,7 +314,7 @@ Widget settings(context) {
         '',
         const Color.fromARGB(255, 255, 100, 100),
         const Color.fromARGB(255, 214, 214, 214),
-        const EditProfileScreen(),
+         showUploadDialog(context),
         false,
         false,
         (value) {},
