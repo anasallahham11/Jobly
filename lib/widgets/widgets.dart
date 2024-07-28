@@ -745,7 +745,7 @@ Widget companyListTile(context, String imageUrl, String companyName) {
   return ListTile(
       onTap: () {
         navigateTo(context,
-            CompanyProfileScreen(imageUrl: imageUrl, companyName: companyName));
+            CompanyProfileScreen(imageUrl: imageUrl, ));
       },
       subtitle: const Text('⭐4.2 | 400 Reviews'),
       title: Text(companyName),
@@ -822,7 +822,7 @@ Widget companyWidget(
         MaterialPageRoute(
           builder: (context) => CompanyProfileScreen(
             imageUrl: imageUrl,
-            companyName: text,
+          
           ),
         ),
       );

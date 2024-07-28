@@ -1,39 +1,47 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/regular/jobs/company_model.dart';
-import 'package:jobly/utils/constants.dart';
-import 'package:jobly/utils/helpers/dio_helper.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/helpers/dio_helper.dart';
 import '../../../../widgets/widgets.dart';
 import '../../jobs/jobs_cubit.dart';
+import 'company_model.dart';
 import 'company_profile_states.dart';
-// ignore: constant_identifier_names
-const  GET_COMPANY_INFO="company/";
 
 class CompanyProfileCubit extends Cubit<CompanyProfileStates>{
   CompanyProfileCubit():super(CompanyProfileInitialState());
   
-CompanyModel? companyModel;
-   List<dynamic>? company;
+CompanyProfileModel? companyModel;
+   dynamic company;
 
-void getCompanyInfo(id){
+void getCompanyDetails(int id){
+  print('before load');
   emit(CompanyLoadingState());
   DioHelper.getData(
-    url: "GET_COMPANY_INFO$id",
+    // url: "$GET_COMPANY_INFO/$id",
+    url: "http://127.0.0.1:8000/api/company/1",
+
     token: token,
     ).then((value){
+      print('rami');
       print(value?.data);
-      print(value?.data);
-      companyModel = CompanyModel.fromJson(value?.data);
+      companyModel = CompanyProfileModel.fromJson(value?.data);
       print(companyModel?.status);
       print(companyModel?.message);
-      print(companyModel?.data[0].companyName);
+      print(companyModel?.data.companyName);
       company = companyModel?.data;
+      print(company.companyName);
+      print('nasser');
       emit(CompanySuccsssState());
     }).catchError((error){
       print(error.toString());
       emit(CompanyErrorState(error.toString()));
     });
 }
+
+
+
+
 
 
 

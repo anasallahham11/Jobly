@@ -1,150 +1,153 @@
-///what is this ?
-// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+ // To parse this JSON data, do
+//
+//     final companyModel = companyModelFromJson(jsonString);
+
 import 'dart:convert';
 
-CompanyModel companyModelFromJson(String str) => CompanyModel.fromJson(json.decode(str));
+CompanyProfileModel companyModelFromJson(String str) => CompanyProfileModel.fromJson(json.decode(str));
 
-String companyModelToJson(CompanyModel data) => json.encode(data.toJson());
+String companyModelToJson(CompanyProfileModel data) => json.encode(data.toJson());
 
-class CompanyModel{
-   bool status;
-  String message;
-  Datum data;
+class CompanyProfileModel {
+    bool status;
+    String message;
+    Data data;
 
+    CompanyProfileModel({
+        required this.status,
+        required this.message,
+        required this.data,
+    });
 
-  CompanyModel({
-    required this.status,
-    required this.message,
-    required this.data,
-  });
+    factory CompanyProfileModel.fromJson(Map<String, dynamic> json) => CompanyProfileModel(
+        status: json["status"],
+        message: json["message"],
+        data: Data.fromJson(json["data"]),
+    );
 
-  factory CompanyModel.fromJson(Map<String, dynamic> json) => CompanyModel(
-    status: json["status"],
-    message: json["message"],
-    data: Datum.fromJson(json["data"]),
-    // data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "status": status,
-    "message": message,
-    "data": data.toJson(),
-  };
-
-
+    Map<String, dynamic> toJson() => {
+        "status": status,
+        "message": message,
+        "data": data.toJson(),
+    };
 }
 
-class AddressModel{
-  int id;
-  int userId;
-  //طلعت هيك صح مقاطعة مو بلد 
-  String county;
-  String city;
-  String governorate;
+class Data {
+    int id;
+    int userId;
+    DateTime dateOfEstablishment;
+    int employeNumber;
+    String? commercialRecord;
+    String companyName;
+    String contactPhone;
+    String industry;
+    String companyDescription;
+    String companyWebsite;
+    String contactEmail;
+    String contactPerson;
+    DateTime createdAt;
+    DateTime updatedAt;
+    Address address;
+    List<dynamic>? ratings;
 
-  AddressModel({
-    required this.id,
-    required this.userId,
-    required this.county,
-    required this.city,
-    required this.governorate
+    Data({
+        required this.id,
+        required this.userId,
+        required this.dateOfEstablishment,
+        required this.employeNumber,
+         this.commercialRecord,
+        required this.companyName,
+        required this.contactPhone,
+        required this.industry,
+        required this.companyDescription,
+        required this.companyWebsite,
+        required this.contactEmail,
+        required this.contactPerson,
+        required this.createdAt,
+        required this.updatedAt,
+        required this.address,
+         this.ratings,
+    });
 
-  });
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
+        id: json["id"],
+        userId: json["user_id"],
+        dateOfEstablishment: DateTime.parse(json["Date_of_Establishment"]),
+        employeNumber: json["employe_number"],
+        commercialRecord: json["Commercial_Record"],
+        companyName: json["company_name"],
+        contactPhone: json["contact_phone"],
+        industry: json["industry"],
+        companyDescription: json["company_description"],
+        companyWebsite: json["company_website"],
+        contactEmail: json["contact_email"],
+        contactPerson: json["contact_person"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        address: Address.fromJson(json["address"]),
+        ratings: List<dynamic>.from(json["ratings"].map((x) => x)),
+    );
 
-  factory AddressModel.fromJson(Map<String, dynamic> json) => AddressModel(
-    id: json["id"],
-    userId: json["user_id"],
-    county: json["county"],
-    city: json["city"],
-    governorate: json["Governorate"],
- 
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "county": county,
-    "city": city,
-    "Governorate": governorate,
-    
-  };
-
-
-
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "Date_of_Establishment": "${dateOfEstablishment.year.toString().padLeft(4, '0')}-${dateOfEstablishment.month.toString().padLeft(2, '0')}-${dateOfEstablishment.day.toString().padLeft(2, '0')}",
+        "employe_number": employeNumber,
+        "Commercial_Record": commercialRecord,
+        "company_name": companyName,
+        "contact_phone": contactPhone,
+        "industry": industry,
+        "company_description": companyDescription,
+        "company_website": companyWebsite,
+        "contact_email": contactEmail,
+        "contact_person": contactPerson,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "address": address.toJson(),
+        "ratings": List<dynamic>.from(ratings!.map((x) => x)),
+    };
 }
 
-class Datum {
-  int id ;
-  int userId;
-  String dateOfEstablishment;
-  int numberOfEmployees;
-  String commercialRecord;
-  String companyName;
-  String phoneNumber;
-  String industry;
-  String companyAboutUs;
-  String companyWebsite;
-  String companyEmail;
-  String contactPerson;
-  List<AddressModel>address;
-  List<double>rating;
+class Address {
+    int id;
+    int userId;
+    String county;
+    String city;
+    String governorate;
+    DateTime createdAt;
+    DateTime updatedAt;
 
+    Address({
+        required this.id,
+        required this.userId,
+        required this.county,
+        required this.city,
+        required this.governorate,
+        required this.createdAt,
+        required this.updatedAt,
+    });
 
+    factory Address.fromJson(Map<String, dynamic> json) => Address(
+        id: json["id"],
+        userId: json["user_id"],
+        county: json["county"],
+        city: json["city"],
+        governorate: json["Governorate"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+    );
 
-  Datum({
-    required this.id,
-    required this.userId,
-    required this.dateOfEstablishment,
-    required this.numberOfEmployees,
-    required this.commercialRecord,
-    required this.companyName,
-    required this.phoneNumber,
-    required this.industry,
-    required this.companyAboutUs,
-    required this.companyWebsite,
-    required this.companyEmail,
-    required this.contactPerson,
-    required this.address,
-    required this.rating,
-    
-  });
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    id: json["id"],
-    userId: json["user_id"],
-    dateOfEstablishment: json["Date_of_Establishment"],
-    numberOfEmployees: json["employe_number"],
-    commercialRecord: json["Commercial_Record"],
-    companyName: json["company_name"],
-    phoneNumber: json["contact_phone"],
-    industry: json["industry"],
-    companyAboutUs: json["company_description"],
-    companyWebsite: json["company_website"],
-    companyEmail: json["contact_email"],
-    contactPerson: json["contact_person"],
-    //data model
-    address: json["address"],
-    //list
-    rating: json["ratings"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "Date_of_Establishment": dateOfEstablishment,
-    "employe_number": numberOfEmployees,
-    "Commercial_Record": commercialRecord,
-    "company_name": companyName,
-    "contact_phone": phoneNumber,
-    "industry": industry,
-    "company_description": companyAboutUs,
-    "company_website": companyWebsite,
-    "contact_email": companyEmail,
-    "contact_person": contactPerson,
-    "address":address,
-    "ratings": rating,
-  };
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "county": county,
+        "city": city,
+        "Governorate": governorate,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+    };
 }
+
 ///response
 /* 
 {
