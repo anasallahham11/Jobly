@@ -7,6 +7,7 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
 import '../profile_view.dart';
+import 'profile_model.dart';
 import 'profile_states.dart';
 
 
@@ -14,6 +15,41 @@ class ProfileCubit extends Cubit<ProfileStates> {
   ProfileCubit() : super(ProfileAboutMeState());
 
   static ProfileCubit get(context) => BlocProvider.of(context);
+
+///GET JOB DETAILS
+  ProfileModel? profileModel;
+  dynamic profile;
+
+  void getProfileDetails() {
+    emit(ProfileLoadingState());
+    DioHelper.getData(
+      url: "http://127.0.0.1:8000/api/employee/show",
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      profileModel = ProfileModel.fromJson(value?.data);
+      print(profileModel?.status);
+      print(profileModel?.message);
+      print(profileModel?.data.employee);
+      profile = profileModel?.data;
+      emit(ProfileSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ProfileErrorState(error.toString()));
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   int selectedIndex = 0;
 

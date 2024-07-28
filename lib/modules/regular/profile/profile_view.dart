@@ -16,10 +16,28 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileCubit(),
+      create: (context) => ProfileCubit()..getProfileDetails(),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cubit = ProfileCubit.get(context);
+
+           if (state is ProfileLoadingState) {
+            return Scaffold(
+              backgroundColor: ColorManager.white,
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is ProfileErrorState) {
+            return Scaffold(
+              backgroundColor: ColorManager.white,
+              body: Center(child: Text('Error: ${state.error}')),
+            );
+          } else if (cubit.profile == null) {
+            return Scaffold(
+              backgroundColor: ColorManager.white,
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else {
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,13 +49,14 @@ class ProfileScreen extends StatelessWidget {
                       "https://www.shutterstock.com/image-photo/happy-mid-aged-business-man-600nw-2307212331.jpg",
                   backgroundImage:
                       "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
-                  name: 'Jakop Asshole',
+                  name: cubit.profile.name,
                   isProfile: true,
                 ),
                 footer(context),
               ],
             ),
           );
+          }
         },
       ),
     );
