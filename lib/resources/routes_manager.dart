@@ -8,6 +8,7 @@ import 'package:jobly/resources/strings_manager.dart';
 
 import '../modules/applications/applications_view.dart';
 import '../modules/core/splash/splash_view.dart';
+import '../modules/regular/profile/profile_view.dart';
 
 
 class Routes{
@@ -26,6 +27,7 @@ class Routes{
 
   static const String homeRoute = "/home";
 
+
 }
 class RouteGenerator{
   static Route<dynamic> getRoute(RouteSettings routeSettings){
@@ -43,7 +45,7 @@ class RouteGenerator{
       case Routes.applicationsRoute:
         return MaterialPageRoute(builder: (_)=> const ApplicationsView());
       case Routes.homeRoute:
-        return MaterialPageRoute(builder: (_)=> const HomeLayoutView());
+        return MaterialPageRoute(builder: (_)=> const HomeLayoutView());        
       default:
         return unDefinedRoute();
     }

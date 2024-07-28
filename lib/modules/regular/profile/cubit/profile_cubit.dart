@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -62,9 +63,13 @@ bool isEnglish = false;  // Initial value of the switch
       emit(ChangeLanguageState()); // Update the text value based on the switch state
     
   }
+
+
+  ///get profile data
+  
   
 
-
+//upload video
      ImagePicker picker= ImagePicker();
      void uploadVideo(){
       print("sdddddddddddddddddddddddddddddddddddddd");
@@ -80,7 +85,21 @@ bool isEnglish = false;  // Initial value of the switch
       emit(UploadVideoErorrState(error.toString()));
     });
      }
+//upload cv
+     FilePickerResult? file_picker;
+     void uploadCv(){
+      print("sdddddddddddddddddddddddddddddddddddddd");
 
+      CacheHelper.init();
+      emit(UploadCVLodingState());
+      DioHelper.uploadCV(filePath: "$file_picker", token: '$token', endpoint: 'employee/cv/upload').then((value) {
+      print("rami");
+      print(value?.data);
+      emit(UploadCVSucsessState());
+    }).catchError((error) {
+      emit(UploadCVErorrState(error.toString()));
+    });
+     }
 
 
 

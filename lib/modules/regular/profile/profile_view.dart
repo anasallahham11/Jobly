@@ -302,6 +302,20 @@ Widget settings(context) {
         false,
         (value) {},
       ),
+
+      //add cv
+        settingsTileSwitch(
+        context,
+        Icons.picture_as_pdf_outlined,
+        'Add CV',
+        '',
+        const Color.fromARGB(255, 255, 100, 100),
+        const Color.fromARGB(255, 214, 214, 214),
+        showUploadCvDialog(context),
+        false,
+        false,
+        (value) {},
+      ),
     ],
   );
 }

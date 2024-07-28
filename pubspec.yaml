@@ -42,6 +42,7 @@ dependencies:
   shared_preferences:
   smooth_page_indicator: ^1.1.0
   multi_select_flutter:
+  file_picker:
 
 dev_dependencies:
   flutter_lints: ^2.0.0

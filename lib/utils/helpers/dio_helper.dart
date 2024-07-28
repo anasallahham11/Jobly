@@ -66,7 +66,7 @@ class DioHelper
       'Authorization': 'Bearer $token',
     };
     var data = FormData.fromMap({
-      'files': [
+      'video': [
         await MultipartFile.fromFile(filePath, filename: filePath.split('/').last)
       ],
     });
@@ -78,6 +78,29 @@ class DioHelper
 
   }
 
+
+
+ static Future<Response?> uploadCV({
+    required String filePath,
+    required String token,
+    required String endpoint,
+  }) async {
+    dio.options.headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var data = FormData.fromMap({
+      'cv': [
+        await MultipartFile.fromFile(filePath, filename: filePath.split('/').last)
+      ],
+    });
+      return dio.post(
+        endpoint,
+        data: data,
+      );
+
+
+  }
 
 
 

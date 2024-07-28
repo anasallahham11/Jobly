@@ -26,3 +26,18 @@ class UploadVideoErorrState extends ProfileStates
   UploadVideoErorrState(this.erorr);
 }
 
+
+class UploadCVLodingState extends ProfileStates{}
+
+
+
+class UploadCVSucsessState extends ProfileStates{}
+
+
+
+class UploadCVErorrState extends ProfileStates
+{
+  final String erorr;
+
+  UploadCVErorrState(this.erorr);
+}
