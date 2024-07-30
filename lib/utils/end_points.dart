@@ -27,4 +27,9 @@ const GET_APPLICATIONS="employee/vacancy/getMyApplications";
 const CANCEL_APPLICATION="ReqquestJobs/delete";
 
 
+//EMPLOYEEPROFILE
+const EMPLYEE_PROFILE="employee/show";
+
+
+
 

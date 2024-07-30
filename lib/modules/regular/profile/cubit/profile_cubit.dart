@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../utils/constants.dart';
+import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
+import '../profile_modle.dart';
 import '../profile_view.dart';
 import 'profile_states.dart';
 
@@ -65,7 +67,33 @@ bool isEnglish = false;  // Initial value of the switch
   }
 
 
-  ///get profile data
+///get profile data
+EmployeeProfile? employeeModel;
+   dynamic profile;
+void getProfileDetails(){
+  print('before load');
+  emit(UploadProfileLodingState());
+  DioHelper.getData(
+    // url: "$EMPLYEE_PROFILE",
+    url: "http://127.0.0.1:8000/api/employee/show",
+
+    token: token,
+    ).then((value){
+      print('rami');
+      print(value?.data);
+      employeeModel = EmployeeProfile.fromJson(value?.data);
+      print(employeeModel?.status);
+      print(employeeModel?.message);
+      print(employeeModel?.data.email);
+      profile = employeeModel?.data;
+      print(profile.phoneNumber);
+      print('nasser');
+      emit(UploadProfileSucsessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(UploadProfileErorrState(error.toString()));
+    });
+}
   
   
 

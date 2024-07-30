@@ -10,7 +10,7 @@ class LightThemeState extends ProfileStates{}
 class ChangeLanguageState extends ProfileStates{}
 
 
-
+//VIDEO
 class UploadVideoLodingState extends ProfileStates{}
 
 
@@ -26,6 +26,7 @@ class UploadVideoErorrState extends ProfileStates
   UploadVideoErorrState(this.erorr);
 }
 
+//CV
 
 class UploadCVLodingState extends ProfileStates{}
 
@@ -40,4 +41,22 @@ class UploadCVErorrState extends ProfileStates
   final String erorr;
 
   UploadCVErorrState(this.erorr);
+}
+
+
+//PROFILE
+
+class UploadProfileLodingState extends ProfileStates{}
+
+
+
+class UploadProfileSucsessState extends ProfileStates{}
+
+
+
+class UploadProfileErorrState extends ProfileStates
+{
+  final String erorr;
+
+  UploadProfileErorrState(this.erorr);
 }
