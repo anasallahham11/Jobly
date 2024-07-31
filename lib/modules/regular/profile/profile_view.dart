@@ -28,10 +28,10 @@ class ProfileScreen extends StatelessWidget {
                 CompanyProfileHeader(
                   context: context,
                   profileImage:
-                      "https://www.shutterstock.com/image-photo/happy-mid-aged-business-man-600nw-2307212331.jpg",
+                      "${ProfileCubit.get(context).employeeModel?.data.employee.image.imageableType}",
                   backgroundImage:
                       "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
-                  name: 'Jakop Asshole',
+                  name: '${ProfileCubit.get(context).employeeModel?.data.name}',
                   isProfile: true,
                 ),
                 footer(context),

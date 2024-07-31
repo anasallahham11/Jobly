@@ -7,7 +7,7 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
-import '../profile_modle.dart';
+import '../profile_model.dart';
 import '../profile_view.dart';
 import 'profile_states.dart';
 
