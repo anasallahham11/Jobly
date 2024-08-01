@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../utils/constants.dart';
+import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
+import '../profile_model.dart';
 import '../profile_view.dart';
-import 'profile_model.dart';
 import 'profile_states.dart';
 
 
@@ -16,28 +17,28 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
   static ProfileCubit get(context) => BlocProvider.of(context);
 
-///GET JOB DETAILS
-  ProfileModel? profileModel;
-  dynamic profile;
+// ///GET JOB DETAILS
+//   ProfileModel? profileModel;
+//   dynamic profile;
 
-  void getProfileDetails() {
-    emit(ProfileLoadingState());
-    DioHelper.getData(
-      url: "http://127.0.0.1:8000/api/employee/show",
-      token: token,
-    ).then((value) {
-      print(value?.data);
-      profileModel = ProfileModel.fromJson(value?.data);
-      print(profileModel?.status);
-      print(profileModel?.message);
-      print(profileModel?.data.employee);
-      profile = profileModel?.data;
-      emit(ProfileSuccessState());
-    }).catchError((error) {
-      print(error.toString());
-      emit(ProfileErrorState(error.toString()));
-    });
-  }
+//   void getProfileDetails() {
+//     emit(ProfileLoadingState());
+//     DioHelper.getData(
+//       url: "http://127.0.0.1:8000/api/employee/show",
+//       token: token,
+//     ).then((value) {
+//       print(value?.data);
+//       profileModel = ProfileModel.fromJson(value?.data);
+//       print(profileModel?.status);
+//       print(profileModel?.message);
+//       print(profileModel?.data.employee);
+//       profile = profileModel?.data;
+//       emit(ProfileSuccessState());
+//     }).catchError((error) {
+//       print(error.toString());
+//       emit(ProfileErrorState(error.toString()));
+//     });
+//   }
 
 
 
@@ -101,7 +102,33 @@ bool isEnglish = false;  // Initial value of the switch
   }
 
 
-  ///get profile data
+///get profile data
+EmployeeProfile? employeeModel;
+   dynamic profile;
+void getProfileDetails(){
+  print('before load');
+  emit(ProfileLoadingState());
+  DioHelper.getData(
+    // url: "$EMPLYEE_PROFILE",
+    url: "http://127.0.0.1:8000/api/employee/show",
+
+    token: token,
+    ).then((value){
+      print('rami');
+      print(value?.data);
+      employeeModel = EmployeeProfile.fromJson(value?.data);
+      print(employeeModel?.status);
+      print(employeeModel?.message);
+      print(employeeModel?.data.email);
+      profile = employeeModel?.data;
+      print(profile.phoneNumber);
+      print('nasser');
+      emit(ProfileSucsessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(ProfileErrorState(error.toString()));
+    });
+}
   
   
 
