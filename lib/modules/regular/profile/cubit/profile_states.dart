@@ -1,4 +1,8 @@
-abstract class ProfileStates{}
+abstract class ProfileStates{
+  const ProfileStates();
+    @override
+  List<Object> get props => [];
+}
 class ProfileAboutMeState extends ProfileStates{}
 class ProfilePostsState extends ProfileStates{}
 class ProfileInfoState extends ProfileStates{}
@@ -10,7 +14,7 @@ class LightThemeState extends ProfileStates{}
 class ChangeLanguageState extends ProfileStates{}
 
 
-
+//VIDEO
 class UploadVideoLodingState extends ProfileStates{}
 
 
@@ -26,6 +30,7 @@ class UploadVideoErorrState extends ProfileStates
   UploadVideoErorrState(this.erorr);
 }
 
+//CV
 
 class UploadCVLodingState extends ProfileStates{}
 
@@ -41,3 +46,28 @@ class UploadCVErorrState extends ProfileStates
 
   UploadCVErorrState(this.erorr);
 }
+
+
+
+
+
+
+
+//PROFILE
+
+class ProfileLoadingState extends ProfileStates{}
+
+
+
+class ProfileSucsessState extends ProfileStates{}
+
+
+
+class ProfileErrorState extends ProfileStates
+{
+  final String error;
+
+  ProfileErrorState(this.error);
+}
+
+

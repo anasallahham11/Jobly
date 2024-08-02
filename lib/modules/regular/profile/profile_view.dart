@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jobly/modules/regular/profile/cubit/profile_states.dart';
+import 'package:jobly/utils/constants.dart';
+import 'package:video_player/video_player.dart';
 import '../../../resources/color_manager.dart';
 import '../../../widgets/rami_widgets.dart';
 import '../../../widgets/widgets.dart';
@@ -13,10 +15,13 @@ import 'cubit/profile_cubit.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  
+
   @override
   Widget build(BuildContext context) {
+    
     return BlocProvider(
-      create: (context) => ProfileCubit(),
+      create: (context) => ProfileCubit()..getProfileDetails(),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -28,13 +33,15 @@ class ProfileScreen extends StatelessWidget {
                 CompanyProfileHeader(
                   context: context,
                   profileImage:
-                      "https://www.shutterstock.com/image-photo/happy-mid-aged-business-man-600nw-2307212331.jpg",
+                      "$baseUrl/images/Employees/${ProfileCubit.get(context).employeeModel?.data.employee.image.filename}",
                   backgroundImage:
                       "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
-                  name: 'Jakop Asshole',
+                  name: '${ProfileCubit.get(context).employeeModel?.data.name}',
                   isProfile: true,
                 ),
+                
                 footer(context),
+              
               ],
             ),
           );
@@ -69,7 +76,7 @@ Widget infoRow(context) {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 buildTextButton(context, 'About Me', 0),
-                buildTextButton(context, 'Posts', 1),
+                
                 buildTextButton(context, 'Settings', 2),
               ],
             ),
@@ -113,7 +120,7 @@ Widget footer(context) {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       width: MediaQuery.of(context).size.width,
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
          color: ColorManager.offWhite,
         // color: Color.fromARGB(255, 245, 245, 245),
         // borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -129,123 +136,54 @@ Widget footer(context) {
   );
 }
 
-
-  
-
-
-
-
-
 Widget aboutMe(context) {
   return Column(
     children: [
       //about me
       jobDescription(context, '',
-          '''I'm a passionate software engineer with a knack for problem-solving and a love for crafting robust, efficient code. With a background in [mention relevant experience or education], I thrive in dynamic environments where I can innovate and collaborate with like-minded professionals. From designing algorithms to debugging complex issues, I enjoy every aspect of the software development lifecycle. Outside of coding, I'm an avid learner, always exploring new technologies and trends to stay ahead in this ever-evolving field. Whether it's building scalable applications or optimizing existing systems, I'm dedicated to delivering solutions that make a real-world impact.'''),
-      //summary
-      jobDescription(context, 'Professional Summary:', '''
-● Experienced software engineer with a passion for building scalable web applications. Proficient in Java, JavaScript, and frameworks like React and Spring. Dedicated to continuous learning and staying updated with industry trends.'''),
+          '''${ProfileCubit.get(context).employeeModel?.data.employee.resume}'''),
+
       //exp
       jobDescription(
         context,
-        'Work Experience:',
-        '''
-● Software Engineer, Tech Solutions Inc.
-
-- Duration:
-January 2019 - Present
-- Responsibilities:
-Developed RESTful APIs using Spring Boot for backend services.
-Implemented responsive front-end components using React and Redux.
-Collaborated with cross-functional teams to deliver projects on time and within budget.
-- Achievements:
-Streamlined API performance, resulting in a 20% decrease in response time.
-Led the migration of legacy systems to microservices architecture, improving scalability and reliability.
-
-● Junior Software Developer, DevTech LLC.
-
-- Duration:
- June 2017 - December 2018
-- Responsibilities:
-Assisted senior developers in coding and debugging web applications using JavaScript and Angular.
-Participated in code reviews and testing phases to ensure product quality.
-Maintained and updated documentation for internal APIs and software components.
-''',
+'● Work Experience:',''' ${ProfileCubit.get(context).employeeModel?.data.employee.experience}''',
       ),
       //Education
       jobDescription(
-          context, 'Education:', '''● Bachelor of Science in Computer Science
-University of Technology, Cityville
-Graduated: May 2017'''),
+          context, 
+'●Education:', '''● ${ProfileCubit.get(context).employeeModel?.data.employee.education}'''),
       //skills
-      jobDescription(context, 'Skills:', '''● Technical Skills:
-- Languages: Java, JavaScript, Python
-- Frameworks: Spring Boot, React, Angular
-- Databases: MySQL, MongoDB
-- Tools & Technologies: Git, JIRA, Docker
-● Soft Skills:
- Problem-solving, teamwork, effective communication
-'''),
+      jobDescription(context,
+'●Skills:', '''${ProfileCubit.get(context).employeeModel?.data.employee.skills}'''),
 
 //contact
       jobDescription(context, 'Contact Information:', '''
+● Name:
+    ${ProfileCubit.get(context).employeeModel?.data.name}
+
 ● Email:
- john.doe@example.com
+    ${ProfileCubit.get(context).employeeModel?.data.email}
 
 ● Phone:
- +1 (555) 123-4567
+    ${ProfileCubit.get(context).employeeModel?.data.employee.phoneNumber}
 
 ● Location:
- San Francisco, CA, USA
+    ${ProfileCubit.get(context).employeeModel?.data.address}
 '''),
 
-      //Perks and Benefits:
-      jobDescription(
-        context,
-        'Links:',
-        '''
-● GitHub :
- https://github.com/johndoe
 
-● LinkedIn :
- https://www.linkedin.com/in/johndoe
-''',
-      ),
+    Text("● viedo"),
+
+    NetworkMediaWidget(),
+
+
+    
+
     ],
   );
 }
 
-Widget posts(context) {
-  final List<String> items = ['Question 1', 'Post 2', 'Post 3', 'Question 4'];
 
-  return ListView.builder(
-    physics: const NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
-    itemCount: items.length,
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Container(
-            color: ColorManager.white,  // Example background color
-            height: 100,
-            width: 100,
-            child: Center(
-              child: Text(
-                items[index],
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
 
 Widget settings(context) {
   return Column(
@@ -319,3 +257,10 @@ Widget settings(context) {
     ],
   );
 }
+
+class NetworkMediaWidget extends StatefulWidget {
+  @override
+  NetworkMediaWidgetState createState() => NetworkMediaWidgetState();
+}
+
+
