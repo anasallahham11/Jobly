@@ -43,6 +43,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   multi_select_flutter:
   file_picker:
+  video_player:
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -71,6 +72,8 @@ flutter:
     - assets/images/employee.png
     - assets/images/fire.png
     - assets/images/tradinos.jpeg
+    - assets/images/dots.png
+    - assets/images/report.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

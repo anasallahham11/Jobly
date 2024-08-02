@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jobly/modules/regular/profile/cubit/profile_states.dart';
+import 'package:jobly/utils/constants.dart';
+import 'package:video_player/video_player.dart';
 import '../../../resources/color_manager.dart';
 import '../../../widgets/rami_widgets.dart';
 import '../../../widgets/widgets.dart';
@@ -13,8 +15,11 @@ import 'cubit/profile_cubit.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  
+
   @override
   Widget build(BuildContext context) {
+    
     return BlocProvider(
       create: (context) => ProfileCubit()..getProfileDetails(),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
@@ -28,13 +33,15 @@ class ProfileScreen extends StatelessWidget {
                 CompanyProfileHeader(
                   context: context,
                   profileImage:
-                      "${ProfileCubit.get(context).employeeModel?.data.employee.image.imageableType}",
+                      "$baseUrl/images/Employees/${ProfileCubit.get(context).employeeModel?.data.employee.image.filename}",
                   backgroundImage:
                       "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
                   name: '${ProfileCubit.get(context).employeeModel?.data.name}',
                   isProfile: true,
                 ),
+                
                 footer(context),
+              
               ],
             ),
           );
@@ -69,7 +76,7 @@ Widget infoRow(context) {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 buildTextButton(context, 'About Me', 0),
-                buildTextButton(context, 'Posts', 1),
+                
                 buildTextButton(context, 'Settings', 2),
               ],
             ),
@@ -113,7 +120,7 @@ Widget footer(context) {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       width: MediaQuery.of(context).size.width,
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
          color: ColorManager.offWhite,
         // color: Color.fromARGB(255, 245, 245, 245),
         // borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -129,13 +136,6 @@ Widget footer(context) {
   );
 }
 
-
-  
-
-
-
-
-
 Widget aboutMe(context) {
   return Column(
     children: [
@@ -146,20 +146,15 @@ Widget aboutMe(context) {
       //exp
       jobDescription(
         context,
-        'Work Experience:',
-        '''
-● ${ProfileCubit.get(context).employeeModel?.data.employee.experience}
-''',
+'● Work Experience:',''' ${ProfileCubit.get(context).employeeModel?.data.employee.experience}''',
       ),
       //Education
       jobDescription(
-          context, 'Education:', '''● ${ProfileCubit.get(context).employeeModel?.data.employee.education}'''),
+          context, 
+'●Education:', '''● ${ProfileCubit.get(context).employeeModel?.data.employee.education}'''),
       //skills
-      jobDescription(context, 'Skills:', '''● Technical Skills:
-
-      ${ProfileCubit.get(context).employeeModel?.data.employee.skills}
-
-'''),
+      jobDescription(context,
+'●Skills:', '''${ProfileCubit.get(context).employeeModel?.data.employee.skills}'''),
 
 //contact
       jobDescription(context, 'Contact Information:', '''
@@ -170,59 +165,25 @@ Widget aboutMe(context) {
     ${ProfileCubit.get(context).employeeModel?.data.email}
 
 ● Phone:
- ${ProfileCubit.get(context).employeeModel?.data.employee.phoneNumber}
+    ${ProfileCubit.get(context).employeeModel?.data.employee.phoneNumber}
 
 ● Location:
- ${ProfileCubit.get(context).employeeModel?.data.address}
+    ${ProfileCubit.get(context).employeeModel?.data.address}
 '''),
 
-      //Perks and Benefits:
-      jobDescription(
-        context,
-        'Links:',
-        '''
-● GitHub :
- https://github.com/johndoe
 
-● LinkedIn :
- https://www.linkedin.com/in/johndoe
-''',
-      ),
+    Text("● viedo"),
+
+    NetworkMediaWidget(),
+
+
+    
+
     ],
   );
 }
 
-Widget posts(context) {
-  final List<String> items = ['Question 1', 'Post 2', 'Post 3', 'Question 4'];
 
-  return ListView.builder(
-    physics: const NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
-    itemCount: items.length,
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: Container(
-            color: ColorManager.white,  // Example background color
-            height: 100,
-            width: 100,
-            child: Center(
-              child: Text(
-                items[index],
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
 
 Widget settings(context) {
   return Column(
@@ -296,3 +257,10 @@ Widget settings(context) {
     ],
   );
 }
+
+class NetworkMediaWidget extends StatefulWidget {
+  @override
+  NetworkMediaWidgetState createState() => NetworkMediaWidgetState();
+}
+
+

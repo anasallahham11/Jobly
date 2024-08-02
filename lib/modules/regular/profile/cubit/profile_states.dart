@@ -1,4 +1,8 @@
-abstract class ProfileStates{}
+abstract class ProfileStates{
+  const ProfileStates();
+    @override
+  List<Object> get props => [];
+}
 class ProfileAboutMeState extends ProfileStates{}
 class ProfilePostsState extends ProfileStates{}
 class ProfileInfoState extends ProfileStates{}
@@ -44,6 +48,11 @@ class UploadCVErorrState extends ProfileStates
 }
 
 
+
+
+
+
+
 //PROFILE
 
 class ProfileLoadingState extends ProfileStates{}
@@ -60,3 +69,5 @@ class ProfileErrorState extends ProfileStates
 
   ProfileErrorState(this.error);
 }
+
+

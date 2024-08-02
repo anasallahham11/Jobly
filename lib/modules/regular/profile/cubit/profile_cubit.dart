@@ -7,6 +7,7 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
+import '../../../../widgets/rami_widgets.dart';
 import '../profile_model.dart';
 import '../profile_view.dart';
 import 'profile_states.dart';
@@ -63,8 +64,6 @@ class ProfileCubit extends Cubit<ProfileStates> {
     switch (selectedIndex) {
       case 0:
         return aboutMe(context);
-      case 1:
-        return posts(context);
       case 2:
         return settings(context);
       default:
@@ -102,16 +101,18 @@ bool isEnglish = false;  // Initial value of the switch
   }
 
 
+
+
 ///get profile data
 EmployeeProfile? employeeModel;
    dynamic profile;
 void getProfileDetails(){
   print('before load');
   emit(ProfileLoadingState());
+  
   DioHelper.getData(
     // url: "$EMPLYEE_PROFILE",
-    url: "http://127.0.0.1:8000/api/employee/show",
-
+    url: "employee/show",
     token: token,
     ).then((value){
       print('rami');
@@ -126,6 +127,7 @@ void getProfileDetails(){
       emit(ProfileSucsessState());
     }).catchError((error){
       print(error.toString());
+
       emit(ProfileErrorState(error.toString()));
     });
 }
@@ -142,7 +144,7 @@ void getProfileDetails(){
       DioHelper.uploadVideo(filePath: "$picker", token: '$token', endpoint: 'employee/upload/video').then((value) {
       print("rami");
       print(value?.data);
-
+      
       emit(UploadVideoSucsessState());
     }).catchError((error) {
       emit(UploadVideoErorrState(error.toString()));
@@ -163,8 +165,5 @@ void getProfileDetails(){
       emit(UploadCVErorrState(error.toString()));
     });
      }
-
-
-
-
 }
+
