@@ -1,7 +1,14 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utils/constants.dart';
+import '../../../utils/end_points.dart';
+import '../../../utils/helpers/dio_helper.dart';
+import '../../regular/search/categories_model.dart';
+import '../models/advices_model.dart';
+import '../models/questions_model.dart';
 import 'community_states.dart';
 
 class CommunityCubit extends Cubit<CommunityStates>{
@@ -12,7 +19,7 @@ class CommunityCubit extends Cubit<CommunityStates>{
     "Questions",
     "Advices",
   ];
-
+  ///Toggle between advices and questions
   int currentIndex=0;
   void changeTabBar(int index)
   {
@@ -20,231 +27,337 @@ class CommunityCubit extends Cubit<CommunityStates>{
     emit(ChangeTabBarState());
   }
 
-  ///GET POSTS
-  // PostsModel? postsModel;
-  // List<dynamic>? posts;
-  // void getPosts()
-  // {
-  //   emit(PostsLoadingState());
-  //   DioHelper.getData(
-  //     url: GETPOSTS,
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     postsModel = PostsModel.fromJson(value?.data);
-  //     print(postsModel?.status);
-  //     print(postsModel?.message);
-  //     print(postsModel?.data[0]);
-  //     posts = postsModel?.data;
-  //     emit(PostsSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(PostsErrorState(error.toString()));
-  //   });
-  // }
+  ///bringing categories and putting them in a drop down button
+  int? dropDownValueCategory;
+  List<DropdownMenuItem<dynamic>> categoriesItems = [];
+  void changeCategoryDropDownButton(int newValue)
+  {
+    dropDownValueCategory = newValue;
+    emit(CategoriesChangeState());
+  }
+
+  CategoriesModel? categoriesModel;
+  List<dynamic>? categories;
+  void getCategories()
+  {
+    emit(CategoriesLoadingState());
+    DioHelper.getData(
+      url: GET_CATEGORIES,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      categoriesModel = CategoriesModel.fromJson(value?.data);
+      print(categoriesModel?.status);
+      print(categoriesModel?.message);
+      print(categoriesModel?.data[0].category);
+      categories = categoriesModel?.data;
+      print(categories?[1].id);
+      categoriesItems = categories!.map((category) {
+        return DropdownMenuItem<dynamic>(
+          value: category.id,
+          child: Text(category.category),
+        );
+      }).toList();
+      emit(CategoriesSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(CategoriesErrorState(error.toString()));
+    });
+  }
+
+  //******************QUESTIONS****************
+  ///ADD QUESTION
+  bool addStatus=false;
+  String addMessage='';
+  void addQuestion({required section,required question})
+  {
+    emit(AddQuestionLoadingState());
+    DioHelper.postData(
+      url: ADD_QUESTION,
+      token: token,
+      data: {
+        'jops_section_id' : section,
+        'content' : question
+      },
+    ).then((value) {
+      print(value?.data);
+      addStatus=value?.data["status"];
+      addMessage=value?.data["message"];
+
+      emit(AddQuestionSuccessState(addStatus,addMessage));
+    }).catchError((error){
+      print(error.toString());
+      emit(AddQuestionErrorState(error.toString()));
+    });
+  }
 
 
-  // ///Delete Post
-  // void deletePost(id)
-  // {
-  //   emit(DeletePostsLoadingState());
-  //   DioHelper.getData(
-  //     url: '${DELETEPOST}/${id}',
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     emit(DeletePostsSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(DeletePostsErrorState(error.toString()));
-  //   });
-  // }
-  //
-  // ///Edit Post
-  // void editPost(
-  //     {
-  //       required postId,
-  //       required  body,
-  //       required  token,
-  //     }
-  //     )
-  // {
-  //   emit(
-  //     EditPostsLoadingState(),
-  //   );
-  //   DioHelper.postData(
-  //     token: token,
-  //     url: '${EDITPOST}/${postId}',
-  //     data: {
-  //       'body': body,
-  //     },
-  //   ).then((value) {
-  //     print(value?.data);
-  //     emit(EditPostsSuccessState());
-  //   }).catchError((error) {
-  //     print(" ${error.response.data}");
-  //     emit(
-  //       EditPostsErrorState(error.toString()),
-  //     );
-  //   });
-  //
-  //
-  // }
+  ///GET QUESTION
+  QuestionsModel? questionsModel;
+  List<dynamic>? questions;
+  void getQuestionsLatest()
+  {
+    emit(GetQuestionsLatestLoadingState());
+    DioHelper.getData(
+      url: GET_QUESTIONS_LATEST,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      questionsModel = QuestionsModel.fromJson(value?.data);
+      print(questionsModel?.status);
+      print(questionsModel?.message);
+      print(questionsModel?.data[0]);
+      questions = questionsModel?.data;
+      emit(GetQuestionsLatestSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(GetQuestionsLatestErrorState(error.toString()));
+    });
+  }
 
+
+  ///DELETE QUESTION
+  void deleteQuestion(id)
+  {
+    emit(DeleteQuestionLoadingState());
+    DioHelper.deleteData(
+      url: '${DELETE_QUESTION}/${id}',
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      emit(DeleteQuestionSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(DeleteQuestionErrorState(error.toString()));
+    });
+  }
+
+  ///EDIT QUESTION
+  void editQuestion(
+      {
+        required questionId,
+        required  content,
+        required  token,
+      }
+      )
+  {
+    emit(EditQuestionLoadingState());
+    DioHelper.putData(
+      token: token,
+      url: '${EDIT_QUESTION}/${questionId}',
+      data: {
+        'content': content,
+      },
+    ).then((value) {
+      print(value?.data);
+      emit(EditQuestionSuccessState());
+    }).catchError((error) {
+      print(" ${error.response.data}");
+      emit(EditQuestionErrorState(error.toString()));
+    });
+  }
+
+  ///REPORT QUESTION
+  bool reportStatus=false;
+  String reportMessage='';
+  void reportQuestion(
+      {
+        required questionId,
+        required  reason,
+        required  token,
+      }
+      )
+  {
+    emit(ReportQuestionLoadingState());
+    DioHelper.postData(
+      token: token,
+      url: REPORT_QUESTION,
+      data: {
+        'question_id' : questionId,
+        'reason': reason,
+      },
+    ).then((value) {
+      print(value?.data);
+      reportStatus=value?.data["status"];
+      reportMessage=value?.data["message"];
+      emit(ReportQuestionSuccessState(reportStatus,reportMessage));
+    }).catchError((error) {
+      print(" ${error.response.data}");
+      emit(EditQuestionErrorState(error.toString()));
+    });
+  }
 
   ///SEND LIKES
-  // ChangeLikeModel? changeLikeModel;
-  // void Like(id)
-  // {
-  //   emit(LikeLoadingState());
-  //   DioHelper.getData(
-  //     url: '${TOGGLELIKE}/${id}',
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     changeLikeModel = ChangeLikeModel.fromJson(value?.data);
-  //     print(changeLikeModel?.status);
-  //     print(changeLikeModel?.message);
-  //     print(changeLikeModel?.data);
-  //     emit(LikeSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(LikeErrorState(error.toString()));
-  //   });
-  // }
+  void likeQuestion(id)
+  {
+    emit(LikeLoadingState());
+    DioHelper.postData(
+      url: '$LIKE_QUESTION/$id',
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      emit(LikeSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(LikeErrorState(error.toString()));
+    });
+  }
 
-  ///SHOW LIKES
-  // ShowLikesModel? showLikesModel;
-  // List<dynamic>? likes;
-  // void getLikes(id)
-  // {
-  //   emit(ShowLikesLoadingState());
-  //   DioHelper.getData(
-  //     url: '${GETLIKES}/${id}',
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     showLikesModel = ShowLikesModel.fromJson(value?.data);
-  //     print(showLikesModel?.status);
-  //     print(showLikesModel?.message);
-  //     print(showLikesModel?.data[0]);
-  //     likes = showLikesModel?.data;
-  //     emit(ShowLikesSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(ShowLikesErrorState(error.toString()));
-  //   });
-  // }
+  //******************ADVICES**************
+  ///ADD ADVICE
+  // bool addStatus=false;
+  // String addMessage='';
+  void addAdvice({required advice})
+  {
+    emit(AddAdviceLoadingState());
+    DioHelper.postData(
+      url: ADD_ADVICE,
+      token: token,
+      data: {
+        'content' : advice
+      },
+    ).then((value) {
+      print(value?.data);
+      addStatus=value?.data["status"];
+      addMessage=value?.data["message"];
 
-  ///SHOW COMMENTS
-  // ShowCommentsModel? showCommentsModel;
-  // List<dynamic>? comments;
-  // void getComments(id)
-  // {
-  //   emit(ShowCommentsLoadingState());
-  //   DioHelper.getData(
-  //     url: '${GETCOMMENTS}/${id}',
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     showCommentsModel = ShowCommentsModel.fromJson(value?.data);
-  //     print(showCommentsModel?.status);
-  //     print(showCommentsModel?.message);
-  //     print(showCommentsModel?.data[0].body);
-  //     comments = showCommentsModel?.data;
-  //     emit(ShowCommentsSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(ShowCommentsErrorState(error.toString()));
-  //   });
-  // }
-
-  ///SEND COMMENT
-  // CreateCommentModel? createCommentModel;
-  // void sendComment(
-  //     {
-  //       required postId,
-  //       required  body,
-  //       required  token,
-  //     }
-  //     )
-  // {
-  //   emit(
-  //     CreateCommentsLoadingState(),
-  //   );
-  //   DioHelper.postData(
-  //     token: token,
-  //     url: CREATECOMMENT,
-  //     data: {
-  //       'post_id':postId,
-  //       'body': body,
-  //     },
-  //   ).then((value) {
-  //     print(value?.data);
-  //     createCommentModel = CreateCommentModel.fromJson(value?.data);
-  //     emit(CreateCommentsSuccessState(createCommentModel!));
-  //   })
-  //       .catchError((error) {
-  //     print(" ${error.response.data}");
-  //     emit(
-  //       CreateCommentsErrorState(error.toString()),
-  //     );
-  //   });
-  //
-  //
-  // }
-
-  ///DELETE COMMENT
-  // void deleteComment(id)
-  // {
-  //   emit(DeleteCommentLoadingState());
-  //   DioHelper.getData(
-  //     url: '${DELETECOMMENT}/${id}',
-  //     token: token,
-  //   ).then((value) {
-  //     print(value?.data);
-  //     emit(DeleteCommentSuccessState());
-  //   }).catchError((error){
-  //     print(error.toString());
-  //     emit(DeleteCommentErrorState(error.toString()));
-  //   });
-  // }
-
-  ///Edit Comment
-  // void editComment(
-  //     {
-  //       required postId,
-  //       required commentId,
-  //       required  body,
-  //       required  token,
-  //     }
-  //     )
-  // {
-  //   emit(
-  //     EditCommentLoadingState(),
-  //   );
-  //   DioHelper.postData(
-  //     token: token,
-  //     url: EDITCOMMENT,
-  //     data: {
-  //       'post_id': postId,
-  //       'comment_id': commentId,
-  //       'body': body,
-  //     },
-  //   ).then((value) {
-  //     print(value?.data);
-  //     emit(EditCommentSuccessState());
-  //   }).catchError((error) {
-  //     print(" ${error.response.data}");
-  //     emit(
-  //       EditCommentErrorState(error.toString()),
-  //     );
-  //   });
-  //
-  //
-  // }
+      emit(AddAdviceSuccessState(addStatus,addMessage));
+    }).catchError((error){
+      print(error.toString());
+      emit(AddAdviceErrorState(error.toString()));
+    });
+  }
 
 
+  ///GET ADVICE
+  AdvicesModel? advicesModel;
+  List<dynamic>? advices;
+  void getAdvicesLatest()
+  {
+    emit(GetAdvicesLoadingState());
+    DioHelper.getData(
+      url: GET_ADVICES_LATEST,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      advicesModel = AdvicesModel.fromJson(value?.data);
+      print(advicesModel?.status);
+      print(advicesModel?.message);
+      print(advicesModel?.data[0]);
+      advices = advicesModel?.data;
+      emit(GetAdvicesSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(GetAdvicesErrorState(error.toString()));
+    });
+  }
+  void getAdvicesLiked()
+  {
+    emit(GetAdvicesLoadingState());
+    DioHelper.getData(
+      url: GET_ADVICES_LIKED,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      advicesModel = AdvicesModel.fromJson(value?.data);
+      print(advicesModel?.status);
+      print(advicesModel?.message);
+      print(advicesModel?.data[0]);
+      advices = questionsModel?.data;
+      emit(GetAdvicesSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(GetAdvicesErrorState(error.toString()));
+    });
+  }
+
+
+  ///DELETE ADVICE
+  void deleteAdvice(id)
+  {
+    emit(DeleteAdviceLoadingState());
+    DioHelper.deleteData(
+      url: '$DELETE_ADVICE/$id',
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      emit(DeleteAdviceSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(DeleteAdviceErrorState(error.toString()));
+    });
+  }
+
+  ///EDIT ADVICE
+  void editAdvice(
+      {
+        required adviceId,
+        required  content,
+        required  token,
+      }
+      )
+  {
+    emit(EditAdviceLoadingState());
+    DioHelper.putData(
+      token: token,
+      url: '$EDIT_ADVICE/$adviceId',
+      data: {
+        'content': content,
+      },
+    ).then((value) {
+      print(value?.data);
+      emit(EditAdviceSuccessState());
+    }).catchError((error) {
+      print(" ${error.response.data}");
+      emit(EditAdviceErrorState(error.toString()));
+    });
+  }
+
+  ///REPORT ADVICE
+  // bool reportStatus=false;
+  // String reportMessage='';
+  void reportAdvice(
+      {
+        required adviceId,
+        required  reason,
+        required  token,
+      }
+      )
+  {
+    emit(ReportAdviceLoadingState());
+    DioHelper.postData(
+      token: token,
+      url: REPORT_ADVICE,
+      data: {
+        'advice_id' : adviceId,
+        'reason': reason,
+      },
+    ).then((value) {
+      print(value?.data);
+      reportStatus=value?.data["status"];
+      reportMessage=value?.data["message"];
+      emit(ReportAdviceSuccessState(reportStatus,reportMessage));
+    }).catchError((error) {
+      print(" ${error.response.data}");
+      emit(EditAdviceErrorState(error.toString()));
+    });
+  }
+
+  ///SEND LIKES
+  void likeAdvice(id)
+  {
+    emit(LikeAdviceLoadingState());
+    DioHelper.postData(
+      url: '$LIKE_ADVICE/$id',
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      emit(LikeAdviceSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(LikeAdviceErrorState(error.toString()));
+    });
+  }
 
 
 }

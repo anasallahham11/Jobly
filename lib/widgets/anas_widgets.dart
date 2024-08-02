@@ -1,13 +1,16 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/community/question/question_view.dart';
 import 'package:jobly/modules/regular/search/cubit/search_cubit.dart';
 import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
 import 'package:jobly/utils/constants.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import '../modules/announcements/cubit/announcements_states.dart';
 import '../modules/applications/cubit/applications_states.dart';
 import '../modules/community/cubit/community_states.dart';
+import '../modules/community/question/cubit/question_states.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
 
@@ -118,6 +121,31 @@ Widget defaultFormField({
           ),
         ));
 
+Future<void> addingDialog(cubit,context,{required title,required controller,required onPressed}){
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: defaultFormField(
+              type: TextInputType.text,
+              label: 'type here',
+              controller: controller
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: onPressed,
+            child: const Text('Confirm'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 ///COMMUNITY
 Widget animatedTabBarItem(cubit, index, height, width, color,) => AnimatedContainer(
       duration: const Duration(milliseconds: DurationConstant.d100),
@@ -147,7 +175,7 @@ Widget animatedTabBarItem(cubit, index, height, width, color,) => AnimatedContai
       ),
     );
 
-Widget buildAnswerItem(answer, context, cubit, state,) => Card(
+Widget buildAnswerItem(answer,question, context, cubit, state,) => Card(
       color: ColorManager.purple0,
       shadowColor: ColorManager.purple0,
       shape: RoundedRectangleBorder(
@@ -166,8 +194,7 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
                 CircleAvatar(
                   radius: AppSize.s20,
                   backgroundColor: ColorManager.white,
-                  backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                  //backgroundImage: answer.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
+                  backgroundImage: imageSelector(image: answer.image,defaultImage: ImageAssets.employeeIc),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -179,32 +206,144 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
                       Row(
                         children: [
                           Text(
-                            "Anas Allahham",
-                            //'${answer.publisher}',
-                            style: TextStyle(height: AppSize.s1_5),
+                            '${answer.name}',
+                            style: const TextStyle(height: AppSize.s1_5),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: AppSize.s8,
                           ),
-                          //answer.publisher.verified ?
-                          1 == 1
-                              ? Icon(
+                          answer.isAuth ?
+                               const Icon(
                                   Icons.verified,
                                   color: Colors.lightBlue,
                                   size: AppSize.s16,
                                 )
-                              : SizedBox(
+                              : const SizedBox(
                                   width: AppSize.s1_5,
                                 ),
                         ],
                       ),
-                      Text("13h ago",
-                          //'${answer.date}',
+                      Text(
+                          '${answer.time}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
                               .copyWith(height: AppSize.s1_5)),
                     ],
+                  ),
+                ),
+                answer.isMine==true?
+                InkWell(
+                  onTap: (){
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(''),
+                          content: SizedBox(
+                              width: 40,
+                              height: 80,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10,),
+                                  InkWell(
+                                      onTap:(){
+                                        var editedAnswerController = TextEditingController(text: '${answer.content}');
+                                        addingDialog(
+                                          cubit,
+                                          context,
+                                          title: 'Edit Answer',
+                                          controller: editedAnswerController,
+                                          onPressed: () {
+                                            cubit.editAnswer(
+                                                answerId : answer.id,
+                                                content : editedAnswerController.text,
+                                                token : token
+                                            );
+                                            cubit.getAnswers(question.id);
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      child: Text('Edit Answer',style: TextStyle(color: ColorManager.pending),)),
+                                  const SizedBox(height: 20,),
+                                  InkWell(
+                                      onTap:(){
+                                        showDialog<void>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Are You Sure'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('Delete'),
+                                                  onPressed: () {
+                                                    cubit.deleteAnswer(answer.id);
+                                                    cubit.getAnswers(question.id);
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text('Cancel'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text('Delete Answer',style: TextStyle(color: ColorManager.error))),
+                                ],
+                              )
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: Image.asset(
+                        ImageAssets.dotsIc
+                    ),
+                  ),
+                ):
+                InkWell(
+                  onTap: (){
+                    var reportController = TextEditingController();
+                    addingDialog(
+                        cubit,
+                        context,
+                        title: 'Report Reason :',
+                        controller: reportController,
+                        onPressed: (){
+                          cubit.reportAnswer(
+                              token:token,
+                              answerId:answer.id,
+                              reason:reportController.text
+                          );
+                          reportController.clear();
+                        }
+                    );
+                  },
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: Image.asset(
+                        ImageAssets.reportIc
+                    ),
                   ),
                 ),
               ],
@@ -213,8 +352,7 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
               height: AppSize.s10,
             ),
             Text(
-              "First step to be a good employee.....mmm I guess you'll never be.",
-              //'${answer.body}',
+              '${answer.content}',
               style: getSemiBoldStyle(color: ColorManager.black),
             ),
             const SizedBox(
@@ -227,18 +365,18 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        // if(answer.isLiked==false) {
-                        //   print(answer.answerId);
-                        //   cubit.Like(answer.answerId);
-                        //   answer.likesCount = answer.likesCount + 1;
-                        //   answer.isLiked = !answer.isLiked;
-                        // }else
-                        // {
-                        //   print(answer.answerId);
-                        //   cubit.Like(answer.answerId);
-                        //   answer.likesCount = answer.likesCount - 1;
-                        //   answer.isLiked = !answer.isLiked;
-                        // }
+                        if(answer.isLiked==false) {
+                          print(answer.id);
+                          cubit.likeAnswer(answer.id);
+                          answer.likesCount = answer.likesCount + 1;
+                          answer.isLiked = !answer.isLiked;
+                        }else
+                        {
+                          print(answer.id);
+                          cubit.likeAnswer(answer.id);
+                          answer.likesCount = answer.likesCount - 1;
+                          answer.isLiked = !answer.isLiked;
+                        }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -253,8 +391,7 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
                             width: AppSize.s4,
                           ),
                           Text(
-                            "101 votes",
-                            //'${answer.likesCount} Votes',
+                            '${answer.likesCount} Votes',
                             style: getSemiBoldStyle(color: ColorManager.purple6)
                                 .copyWith(fontSize: FontSize.s14),
                           )
@@ -269,6 +406,20 @@ Widget buildAnswerItem(answer, context, cubit, state,) => Card(
         ),
       ),
     );
+
+Widget answersBuilder(answers,question, context, cubit, state) => ConditionalBuilder(
+  condition: state is! GetAnswerLoadingState && answers != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildAnswerItem(answers[index],question, context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s8,
+      ),
+      itemCount: answers.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
 
 Widget buildAdviceItem(advice, context, cubit, state,) => Card(
       shape: RoundedRectangleBorder(
@@ -287,8 +438,7 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
                 CircleAvatar(
                   radius: AppSize.s20,
                   backgroundColor: ColorManager.white,
-                  backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                  //backgroundImage: advice.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
+                  backgroundImage: imageSelector(image: advice.image,defaultImage: ImageAssets.employeeIc),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -300,32 +450,144 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
                       Row(
                         children: [
                           Text(
-                            "Anas Allahham",
-                            //'${advice.publisher}',
-                            style: TextStyle(height: AppSize.s1_5),
+                            '${advice.name}',
+                            style: const TextStyle(height: AppSize.s1_5),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: AppSize.s8,
                           ),
-                          //advice.publisher.verified ?
-                          1 == 1
-                              ? Icon(
+                          advice.isAuth
+                              ? const Icon(
                                   Icons.verified,
                                   color: Colors.lightBlue,
                                   size: AppSize.s16,
                                 )
-                              : SizedBox(
+                              : const SizedBox(
                                   width: AppSize.s1_5,
                                 ),
                         ],
                       ),
-                      Text("13h ago",
-                          //'${advice.date}',
+                      Text(
+                          '${advice.time}',
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
                               .copyWith(height: AppSize.s1_5)),
                     ],
+                  ),
+                ),
+                advice.isMine == true?
+                InkWell(
+                  onTap: (){
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(''),
+                          content: SizedBox(
+                              width: 40,
+                              height: 80,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10,),
+                                  InkWell(
+                                      onTap:(){
+                                        var editedAdviceController = TextEditingController(text: '${advice.content}');
+                                        addingDialog(
+                                          cubit,
+                                          context,
+                                          title: 'Edit Advice',
+                                          controller: editedAdviceController,
+                                          onPressed: () {
+                                            cubit.editAdvice(
+                                                adviceId : advice.id,
+                                                content : editedAdviceController.text,
+                                                token : token
+                                            );
+                                            cubit.getAdvicesLatest();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      },
+                                      child: Text('Edit Advice',style: TextStyle(color: ColorManager.pending),)),
+                                  const SizedBox(height: 20,),
+                                  InkWell(
+                                      onTap:(){
+                                        showDialog<void>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Are You Sure'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('Delete'),
+                                                  onPressed: () {
+                                                    cubit.deleteAdvice(advice.id);
+                                                    cubit.getAdvicesLatest();
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text('Cancel'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Text('Delete Advice',style: TextStyle(color: ColorManager.error))),
+                                ],
+                              )
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: Image.asset(
+                        ImageAssets.dotsIc
+                    ),
+                  ),
+                ):
+                InkWell(
+                  onTap: (){
+                    var reportController = TextEditingController();
+                    addingDialog(
+                        cubit,
+                        context,
+                        title: 'Report Reason :',
+                        controller: reportController,
+                        onPressed: (){
+                          cubit.reportAdvice(
+                              token:token,
+                              adviceId:advice.id,
+                              reason:reportController.text
+                          );
+                          reportController.clear();
+                        }
+                    );
+                  },
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: Image.asset(
+                        ImageAssets.reportIc
+                    ),
                   ),
                 ),
               ],
@@ -334,8 +596,7 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
               height: AppSize.s10,
             ),
             Text(
-              "First step to be a good employee...is to suck my dick.",
-              //'${advice.body}',
+              '${advice.content}',
               style: getSemiBoldStyle(color: ColorManager.black),
             ),
             const SizedBox(
@@ -348,18 +609,18 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        // if(advice.isLiked==false) {
-                        //   print(advice.adviceId);
-                        //   cubit.Like(advice.adviceId);
-                        //   advice.likesCount = advice.likesCount + 1;
-                        //   advice.isLiked = !advice.isLiked;
-                        // }else
-                        // {
-                        //   print(advice.adviceId);
-                        //   cubit.Like(advice.adviceId);
-                        //   advice.likesCount = advice.likesCount - 1;
-                        //   advice.isLiked = !advice.isLiked;
-                        // }
+                        if(advice.isLiked==false) {
+                          print(advice.id);
+                          cubit.likeAdvice(advice.id);
+                          advice.likesCount = advice.likesCount + 1;
+                          advice.isLiked = !advice.isLiked;
+                        }else
+                        {
+                          print(advice.id);
+                          cubit.likeAdvice(advice.id);
+                          advice.likesCount = advice.likesCount - 1;
+                          advice.isLiked = !advice.isLiked;
+                        }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -374,8 +635,7 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
                             width: AppSize.s4,
                           ),
                           Text(
-                            "101 votes",
-                            //'${advice.likesCount} Votes',
+                            '${advice.likesCount} Votes',
                             style: getSemiBoldStyle(color: ColorManager.purple6)
                                 .copyWith(fontSize: FontSize.s14),
                           )
@@ -391,151 +651,296 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
       ),
     );
 
-Widget buildQuestionItem(question, context, cubit, state,) => Card(
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(AppSize.s28), // Change the radius here
+Widget advicesBuilder(advices, context, cubit, state) => ConditionalBuilder(
+  condition: state is! GetAdvicesLoadingState && advices != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildAdviceItem(advices[index], context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s8,
       ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: AppSize.s18,
-      margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
-      child: Padding(
-        padding: const EdgeInsets.all(AppPadding.p14),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: AppSize.s20,
-                  backgroundColor: ColorManager.white,
-                  backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                  //backgroundImage: question.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
-                ),
-                const SizedBox(
-                  width: AppSize.s14,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Anas Allahham",
-                            //'${question.publisher}',
-                            style: TextStyle(height: AppSize.s1_5),
-                          ),
-                          SizedBox(
-                            width: AppSize.s8,
-                          ),
-                          //question.publisher.verified ?
-                          1 == 1
-                              ? Icon(
-                                  Icons.verified,
-                                  color: Colors.lightBlue,
-                                  size: AppSize.s16,
-                                )
-                              : SizedBox(
-                                  width: AppSize.s1_5,
-                                ),
-                        ],
-                      ),
-                      Text("13h ago",
-                          //'${question.date}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(height: AppSize.s1_5)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: AppSize.s10,
-            ),
-            Text(
-              "What the fuck?",
-              //'${question.body}',
-              style: getSemiBoldStyle(color: ColorManager.black),
-            ),
-            const SizedBox(
-              height: AppSize.s10,
-            ),
-            SizedBox(
-              height: AppSize.s30,
-              child: Row(
+      itemCount: advices.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
+
+Widget buildQuestionItem(question, context, cubit, state,) => InkWell(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuestionView(question),
+          ),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(AppSize.s28), // Change the radius here
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: AppSize.s18,
+        margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
+        child: Padding(
+          padding: const EdgeInsets.all(AppPadding.p14),
+          child: Column(
+            children: [
+              Row(
                 children: [
+                  CircleAvatar(
+                    radius: AppSize.s20,
+                    backgroundColor: ColorManager.white,
+                    backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
+                  ),
+                  const SizedBox(
+                    width: AppSize.s14,
+                  ),
                   Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        // if(question.isLiked==false) {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount + 1;
-                        //   question.isLiked = !question.isLiked;
-                        // }else
-                        // {
-                        //   print(question.questionId);
-                        //   cubit.Like(question.questionId);
-                        //   question.likesCount = question.likesCount - 1;
-                        //   question.isLiked = !question.isLiked;
-                        // }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            ImageAssets.upArrowIc,
-                            width: AppSize.s16,
-                            height: AppSize.s16,
-                            color: ColorManager.purple5,
-                          ),
-                          const SizedBox(
-                            width: AppSize.s4,
-                          ),
-                          Text(
-                            "101 votes",
-                            //'${question.likesCount} Votes',
-                            style: getBoldStyle(color: ColorManager.purple6)
-                                .copyWith(fontSize: FontSize.s14),
-                          )
-                        ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${question.name}',
+                              style: const TextStyle(height: AppSize.s1_5),
+                            ),
+                            const SizedBox(
+                              width: AppSize.s8,
+                            ),
+                            question.isAuth ?
+                            const Icon(
+                                    Icons.verified,
+                                    color: Colors.lightBlue,
+                                    size: AppSize.s16,
+                                  ) :
+                            const SizedBox(width: AppSize.s1_5,),
+                          ],
+                        ),
+                        Text(
+                            '${question.time}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(height: AppSize.s1_5)),
+                      ],
+                    ),
+                  ),
+                  question.isMine==true?
+                  InkWell(
+                    onTap: (){
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(''),
+                            content: SizedBox(
+                                width: 40,
+                                height: 80,
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 10,),
+                                    InkWell(
+                                        onTap:(){
+                                          var editedQuestionController = TextEditingController(text: '${question.content}');
+                                          addingDialog(
+                                            cubit,
+                                            context,
+                                            title: 'Edit Question',
+                                            controller: editedQuestionController,
+                                            onPressed: () {
+                                              cubit.editQuestion(
+                                                  questionId : question.id,
+                                                  content : editedQuestionController.text,
+                                                  token : token
+                                              );
+                                              cubit.getQuestionsLatest();
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                          );
+                                        },
+                                        child: Text('Edit Question',style: TextStyle(color: ColorManager.pending),)),
+                                    const SizedBox(height: 20,),
+                                    InkWell(
+                                        onTap:(){
+                                          showDialog<void>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: const Text('Are You Sure'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text('Delete'),
+                                                    onPressed: () {
+                                                      cubit.deleteQuestion(question.id);
+                                                      cubit.getQuestionsLatest();
+                                                      Navigator.of(context).pop();
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: const Text('Cancel'),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Text('Delete Question',style: TextStyle(color: ColorManager.error))),
+                                  ],
+                                )
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Image.asset(
+                          ImageAssets.dotsIc
+                      ),
+                    ),
+                  ):
+                  InkWell(
+                    onTap: (){
+                      var reportController = TextEditingController();
+                      addingDialog(
+                          cubit,
+                          context,
+                          title: 'Report Reason :',
+                          controller: reportController,
+                          onPressed: (){
+                            cubit.reportQuestion(
+                                token:token,
+                                questionId:question.id,
+                                reason:reportController.text
+                            );
+                            reportController.clear();
+                          }
+                      );
+                    },
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Image.asset(
+                          ImageAssets.reportIc
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            ImageAssets.answersIc,
-                            width: AppSize.s20,
-                            height: AppSize.s20,
-                            color: ColorManager.purple5,
-                          ),
-                          const SizedBox(
-                            width: AppSize.s5,
-                          ),
-                          Text(
-                            "20 answers",
-                            //'${question.comentsCount} Answers',
-                            style: getBoldStyle(color: ColorManager.purple6)
-                                .copyWith(fontSize: FontSize.s14),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
-            ),
-          ],
+              const SizedBox(
+                height: AppSize.s10,
+              ),
+              Text(
+                '${question.content}',
+                style: getSemiBoldStyle(color: ColorManager.black),
+              ),
+              const SizedBox(
+                height: AppSize.s10,
+              ),
+              SizedBox(
+                height: AppSize.s30,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          if(question.isLiked==false) {
+                            print(question.id);
+                            cubit.likeQuestion(question.id);
+                            question.likesCount = question.likesCount + 1;
+                            question.isLiked = !question.isLiked;
+                          }else
+                          {
+                            print(question.id);
+                            cubit.likeQuestion(question.id);
+                            question.likesCount = question.likesCount - 1;
+                            question.isLiked = !question.isLiked;
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              ImageAssets.upArrowIc,
+                              width: AppSize.s16,
+                              height: AppSize.s16,
+                              color: ColorManager.purple5,
+                            ),
+                            const SizedBox(
+                              width: AppSize.s4,
+                            ),
+                            Text(
+                              '${question.likesCount} Votes',
+                              style: getBoldStyle(color: ColorManager.purple6)
+                                  .copyWith(fontSize: FontSize.s14),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              ImageAssets.answersIc,
+                              width: AppSize.s20,
+                              height: AppSize.s20,
+                              color: ColorManager.purple5,
+                            ),
+                            const SizedBox(
+                              width: AppSize.s5,
+                            ),
+                            Text(
+                              '${question.answersCount} Answers',
+                              style: getBoldStyle(color: ColorManager.purple6)
+                                  .copyWith(fontSize: FontSize.s14),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+
+Widget questionsBuilder(questions, context, cubit, state) => ConditionalBuilder(
+  condition: state is! CommunityLoadingState && questions != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildQuestionItem(questions[index], context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s8,
+      ),
+      itemCount: questions.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
 
 Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppPadding.p20),
@@ -546,8 +951,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
               CircleAvatar(
                 radius: AppSize.s20,
                 backgroundColor: ColorManager.purple4,
-                backgroundImage: const AssetImage(ImageAssets.employeeIc),
-                //backgroundImage: question.publisher.image=='null' ? const AssetImage(ImageAssets.splashLogo) :const AssetImage(ImageAssets.splashLogo),
+                backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
               ),
               const SizedBox(
                 width: AppSize.s14,
@@ -559,27 +963,25 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
                     Row(
                       children: [
                         Text(
-                          "Anas Allahham",
-                          //'${question.publisher}',
-                          style: TextStyle(height: AppSize.s1_5),
+                          '${question.name}',
+                          style: const TextStyle(height: AppSize.s1_5),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: AppSize.s8,
                         ),
-                        //question.publisher.verified ?
-                        1 == 1
-                            ? Icon(
+                        question.isAuth==true ?
+                             const Icon(
                                 Icons.verified,
                                 color: Colors.lightBlue,
                                 size: AppSize.s16,
                               )
-                            : SizedBox(
+                            : const SizedBox(
                                 width: AppSize.s1_5,
                               ),
                       ],
                     ),
-                    Text("13h ago",
-                        //'${question.date}',
+                    Text(
+                        '${question.time}',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall!
@@ -593,7 +995,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
             height: AppSize.s16,
           ),
           Text(
-            "I currently work in insurance and I hate it. The issue is that I think I hate sitting in a desk for 8 hours everyday. I work in an office where it’s not really possible to have conversations with my coworkers so I pretty much stay silent for 8 hours a day minus the occasional meeting. ",
+            question.content,
             style: getMediumStyle(color: ColorManager.black)
                 .copyWith(fontSize: FontSize.s17),
           ),
@@ -607,18 +1009,18 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // if(question.isLiked==false) {
-                      //   print(question.questionId);
-                      //   cubit.Like(question.questionId);
-                      //   question.likesCount = question.likesCount + 1;
-                      //   question.isLiked = !question.isLiked;
-                      // }else
-                      // {
-                      //   print(question.questionId);
-                      //   cubit.Like(question.questionId);
-                      //   question.likesCount = question.likesCount - 1;
-                      //   question.isLiked = !question.isLiked;
-                      // }
+                      if(question.isLiked==false) {
+                        print(question.id);
+                        cubit.likeQuestion(question.id);
+                        question.likesCount = question.likesCount + 1;
+                        question.isLiked = !question.isLiked;
+                      }else
+                      {
+                        print(question.id);
+                        cubit.likeQuestion(question.id);
+                        question.likesCount = question.likesCount - 1;
+                        question.isLiked = !question.isLiked;
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -633,8 +1035,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
                           width: AppSize.s4,
                         ),
                         Text(
-                          "101 votes",
-                          //'${question.likesCount} Votes',
+                          '${question.likesCount} Votes',
                           style: getBoldStyle(color: ColorManager.purple6)
                               .copyWith(fontSize: FontSize.s14),
                         )
@@ -658,8 +1059,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
                           width: AppSize.s5,
                         ),
                         Text(
-                          "20 answers",
-                          //'${question.commentsCount} Answers',
+                          '${question.answersCount} Answers',
                           style: getBoldStyle(color: ColorManager.purple6)
                               .copyWith(fontSize: FontSize.s14),
                         )
@@ -673,19 +1073,7 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
         ],
       ),
     );
-Widget questionsBuilder(questions, context, cubit, state) => ConditionalBuilder(
-      condition: state is! CommunityLoadingState && questions != null,
-      builder: (context) => ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) =>
-              buildQuestionItem(questions[index], context, cubit, state),
-          separatorBuilder: (context, index) => const SizedBox(
-                height: AppSize.s8,
-              ),
-          itemCount: questions.length),
-      fallback: (context) => const Center(child: CircularProgressIndicator()),
-    );
+
 
 ///ANNOUNCEMENT
 Widget buildAnnouncementItem(announcement, context, cubit, state) {
@@ -718,18 +1106,18 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                     CircleAvatar(
                       radius: AppSize.s20,
                       backgroundColor: ColorManager.white,
-                      backgroundImage: const AssetImage(ImageAssets.tradinos),
+                      backgroundImage: imageSelector(image: announcement.companyPhoto,defaultImage: ImageAssets.purpleLogo),
                     ),
                     const SizedBox(width: AppSize.s14),
                     Expanded(
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
-                            "Tradinos",
-                            style: TextStyle(height: AppSize.s1_5),
+                            '${announcement.companyName}',
+                            style: const TextStyle(height: AppSize.s1_5),
                           ),
-                          SizedBox(width: AppSize.s8),
-                          Icon(Icons.verified, color: Colors.lightBlue, size: AppSize.s16),
+                          const SizedBox(width: AppSize.s8),
+                          const Icon(Icons.verified, color: Colors.lightBlue, size: AppSize.s16),
                         ],
                       ),
                     ),
@@ -737,7 +1125,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                 ),
                 const SizedBox(height: AppSize.s10),
                 Text(
-                  "Flutter Development Course:",
+                  '${announcement.title}',
                   style: getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s16),
                 ),
                 const Divider(),
@@ -752,7 +1140,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             children: [
                               Icon(Icons.calendar_month_outlined, color: ColorManager.purple5),
                               const SizedBox(width: AppSize.s5),
-                              const Text("Month"),
+                               Text('${announcement.time}'),
                             ],
                           ),
                           const SizedBox(height: AppSize.s8),
@@ -760,7 +1148,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             children: [
                               Icon(Icons.access_time, color: ColorManager.purple5),
                               const SizedBox(width: AppSize.s5),
-                              const Text("Sun - Thu"),
+                               Text('${announcement.days}',),
                             ],
                           ),
                           const SizedBox(height: AppSize.s8),
@@ -768,7 +1156,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             children: [
                               Icon(Icons.person_outline, color: ColorManager.purple5),
                               const SizedBox(width: AppSize.s5),
-                              const Text("Mr. Anas Allahham"),
+                               Text('${announcement.companyEmail}',),
                             ],
                           ),
                         ],
@@ -778,12 +1166,12 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("Start at : 22/06/2024"),
-                          SizedBox(height: AppSize.s14),
-                          Text("From 1 to 4"),
-                          SizedBox(height: AppSize.s16),
-                          Text("TBD"),
+                        children: [
+                          Text('${announcement.startDate}',),
+                          const SizedBox(height: AppSize.s14),
+                          Text("From ${announcement.time}"),
+                          const SizedBox(height: AppSize.s16),
+                          Text('${announcement.companyEmail}',),
                         ],
                       ),
                     ),
@@ -794,7 +1182,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                   children: [
                     Icon(Icons.attach_money, color: ColorManager.pending),
                     const SizedBox(width: AppSize.s5),
-                    const Text("Price : 400,000 SYP"),
+                     Text("Price : ${announcement.price} SYP"),
                   ],
                 ),
               ],
@@ -814,7 +1202,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
               ),
             ),
             child: Text(
-              "Course",
+              announcement.type=="course"?"Course":"Internship",
               style: getSemiBoldStyle(color: ColorManager.white,fontSize: FontSize.s14),
             ),
           ),
@@ -823,7 +1211,19 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
     ),
   );
 }
-
+Widget announcementsBuilder(announcements, context, cubit, state) => ConditionalBuilder(
+  condition: state is! AnnouncementsLoadingState && announcements != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildQuestionItem(announcements[index], context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s20,
+      ),
+      itemCount: announcements.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
 ///APPLICATIONS
 Widget buildApplicationItem(application, context, cubit, state) {
   return Container(
@@ -862,7 +1262,7 @@ Widget buildApplicationItem(application, context, cubit, state) {
               child: CircleAvatar(
                 radius: AppSize.s350,
                 backgroundColor: ColorManager.purple4,
-                backgroundImage: imageSelector(application.publisherPhoto)
+                backgroundImage: imageSelector(image: application.publisherPhoto,defaultImage: ImageAssets.purpleLogo)
               ),
             ),
             const SizedBox(width: AppSize.s16,),
@@ -973,11 +1373,11 @@ Color statusColor(status){
     return ColorManager.grey;
   }
 }
-ImageProvider<Object> imageSelector(image){
+ImageProvider<Object> imageSelector({required image,required defaultImage}){
   if(image==null) {
-    return const AssetImage(ImageAssets.purpleLogo);
+    return AssetImage(defaultImage);
   } else {
-    return NetworkImage("${baseUrl}images$image");
+    return NetworkImage("${baseUrl}images/$image");
   }
 }
 ///FILTER

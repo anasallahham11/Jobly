@@ -14,15 +14,49 @@ import 'cubit/question_states.dart';
 
 
 class QuestionView extends StatelessWidget {
-  const QuestionView({super.key});
+  const QuestionView(this.question, {super.key});
+  final question;
   @override
   Widget build(BuildContext context) {
     var answerController = TextEditingController();
 
     return BlocProvider(
-        create: (BuildContext context) => QuestionCubit(),
+        create: (BuildContext context) => QuestionCubit()..getAnswers(question.id),
         child: BlocConsumer<QuestionCubit, QuestionStates>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is AddAnswerSuccessState) {
+                if (state.addStatus == true) {
+                  showToast(text: 'Answer is Sent.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.addMessage, state: ToastStates.ERROR);
+                }
+              }
+              if (state is ReportAnswerSuccessState) {
+                if (state.reportStatus == true) {
+                  showToast(text: 'Report is Sent.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.reportMessage, state: ToastStates.ERROR);
+                }
+              }
+              if (state is DeleteAnswerSuccessState) {
+                if (state.deleteStatus == true) {
+                  showToast(text: 'Answer is Deleted.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.deleteMessage, state: ToastStates.ERROR);
+                }
+              }
+              if (state is EditAnswerSuccessState) {
+                if (state.editStatus == true) {
+                  showToast(text: 'Answer is edited.', state: ToastStates.SUCCESS);
+
+                } else {
+                  showToast(text: state.editMessage, state: ToastStates.ERROR);
+                }
+              }
+            },
             builder: (context, state) {
               var cubit = QuestionCubit.get(context);
               return Scaffold(
@@ -36,7 +70,7 @@ class QuestionView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children:[
                     const SizedBox(height: AppSize.s14,),
-                    buildDetailedQuestionItem(null, context, cubit, state),
+                    buildDetailedQuestionItem(question, context, cubit, state),
                     //const SizedBox(height: AppSize.s16,),
                     Padding(
                       padding: const EdgeInsets.all( 20.0),
@@ -45,6 +79,11 @@ class QuestionView extends StatelessWidget {
                           type: TextInputType.text,
                           label: "Add Answer",
                           suffix: Icons.add,
+                          suffixPressed: (){
+                            cubit.addAnswer(questionId: question.id, content: answerController.text);
+                            question.answersCount++;
+                            cubit.getAnswers(question.id);
+                          },
                           prefix: Icons.mode_comment_rounded
                       ),
                     ),
@@ -63,15 +102,7 @@ class QuestionView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            SizedBox(height: 20,),
-                            buildAnswerItem(null, context, cubit, state),
-                            SizedBox(height: 20,),
-                            buildAnswerItem(null, context, cubit, state),
-                            SizedBox(height: 20,),
-                            buildAnswerItem(null, context, cubit, state),
-                            SizedBox(height: 20,),
-                            buildAnswerItem(null, context, cubit, state),
-                            SizedBox(height: 20,),
+                            answersBuilder(cubit.answers,question, context, cubit, state)
 
                           ],
                         ),

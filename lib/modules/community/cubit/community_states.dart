@@ -13,29 +13,84 @@ class CommunityErrorState extends CommunityStates{
 }
 class ChangeTabBarState extends CommunityStates{}
 
+///DROP DOWN BUTTON
+class CategoriesInitialState extends CommunityStates{}
 
-class DeletePostsInitialState extends CommunityStates{}
+class CategoriesLoadingState extends CommunityStates{}
 
-class DeletePostsLoadingState extends CommunityStates{}
+class CategoriesSuccessState extends CommunityStates{}
 
-class DeletePostsSuccessState extends CommunityStates{}
-
-class DeletePostsErrorState extends CommunityStates{
+class CategoriesErrorState extends CommunityStates{
   final String error;
-  DeletePostsErrorState(this.error);
+  CategoriesErrorState(this.error);
 }
 
-class EditPostsInitialState extends CommunityStates{}
+class CategoriesChangeState extends CommunityStates{}
 
-class EditPostsLoadingState extends CommunityStates{}
+///********QUESTIONS**********
+///GET
+class GetQuestionsLatestInitialState extends CommunityStates{}
 
-class EditPostsSuccessState extends CommunityStates{}
+class GetQuestionsLatestLoadingState extends CommunityStates{}
 
-class EditPostsErrorState extends CommunityStates{
+class GetQuestionsLatestSuccessState extends CommunityStates{}
+
+class GetQuestionsLatestErrorState extends CommunityStates{
   final String error;
-  EditPostsErrorState(this.error);
+  GetQuestionsLatestErrorState(this.error);
+}
+///ADD
+class AddQuestionInitialState extends CommunityStates{}
+
+class AddQuestionLoadingState extends CommunityStates{}
+
+class AddQuestionSuccessState extends CommunityStates{
+  final bool status;
+  final String message;
+  AddQuestionSuccessState(this.status,this.message);
 }
 
+class AddQuestionErrorState extends CommunityStates{
+  final String error;
+  AddQuestionErrorState(this.error);
+}
+///DELETE
+class DeleteQuestionInitialState extends CommunityStates{}
+
+class DeleteQuestionLoadingState extends CommunityStates{}
+
+class DeleteQuestionSuccessState extends CommunityStates{}
+
+class DeleteQuestionErrorState extends CommunityStates{
+  final String error;
+  DeleteQuestionErrorState(this.error);
+}
+///EDIT
+class EditQuestionInitialState extends CommunityStates{}
+
+class EditQuestionLoadingState extends CommunityStates{}
+
+class EditQuestionSuccessState extends CommunityStates{}
+
+class EditQuestionErrorState extends CommunityStates{
+  final String error;
+  EditQuestionErrorState(this.error);
+}
+///REPORT
+class ReportQuestionInitialState extends CommunityStates{}
+
+class ReportQuestionLoadingState extends CommunityStates{}
+
+class ReportQuestionSuccessState extends CommunityStates{
+  final bool status;
+  final String message;
+  ReportQuestionSuccessState(this.status,this.message);
+}
+
+class ReportQuestionErrorState extends CommunityStates{
+  final String error;
+  ReportQuestionErrorState(this.error);
+}
 ///LIKE
 class LikeLoadingState extends CommunityStates{}
 
@@ -46,58 +101,79 @@ class LikeErrorState extends CommunityStates{
   LikeErrorState(this.error);
 }
 
-class ChangeIsLikedState extends CommunityStates{}
 
-class ShowLikesLoadingState extends CommunityStates{}
+///********ADVICES**********
+///GET
+class GetAdvicesInitialState extends CommunityStates{}
 
-class ShowLikesSuccessState extends CommunityStates{}
+class GetAdvicesLoadingState extends CommunityStates{}
 
-class ShowLikesErrorState extends CommunityStates{
+class GetAdvicesSuccessState extends CommunityStates{}
+
+class GetAdvicesErrorState extends CommunityStates{
   final String error;
-  ShowLikesErrorState(this.error);
+  GetAdvicesErrorState(this.error);
 }
-///COMMENTS
-class ShowCommentsLoadingState extends CommunityStates{}
+///ADD
+class AddAdviceInitialState extends CommunityStates{}
 
-class ShowCommentsSuccessState extends CommunityStates{}
+class AddAdviceLoadingState extends CommunityStates{}
 
-class ShowCommentsErrorState extends CommunityStates{
-  final String error;
-  ShowCommentsErrorState(this.error);
-}
-
-
-class CreateCommentsLoadingState extends CommunityStates{}
-
-class CreateCommentsSuccessState extends CommunityStates{
-  // final CreateCommentModel createCommentModel;
-  //
-  // CreateCommentsSuccessState(this.createCommentModel);
+class AddAdviceSuccessState extends CommunityStates{
+  final bool status;
+  final String message;
+  AddAdviceSuccessState(this.status,this.message);
 }
 
-class CreateCommentsErrorState extends CommunityStates{
+class AddAdviceErrorState extends CommunityStates{
   final String error;
-  CreateCommentsErrorState(this.error);
+  AddAdviceErrorState(this.error);
+}
+///DELETE
+class DeleteAdviceInitialState extends CommunityStates{}
+
+class DeleteAdviceLoadingState extends CommunityStates{}
+
+class DeleteAdviceSuccessState extends CommunityStates{}
+
+class DeleteAdviceErrorState extends CommunityStates{
+  final String error;
+  DeleteAdviceErrorState(this.error);
+}
+///EDIT
+class EditAdviceInitialState extends CommunityStates{}
+
+class EditAdviceLoadingState extends CommunityStates{}
+
+class EditAdviceSuccessState extends CommunityStates{}
+
+class EditAdviceErrorState extends CommunityStates{
+  final String error;
+  EditAdviceErrorState(this.error);
+}
+///REPORT
+class ReportAdviceInitialState extends CommunityStates{}
+
+class ReportAdviceLoadingState extends CommunityStates{}
+
+class ReportAdviceSuccessState extends CommunityStates{
+  final bool status;
+  final String message;
+  ReportAdviceSuccessState(this.status,this.message);
 }
 
-class DeleteCommentInitialState extends CommunityStates{}
-
-class DeleteCommentLoadingState extends CommunityStates{}
-
-class DeleteCommentSuccessState extends CommunityStates{}
-
-class DeleteCommentErrorState extends CommunityStates{
+class ReportAdviceErrorState extends CommunityStates{
   final String error;
-  DeleteCommentErrorState(this.error);
+  ReportAdviceErrorState(this.error);
 }
 
-class EditCommentInitialState extends CommunityStates{}
 
-class EditCommentLoadingState extends CommunityStates{}
+///LIKE
+class LikeAdviceLoadingState extends CommunityStates{}
 
-class EditCommentSuccessState extends CommunityStates{}
+class LikeAdviceSuccessState extends CommunityStates{}
 
-class EditCommentErrorState extends CommunityStates{
+class LikeAdviceErrorState extends CommunityStates{
   final String error;
-  EditCommentErrorState(this.error);
+  LikeAdviceErrorState(this.error);
 }

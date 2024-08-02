@@ -1,6 +1,8 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:jobly/utils/end_points.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/helpers/dio_helper.dart';
+import '../model/announcements_model.dart';
 import 'announcements_states.dart';
 
 
@@ -8,42 +10,27 @@ class AnnouncementsCubit extends Cubit<AnnouncementsStates>{
   AnnouncementsCubit() : super(AnnouncementsInitialState());
   static AnnouncementsCubit get(context) => BlocProvider.of(context);
 
-  List<String> type = [
-    "Course",
-    "Internship",
-  ];
-
-  int currentIndex=0;
-  void changeTabBar(int index)
+  ///GET ANNOUNCEMENTS
+  AnnouncementsModel? announcementsModel;
+  List<dynamic>? announcements;
+  void getAnnouncements()
   {
-    currentIndex= index;
-    emit(ChangeTabBarState());
+    emit(AnnouncementsLoadingState());
+    DioHelper.getData(
+      url: GET_ANNOUNCEMENTS,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      announcementsModel = AnnouncementsModel.fromJson(value?.data);
+      print(announcementsModel?.status);
+      print(announcementsModel?.message);
+      print(announcementsModel?.data[0]);
+      announcements = announcementsModel?.data;
+      emit(AnnouncementsSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AnnouncementsErrorState(error.toString()));
+    });
   }
-
-///GET COURSES
-// PostsModel? postsModel;
-// List<dynamic>? posts;
-// void getPosts()
-// {
-//   emit(PostsLoadingState());
-//   DioHelper.getData(
-//     url: GETPOSTS,
-//     token: token,
-//   ).then((value) {
-//     print(value?.data);
-//     postsModel = PostsModel.fromJson(value?.data);
-//     print(postsModel?.status);
-//     print(postsModel?.message);
-//     print(postsModel?.data[0]);
-//     posts = postsModel?.data;
-//     emit(PostsSuccessState());
-//   }).catchError((error){
-//     print(error.toString());
-//     emit(PostsErrorState(error.toString()));
-//   });
-// }
-
-
-
 
 }

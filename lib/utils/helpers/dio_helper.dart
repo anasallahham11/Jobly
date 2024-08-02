@@ -1,14 +1,11 @@
 import 'package:dio/dio.dart';
-import 'dart:convert';
-import 'dart:html';
-
 class DioHelper
 {
   static late Dio dio;
   static init(){
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://192.168.1.105:8000/api/',
+        baseUrl: 'http://192.168.1.8:8000/api/',
         receiveDataWhenStatusError: true,
       ),
     );
@@ -48,6 +45,46 @@ class DioHelper
     };
 
     return dio.post(
+      url,
+      queryParameters: query,
+      data: data,
+    );
+  }
+
+  static Future<Response?> deleteData({
+    required String url,
+    Map<String,dynamic>? query,
+    Map<String,dynamic>? data,
+    String lang = 'en',
+    String? token,
+  }) async {
+    dio.options.headers={
+      'content_type':'application/json',
+      'lang':lang,
+      'Authorization': 'Bearer $token',
+    };
+
+    return dio.delete(
+      url,
+      queryParameters: query,
+      data: data,
+    );
+  }
+
+  static Future<Response?> putData({
+    required String url,
+    Map<String,dynamic>? query,
+    Map<String,dynamic>? data,
+    String lang = 'en',
+    String? token,
+  }) async {
+    dio.options.headers={
+      'content_type':'application/json',
+      'lang':lang,
+      'Authorization': 'Bearer $token',
+    };
+
+    return dio.put(
       url,
       queryParameters: query,
       data: data,

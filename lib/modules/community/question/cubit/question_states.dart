@@ -11,29 +11,77 @@ class QuestionErrorState extends QuestionStates{
   final String error;
   QuestionErrorState(this.error);
 }
-class ChangeTabBarState extends QuestionStates{}
 
+class GetAnswerInitialState extends QuestionStates{}
 
-class DeletePostsInitialState extends QuestionStates{}
+class GetAnswerLoadingState extends QuestionStates{}
 
-class DeletePostsLoadingState extends QuestionStates{}
+class GetAnswerSuccessState extends QuestionStates{}
 
-class DeletePostsSuccessState extends QuestionStates{}
-
-class DeletePostsErrorState extends QuestionStates{
+class GetAnswerErrorState extends QuestionStates{
   final String error;
-  DeletePostsErrorState(this.error);
+  GetAnswerErrorState(this.error);
 }
 
-class EditPostsInitialState extends QuestionStates{}
+class AddAnswerInitialState extends QuestionStates{}
 
-class EditPostsLoadingState extends QuestionStates{}
+class AddAnswerLoadingState extends QuestionStates{}
 
-class EditPostsSuccessState extends QuestionStates{}
+class AddAnswerSuccessState extends QuestionStates{
+  final bool addStatus;
+  final String addMessage;
+  AddAnswerSuccessState(this.addStatus,this.addMessage);
+}
 
-class EditPostsErrorState extends QuestionStates{
+class AddAnswerErrorState extends QuestionStates{
   final String error;
-  EditPostsErrorState(this.error);
+  AddAnswerErrorState(this.error);
+}
+
+
+class DeleteAnswerInitialState extends QuestionStates{}
+
+class DeleteAnswerLoadingState extends QuestionStates{}
+
+class DeleteAnswerSuccessState extends QuestionStates{
+  final bool deleteStatus;
+  final String deleteMessage;
+  DeleteAnswerSuccessState(this.deleteStatus,this.deleteMessage);
+}
+
+class DeleteAnswerErrorState extends QuestionStates{
+  final String error;
+  DeleteAnswerErrorState(this.error);
+}
+
+class EditAnswerInitialState extends QuestionStates{}
+
+class EditAnswerLoadingState extends QuestionStates{}
+
+class EditAnswerSuccessState extends QuestionStates{
+  final bool editStatus;
+  final String editMessage;
+  EditAnswerSuccessState(this.editStatus,this.editMessage);
+}
+
+class EditAnswerErrorState extends QuestionStates{
+  final String error;
+  EditAnswerErrorState(this.error);
+}
+
+class ReportAnswerInitialState extends QuestionStates{}
+
+class ReportAnswerLoadingState extends QuestionStates{}
+
+class ReportAnswerSuccessState extends QuestionStates{
+  final bool reportStatus;
+  final String reportMessage;
+  ReportAnswerSuccessState(this.reportStatus,this.reportMessage);
+}
+
+class ReportAnswerErrorState extends QuestionStates{
+  final String error;
+  ReportAnswerErrorState(this.error);
 }
 
 ///LIKE
@@ -47,57 +95,3 @@ class LikeErrorState extends QuestionStates{
 }
 
 class ChangeIsLikedState extends QuestionStates{}
-
-class ShowLikesLoadingState extends QuestionStates{}
-
-class ShowLikesSuccessState extends QuestionStates{}
-
-class ShowLikesErrorState extends QuestionStates{
-  final String error;
-  ShowLikesErrorState(this.error);
-}
-///COMMENTS
-class ShowCommentsLoadingState extends QuestionStates{}
-
-class ShowCommentsSuccessState extends QuestionStates{}
-
-class ShowCommentsErrorState extends QuestionStates{
-  final String error;
-  ShowCommentsErrorState(this.error);
-}
-
-
-class CreateCommentsLoadingState extends QuestionStates{}
-
-class CreateCommentsSuccessState extends QuestionStates{
-  // final CreateCommentModel createCommentModel;
-  //
-  // CreateCommentsSuccessState(this.createCommentModel);
-}
-
-class CreateCommentsErrorState extends QuestionStates{
-  final String error;
-  CreateCommentsErrorState(this.error);
-}
-
-class DeleteCommentInitialState extends QuestionStates{}
-
-class DeleteCommentLoadingState extends QuestionStates{}
-
-class DeleteCommentSuccessState extends QuestionStates{}
-
-class DeleteCommentErrorState extends QuestionStates{
-  final String error;
-  DeleteCommentErrorState(this.error);
-}
-
-class EditCommentInitialState extends QuestionStates{}
-
-class EditCommentLoadingState extends QuestionStates{}
-
-class EditCommentSuccessState extends QuestionStates{}
-
-class EditCommentErrorState extends QuestionStates{
-  final String error;
-  EditCommentErrorState(this.error);
-}

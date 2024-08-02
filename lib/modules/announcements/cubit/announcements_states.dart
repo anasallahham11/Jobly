@@ -11,7 +11,6 @@ class AnnouncementsErrorState extends AnnouncementsStates{
   final String error;
   AnnouncementsErrorState(this.error);
 }
-class ChangeTabBarState extends AnnouncementsStates{}
 
 
 

@@ -6,9 +6,7 @@ import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/resources/font_manager.dart';
 import 'package:jobly/resources/style_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
-
 import '../../widgets/anas_widgets.dart';
-import '../../widgets/widgets.dart';
 import 'cubit/community_cubit.dart';
 import 'cubit/community_states.dart';
 
@@ -16,12 +14,53 @@ class CommunityView extends StatelessWidget {
   const CommunityView({super.key});
   @override
   Widget build(BuildContext context) {
-    //var commentController = TextEditingController();
+    var newQuestionController = TextEditingController();
+    var newAdviceController = TextEditingController();
+
 
     return BlocProvider(
-        create: (BuildContext context) => CommunityCubit(),
+        create: (BuildContext context) => CommunityCubit()..getQuestionsLatest(),
         child: BlocConsumer<CommunityCubit, CommunityStates>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is AddQuestionSuccessState) {
+                if (state.status == true) {
+                  showToast(text: 'Question is Sent Successfully.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.message, state: ToastStates.ERROR);
+                }
+              }
+              if (state is AddAdviceSuccessState) {
+                if (state.status == true) {
+                  showToast(text: 'Advice is Sent Successfully.', state: ToastStates.SUCCESS);
+                  CommunityCubit.get(context).getAdvicesLatest();
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.message, state: ToastStates.ERROR);
+                }
+              }
+              if (state is DeleteAdviceSuccessState) {
+                CommunityCubit.get(context).getAdvicesLatest();
+              }
+
+              if (state is ReportQuestionSuccessState) {
+                if (state.status == true) {
+                  showToast(text: 'Report is Sent Successfully.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.message, state: ToastStates.ERROR);
+                }
+              }
+              if (state is ReportAdviceSuccessState) {
+                if (state.status == true) {
+                  showToast(text: 'Report is Sent Successfully.', state: ToastStates.SUCCESS);
+                  Navigator.pop(context);
+                } else {
+                  showToast(text: state.message, state: ToastStates.ERROR);
+                }
+              }
+
+            },
             builder: (context, state) {
               var cubit = CommunityCubit.get(context);
               return Scaffold(
@@ -37,6 +76,37 @@ class CommunityView extends StatelessWidget {
                   ],
                 ),
                 backgroundColor: ColorManager.offWhite,
+                floatingActionButton: FloatingActionButton(
+                    backgroundColor: ColorManager.purple6,
+                    onPressed: () {
+                      if(cubit.currentIndex == 0) {
+                        addingDialog(
+                            cubit,
+                            context,
+                            title: "Add Question :",
+                            controller: newQuestionController,
+                            onPressed: (){
+                              cubit.addQuestion(section: 1, question: newQuestionController.text);
+                              newQuestionController.clear();
+                            }
+                        );
+
+                      } else {
+                        addingDialog(
+                            cubit,
+                            context,
+                            title: "Add Advice :",
+                            controller: newAdviceController,
+                            onPressed: (){
+                              cubit.addAdvice(advice: newAdviceController.text);
+                              newAdviceController.clear();
+                            }
+                        );
+
+                      }
+                    },
+                    child: Icon(Icons.add,color: ColorManager.purple2,)
+                ),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children:[
@@ -50,7 +120,11 @@ class CommunityView extends StatelessWidget {
                         itemBuilder: (context,index)=> GestureDetector(
                           onTap: (){
                             cubit.changeTabBar(index);
-                            //cubit.getQuestions();
+                            if(cubit.currentIndex==0) {
+                              cubit.getQuestionsLatest();
+                            } else {
+                              cubit.getAdvicesLatest();
+                            }
                           },
                           child: animatedTabBarItem(cubit, index, AppSize.s2, AppSize.s165, ColorManager.purple6),
                         ),
@@ -62,15 +136,9 @@ class CommunityView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            buildAdviceItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAdviceItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAdviceItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAdviceItem(null, context, cubit, state),
-                            const SizedBox(height: 20),
-                            buildAdviceItem(null, context, cubit, state)
+                            cubit.currentIndex==0?
+                            questionsBuilder(cubit.questions, context, cubit, state):
+                            advicesBuilder(cubit.advices, context, cubit, state)
                           ],
                         ),
                       ),

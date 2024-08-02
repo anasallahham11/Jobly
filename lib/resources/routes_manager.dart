@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:jobly/modules/announcements/announcement_view.dart';
 import 'package:jobly/modules/community/community_view.dart';
-import 'package:jobly/modules/community/question/question_view.dart';
 import 'package:jobly/modules/core/onboarding/onboarding_view.dart';
 import 'package:jobly/modules/home/home_layout_view.dart';
 import 'package:jobly/resources/strings_manager.dart';
-
 import '../modules/applications/applications_view.dart';
 import '../modules/core/splash/splash_view.dart';
-import '../modules/regular/profile/profile_view.dart';
 
 
 class Routes{
@@ -38,8 +35,6 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_)=> const OnboardingView());
       case Routes.communityRoute:
        return MaterialPageRoute(builder: (_)=> const CommunityView());
-      case Routes.questionRoute:
-        return MaterialPageRoute(builder: (_)=> const QuestionView());
       case Routes.announcementsRoute:
         return MaterialPageRoute(builder: (_)=> const AnnouncementsView());
       case Routes.applicationsRoute:
