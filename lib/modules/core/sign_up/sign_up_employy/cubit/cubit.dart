@@ -1,10 +1,11 @@
-
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/states.dart';
 import 'package:jobly/utils/constants.dart';
-
-import '../../../../../utils/helpers/cache_helper.dart';
+import 'package:jobly/utils/end_points.dart';
+import '../signup_modle_employy.dart';
 
 
 class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
@@ -26,86 +27,88 @@ class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
     emit(WorkingStatusState(workingStatus: workingStatus!));
   }
 
-    
-  Future<void> employySignUp({
-    required String age,
-    required String resume,
-    required String experience,
-    required String education,
-     var  portfolio=";k;jhk",
-    required String phone_number,
-      String? filePath,
-     String? imagename,
+  ///Edit Profile
+  SignUpEmployyModlee? signUpEmployyModlee;
+  dynamic signup;
+
+  Future signUpEmployee({
+    dateOfBirth,
+    resume,
+    experience,
+    education,
+    portfolio,
+    phoneNumber,
+    workStatus,
+    graduationStatus,
+    filePath,
+    fileName
   }) async {
-   // print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+workingStatus!+"**"+graduationStatus!+"**"}");
-   print("*********'Bearer ${CacheHelper.getData(key: 'token')}'**************************+$filePath+*********+$imagename");
-emit(SignUpEmployyLoading());
-var data = FormData.fromMap({
-  'date_of_birth': age,
-  'resume': resume,
-  'experience': experience,
-  'education': education,
-  'portfolio': portfolio,
-  'phone_number': phone_number,
-  'work_status': workingStatus,
-  'graduation_status': graduationStatus,
-  'photo': await MultipartFile.fromFile(filePath!,filename: imagename)
-});
-
-var dio = Dio();
-dio.post(
-  '$baseUrl/employee/create/employee',
-  data: data,
-  options: Options(
-    headers: {
-      'Authorization': 'Bearer ${CacheHelper.getData(key: 'token')}'}
-  )
-  
-)
-.then((value) {
+    emit(SignUpEmployyLoading());
+    Map<String, dynamic> formDataMap = {
+      'date_of_birth': dateOfBirth,
+      'resume': resume,
+      'experience': experience,
+      'education': education,
+      'portfolio': portfolio,
+      'phone_number': phoneNumber,
+      'work_status': workStatus,
+      'graduation_status': graduationStatus,
+    };
+    if (filePath != null) {
+      formDataMap['photo'] =
+      await MultipartFile.fromFile(filePath, filename: fileName);
+    }
+    FormData data = FormData.fromMap(formDataMap);
+    var dio = Dio();
+    dio.post(
+        "${baseUrl}api/$SIGHNUPEMPLOYY",
+        data: data,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        onSendProgress: (int sent, int total) {
+          print('$sent $total');
+        }).then((value) {
       print(value.data);
+      // editProfileModel = EditProfileModel.fromJson(value.data);
+      // print(editProfileModel?.status);
+      // print(editProfileModel?.message);
+      // print(editProfileModel?.data.image);
+      // editedProfile = editProfileModel?.data;
+      // print("${baseUrl}images/${editedProfile.image}");
       emit(SignUpEmployySuccess());
-} ).catchError((error) {
-      emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
+    }).catchError((error) {
+      print(error.toString());
+      emit(SignUpEmployyError(error.toString(), error: error.toString()));
     });
+  }
 
 
+  // function to handle file selection
+  File? selectedFile;
+  String? fileName;
+  String? filePath;
+  FormData? data;
 
-
-
-
-    
-
-  // void userSignUp({
-  //   required String email,
-  //   required String password,
-  //   required String name,
-  // }) {
-  //   CacheHelper.init();
-  //   emit(SignUpEmployyLoading());
-  //   DioHelper.postData(
-  //     token:CacheHelper.getData(key: 'token') ,
-  //     url: SIGHNUPEMPLOYY,
-  //     data: {
-  //       'email': email,
-  //       'name':name,
-  //       'password': password,
-  //       'role':"1",
-  //     },
-  //   ).then((value) {
-  //     print("rami");
-
-  //     print(value?.data);
-      
-  //   //   var dataResponse= UserSignupModle.fromJson(value?.data);
-  //   //   token = dataResponse.data?.token;
-  //   //   print(token);
-  //   //   CacheHelper.saveData(key: 'token', value:token );
-  //   //  print( CacheHelper.getData(key: 'token'));
-
-  //     emit(SignUpEmployySuccess());
-  //   }).catchError((error) {
-  //     emit(SignUpEmployyError(error.toString(), error: '${error.toString()}'));
-  //   });
-  // }
-  }}
+  Future<void> selectFile() async {
+    emit(UploadImageLoadingState());
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png'],
+    );
+    if (result != null) {
+      selectedFile = File(result.files.single.path ?? "");
+      print(selectedFile?.path);
+      fileName = selectedFile!
+          .path
+          .split(r'\')
+          .last;
+      filePath = selectedFile!.path;
+      emit(UploadImageSuccessState());
+    } else {
+      emit(UploadImageErrorState("No file selected"));
+    }
+  }
+}

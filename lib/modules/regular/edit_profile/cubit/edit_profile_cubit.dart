@@ -199,7 +199,6 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
         onSendProgress: (int sent,int total){
           print('$sent $total');
         }).then((value){
-      print('rami');
       print(value.data);
       // editProfileModel = EditProfileModel.fromJson(value.data);
       // print(editProfileModel?.status);
@@ -207,7 +206,6 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
       // print(editProfileModel?.data.image);
       // editedProfile = editProfileModel?.data;
       // print("${baseUrl}images/${editedProfile.image}");
-      print('nasser');
       emit(EditProfileSuccessState());
     }).catchError((error){
       print(error.toString());

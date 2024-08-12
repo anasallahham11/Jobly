@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jobly/modules/regular/profile/cubit/profile_states.dart';
 import 'package:jobly/utils/constants.dart';
-import '../../../resources/color_manager.dart';
 import '../../../widgets/anas_widgets.dart';
-import '../../../widgets/rami_widgets.dart';
 import '../../../widgets/widgets.dart';
-import '../edit_profile/edit_profile_view.dart';
 import 'cubit/employee_profile_cubit.dart';
 import 'cubit/employee_profile_states.dart';
 

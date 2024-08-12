@@ -76,7 +76,7 @@ class _SignupFavState extends State<SignupFav> {
                 ),
               );
               // Navigate to another screen
-              // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SignupSkill()));
+               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeLayoutView()));
             }
           },
           

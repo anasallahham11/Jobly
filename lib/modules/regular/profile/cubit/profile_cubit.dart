@@ -92,16 +92,17 @@ void getProfileDetails(){
       profileModel = ProfileModel.fromJson(value?.data);
       print(profileModel?.status);
       print(profileModel?.message);
-      print(profileModel?.data.email);
+      print(profileModel?.data?.email);
       profile = profileModel?.data;
-      print("${baseUrl}videos/videos/${profile.employee.video.filename}");
-      videoFile="${baseUrl}videos/videos/${profile.employee.video.filename}";
+
+
+      //print("${baseUrl}videos/videos/${profile.employee.video.filename}");
+      videoFile=profile.employee.video!=null?"${baseUrl}videos/videos/${profile.employee.video.filename}":null;
       cvFile="${baseUrl}files/CVs/${profile.employee.cv}";
       skills=profile.employee.skills.map((skill) {
         return "\n- ${skill.skill}";
       }).toString();
       skills=skills.substring(1,skills.length - 1);
-      print('nasser');
       emit(ProfileSucsessState());
     }).catchError((error){
       print(error.toString());

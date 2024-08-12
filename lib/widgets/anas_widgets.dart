@@ -1791,9 +1791,9 @@ Widget aboutMe(cubit,context) {
     ${cubit.profile.employee.phoneNumber}
 
 ● Location:
-    - Country : ${cubit.profile.address.county}
-    - City : ${cubit.profile.address.city}
-    - Governorate : ${cubit.profile.address.governorate}
+    - Country : ${cubit.profile.address !=null? cubit.profile.address.county:""}
+    - City : ${cubit.profile.address!=null?cubit.profile.address.city:""}
+    - Governorate : ${cubit.profile.address!=null?cubit.profile.address.governorate:""}
 '''),
 
 

@@ -11,6 +11,7 @@ import '../../../../resources/style_manager.dart';
 import '../../../../resources/values_manager.dart';
 import '../../../../widgets/anas_widgets.dart';
 import '../../../home/home_layout_view.dart';
+import '../sign_up_fav/signup_fav_view.dart';
 
 class SingupSkill extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _SingupSkillState extends State<SingupSkill> {
                 ),
               );
               // Navigate to another screen
-              // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
+               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SignupFav()));
             }
           },
           child: Container(

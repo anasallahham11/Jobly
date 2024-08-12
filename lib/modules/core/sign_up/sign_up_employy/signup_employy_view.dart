@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/cubit.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/states.dart';
 
@@ -28,8 +27,7 @@ class _SingupEmployyState extends State<SingupEmployy> {
   final List<String> workingStatusOptions = ['working', 'student', 'not working'];
 
    //File? _image;
-   String? _filePath="Jobly/assets/images/jobly_logo_purple.png";
-  String _imageName = 'jobly';
+
 
   // Future<void> pickImage(ImageSource source) async {
   //   final picker = ImagePicker();
@@ -48,23 +46,24 @@ class _SingupEmployyState extends State<SingupEmployy> {
 
 
 
-Future<void> pickImage(ImageSource camera) async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  if (pickedFile != null) {
-    // This is the correct way to get the file path as a String
-     _filePath = pickedFile.path;
-      _imageName= pickedFile.name;
-    // Now you can call your userSignUp method with the correct file path
-
-  } else {
-    print('No image selected.');
-  }
-}
+// Future<void> pickImage(ImageSource camera) async {
+//   final picker = ImagePicker();
+//   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+//
+//   if (pickedFile != null) {
+//     // This is the correct way to get the file path as a String
+//      _filePath = pickedFile.path;
+//       _imageName= pickedFile.name;
+//     // Now you can call your userSignUp method with the correct file path
+//
+//   } else {
+//     print('No image selected.');
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
+
 
     return Scaffold(
       body: BlocProvider(
@@ -231,46 +230,53 @@ Future<void> pickImage(ImageSource camera) async {
                                       },
                                     ),
                                     const SizedBox(height: AppSize.s16),
-                                    _filePath != null
-                                        ? Column(
-                                            children: [
-                                              const SizedBox(height: 8),
-                                              Text(
-                                                _imageName,
-                                                style: TextStyle(fontSize: FontSize.s12, color: Colors.black),
-                                              ),
-                                            ],
-                                          )
-                                        : Container(),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _showImagePicker(context);
-                                      },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: ColorManager.purple2
+                                    // BlocProvider.of<SignUpEmployyCubit>(context).filePath != null
+                                    //     ? Column(
+                                    //         children: [
+                                    //           const SizedBox(height: 8),
+                                    //           Text(
+                                    //             BlocProvider.of<SignUpEmployyCubit>(context).fileName!,
+                                    //             style: TextStyle(fontSize: FontSize.s12, color: Colors.black),
+                                    //           ),
+                                    //         ],
+                                    //       )
+                                    //     : Container(),
+                                    BlocBuilder<SignUpEmployyCubit, SignUpEmployyState>(
+                                      builder: (context, state){
+                                        var cubit = SignUpEmployyCubit.get(context);
+                                        return ElevatedButton(
+                                          onPressed: () {
+                                            BlocProvider.of<SignUpEmployyCubit>(context).selectFile();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: ColorManager.purple2
                                           ),
-                                      child: Text(AppStrings.PickImage,style: TextStyle(color: ColorManager.black),),
-                                    ),
+                                          child: Text(AppStrings.PickImage,style: TextStyle(color: ColorManager.black),),
+                                        );
+                                      }),
+
                                     const SizedBox(height: AppSize.s16),
                                     BlocBuilder<SignUpEmployyCubit, SignUpEmployyState>(
                                       builder: (context, state) {
+                                        var cubit=SignUpEmployyCubit.get(context);
                                         if (state is SignUpEmployyLoading) {
                                           return const CircularProgressIndicator();
                                         }
 
                                         return ElevatedButton(
                                           onPressed: () {
-                                            final age = _ageController.text;
-                                            final resume = _resumeController.text;
-                                            final experience = _experienceController.text;
-                                            final education = _educationController.text;
-                                            final portfolio = _portfolioController.text;
-                                            final phone_number = _phone_numberController.text;
-                                            final image = _filePath;
-                                            String imagename=_imageName;
-                                            print("${age+"*"+resume+"**"+experience+"**"+education+"*"+portfolio+"**"+phone_number+"**"+_filePath!+"**"+imagename+"**"}");
-                                         
-                                            BlocProvider.of<SignUpEmployyCubit>(context).employySignUp(age: age, resume: resume, experience: experience, education: education ,portfolio:portfolio, phone_number: phone_number,filePath:_filePath,imagename: _imageName  );
+                                            cubit.signUpEmployee(
+                                                dateOfBirth: _ageController.text,
+                                                resume: _resumeController.text,
+                                                education: _educationController.text,
+                                                experience: _experienceController.text,
+                                                portfolio: _portfolioController.text,
+                                                phoneNumber: _phone_numberController.text,
+                                                workStatus: cubit.workingStatus,
+                                                graduationStatus: cubit.graduationStatus,
+                                                fileName: cubit.fileName,
+                                                filePath: cubit.filePath
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: ColorManager.white,
@@ -323,33 +329,33 @@ Future<void> pickImage(ImageSource camera) async {
     );
   }
 
-  void _showImagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Photo Library'),
-                onTap: () {
-                  pickImage(ImageSource.gallery);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_camera),
-                title: Text('Camera'),
-                onTap: () {
-                  pickImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void _showImagePicker(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext bc) {
+  //       return SafeArea(
+  //         child: Wrap(
+  //           children: <Widget>[
+  //             ListTile(
+  //               leading: Icon(Icons.photo_library),
+  //               title: Text('Photo Library'),
+  //               onTap: () {
+  //                 pickImage(ImageSource.gallery);
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //             ListTile(
+  //               leading: Icon(Icons.photo_camera),
+  //               title: Text('Camera'),
+  //               onTap: () {
+  //                 pickImage(ImageSource.camera);
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

@@ -39,3 +39,10 @@ class WorkingStatusState extends SignUpEmployyState {
 
   WorkingStatusState({required this.workingStatus});
 }
+
+class UploadImageLoadingState extends SignUpEmployyState{}
+class UploadImageSuccessState extends SignUpEmployyState{}
+class UploadImageErrorState extends SignUpEmployyState{
+  final String error;
+  UploadImageErrorState(this.error);
+}

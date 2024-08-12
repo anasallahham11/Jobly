@@ -42,7 +42,7 @@ class EmployeeProfileCubit extends Cubit<EmployeeProfileStates> {
       profileModel = ProfileModel.fromJson(value?.data);
       print(profileModel?.status);
       print(profileModel?.message);
-      print(profileModel?.data.email);
+      print(profileModel?.data?.email);
       profile = profileModel?.data;
       print("${baseUrl}videos/videos/${profile.employee.video.filename}");
       videoFile="${baseUrl}videos/videos/${profile.employee.video.filename}";

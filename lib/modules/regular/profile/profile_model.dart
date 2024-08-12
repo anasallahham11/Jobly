@@ -11,7 +11,7 @@ String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 class ProfileModel {
     bool status;
     String message;
-    Data data;
+    Data? data;
 
     ProfileModel({
         required this.status,
@@ -22,13 +22,13 @@ class ProfileModel {
     factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         status: json["status"],
         message: json["message"],
-        data: Data.fromJson(json["data"]),
+        data: json["data"] != null ? Data.fromJson(json["data"]) : null,
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data.toJson(),
+        "data": data?.toJson(),
     };
 }
 
@@ -43,9 +43,9 @@ class Data {
     DateTime createdAt;
     DateTime updatedAt;
     int points;
-    List<Advice> advices;
+    List<dynamic> advices;
     Employee employee;
-    Address address;
+    Address? address;
 
     Data({
         required this.id,
@@ -60,7 +60,7 @@ class Data {
         required this.points,
         required this.advices,
         required this.employee,
-        required this.address,
+         this.address,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -74,9 +74,9 @@ class Data {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         points: json["points"],
-        advices: List<Advice>.from(json["advices"].map((x) => Advice.fromJson(x))),
+        advices: json["advices"],
         employee: Employee.fromJson(json["employee"]),
-        address: Address.fromJson(json["address"]),
+        address: json["address"] != null ? Address.fromJson(json["address"]) : null,
     );
 
     Map<String, dynamic> toJson() => {
@@ -92,7 +92,7 @@ class Data {
         "points": points,
         "advices": List<dynamic>.from(advices.map((x) => x.toJson())),
         "employee": employee.toJson(),
-        "address": address.toJson(),
+        "address": address?.toJson(),
     };
 }
 
@@ -205,7 +205,7 @@ class Employee {
     Employee({
         required this.id,
         required this.userId,
-        required this.cv,
+         this.cv,
         required this.dateOfBirth,
         required this.resume,
         required this.experience,
@@ -216,8 +216,8 @@ class Employee {
         required this.graduationStatus,
         required this.createdAt,
         required this.updatedAt,
-        required this.image,
-        required this.video,
+         this.image,
+         this.video,
         required this.skills,
     });
 
@@ -235,8 +235,8 @@ class Employee {
         graduationStatus: json["graduation_status"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        image: Image.fromJson(json["image"]),
-        video: Video.fromJson(json["video"]),
+        image: json["image"] != null ? Image.fromJson(json["image"]) : null,
+        video: json["video"] != null ? Video.fromJson(json["video"]) : null,
         skills: List<Skill>.from(json["skills"].map((x) => Skill.fromJson(x))),
     );
 

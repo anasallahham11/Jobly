@@ -16,16 +16,16 @@ class EditProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ageController = TextEditingController(text: profile.employee.dateOfBirth);
-    var phoneNumberController = TextEditingController(text: profile.employee.phoneNumber);
-    var experienceController = TextEditingController(text: profile.employee.experience);
+    var ageController = TextEditingController(text: profile.employee.dateOfBirth ?? "");
+    var phoneNumberController = TextEditingController(text: profile.employee.phoneNumber ?? "");
+    var experienceController = TextEditingController(text: profile.employee.experience ??"");
     var skillController = TextEditingController();
-    var educationController = TextEditingController(text: profile.employee.education);
-    var resumeController = TextEditingController(text: profile.employee.resume);
-    var portfolioController = TextEditingController(text: profile.employee.portfolio);
-    var countryController = TextEditingController(text: profile.address.county);
-    var cityController = TextEditingController(text: profile.address.city);
-    var governorateController = TextEditingController(text: profile.address.governorate);
+    var educationController = TextEditingController(text: profile.employee.education ?? "");
+    var resumeController = TextEditingController(text: profile.employee.resume ?? "");
+    var portfolioController = TextEditingController(text: profile.employee.portfolio ?? "");
+    var countryController = TextEditingController(text: profile.address!=null?profile.address.county:"");
+    var cityController = TextEditingController(text: profile.address!=null?profile.address.city:"");
+    var governorateController = TextEditingController(text: profile.address!=null?profile.address.governorate:"");
 
     return BlocProvider(
       create: (context) => EditProfileCubit()..getCategories(),
