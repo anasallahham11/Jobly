@@ -16,9 +16,12 @@ class JobDetailsCubit extends Cubit<JobDetailsStates> {
 
 
 
+
   ///GET JOB DETAILS
   JobDetailsModel? jobModel;
   dynamic job;
+  static dynamic detailsJobType="";
+  static dynamic detailsJobSalary="";
 
   void getJobDetails(int id) {
     emit(JobDetailsLoadingState());
@@ -32,6 +35,8 @@ class JobDetailsCubit extends Cubit<JobDetailsStates> {
       print(jobModel?.message);
       print(jobModel?.data.section);
       job = jobModel?.data;
+      detailsJobSalary=job.jobType;
+      detailsJobType=job.salaryRange;
       emit(JobDetailsSuccessState());
     }).catchError((error) {
       print(error.toString());

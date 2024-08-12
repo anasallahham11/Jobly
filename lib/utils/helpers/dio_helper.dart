@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:jobly/utils/constants.dart';
 class DioHelper
 {
   static late Dio dio;
   static init(){
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://192.168.1.8:8000/api/',
+        baseUrl: '${baseUrl}api/',
         receiveDataWhenStatusError: true,
       ),
     );
@@ -90,55 +91,6 @@ class DioHelper
       data: data,
     );
   }
-
-
-
- static Future<Response?> uploadVideo({
-    required String filePath,
-    required String token,
-    required String endpoint,
-  }) async {
-    dio.options.headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    var data = FormData.fromMap({
-      'video': [
-        await MultipartFile.fromFile(filePath, filename: filePath.split('/').last)
-      ],
-    });
-      return dio.post(
-        endpoint,
-        data: data,
-      );
-
-
-  }
-
-
-
- static Future<Response?> uploadCV({
-    required String filePath,
-    required String token,
-    required String endpoint,
-  }) async {
-    dio.options.headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    var data = FormData.fromMap({
-      'cv': [
-        await MultipartFile.fromFile(filePath, filename: filePath.split('/').last)
-      ],
-    });
-      return dio.post(
-        endpoint,
-        data: data,
-      );
-
-
-  }
-
 
 
 

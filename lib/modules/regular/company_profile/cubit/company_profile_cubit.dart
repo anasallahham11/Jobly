@@ -1,29 +1,32 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jobly/utils/end_points.dart';
+import '../../../../resources/assets_manager.dart';
+import '../../../../resources/color_manager.dart';
+import '../../../../resources/values_manager.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/helpers/dio_helper.dart';
 import '../../../../widgets/widgets.dart';
 import '../../jobs/jobs_cubit.dart';
-import 'company_model.dart';
+import '../../jobs/jobs_model.dart';
+import '../company_model.dart';
 import 'company_profile_states.dart';
 
 class CompanyProfileCubit extends Cubit<CompanyProfileStates>{
   CompanyProfileCubit():super(CompanyProfileInitialState());
+
+  static CompanyProfileCubit get(context) => BlocProvider.of(context); 
   
 CompanyProfileModel? companyModel;
    dynamic company;
-
 void getCompanyDetails(int id){
   print('before load');
   emit(CompanyLoadingState());
   DioHelper.getData(
-    // url: "$GET_COMPANY_INFO/$id",
-    url: "http://127.0.0.1:8000/api/company/1",
-
+    url: "$COMPANY_PROFILE/$id",
     token: token,
     ).then((value){
-      print('rami');
+      print('company reviews');
       print(value?.data);
       companyModel = CompanyProfileModel.fromJson(value?.data);
       print(companyModel?.status);
@@ -31,8 +34,9 @@ void getCompanyDetails(int id){
       print(companyModel?.data.companyName);
       company = companyModel?.data;
       print(company.companyName);
-      print('nasser');
-      emit(CompanySuccsssState());
+      //print(company.ratings[0].comment);
+      print('company reviews');
+      emit(CompanySuccessState());
     }).catchError((error){
       print(error.toString());
       emit(CompanyErrorState(error.toString()));
@@ -40,23 +44,62 @@ void getCompanyDetails(int id){
 }
 
 
+///GET COMPANY JOBS
+
+   JobsModel? jobsModel;
+   List<dynamic>? jobs;
+   void getCompanyJobs(id)
+  {
+    emit(CompanyJobsLoadingState());
+    DioHelper.getData(
+      url: '$GET_JOBS_OF_COMPANY/$id',
+      token: token,
+    ).then((value) {
+      print('company jobs');
+      print(value?.data);
+      jobsModel = JobsModel.fromJson(value?.data);
+      print(jobsModel?.status);
+      print(jobsModel?.message);
+      print(jobsModel?.data[0].section);
+      jobs = jobsModel?.data;
+      print('nasser');
+      print('nasser');
+      print(jobs?.length);
+      print(jobs![0]);
+      emit(CompanyJobsSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(CompanyJobsErrorState(error.toString()));
+    });
+  }
+
+  ///ADD RATING
+
+
+  void addRating({required id,required rating, required comment})
+  {
+    emit(AddRatingLoadingState());
+    DioHelper.postData(
+      url: ADD_RATING,
+      token: token,
+      data: {
+        'company_id' : id,
+        'rating' : rating,
+        'comment' : comment
+      },
+    ).then((value) {
+      print(value?.data);
+      emit(AddRatingSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(AddRatingErrorState(error.toString()));
+    });
+  }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  static CompanyProfileCubit get(context) => BlocProvider.of(context);
+  
 
 String truncateTextToFit(String text, int maxLength, BuildContext context) {
   final String limitedText =
@@ -100,7 +143,11 @@ void showFullComment(BuildContext context, String writer, String text, String co
         backgroundColor: Colors.white,
         title: Column(
           children: [
-            circularImage(context, commentWriterProfile, 50),
+            CircleAvatar(
+              radius: AppSize.s28,
+              backgroundColor: ColorManager.purple2,
+              backgroundImage: const AssetImage(ImageAssets.employeeIc ),
+            ),
             Text(writer),
           ],
         ),

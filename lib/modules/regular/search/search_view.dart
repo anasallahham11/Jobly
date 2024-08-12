@@ -9,13 +9,12 @@ import 'cubit/search_states.dart';
 
 
 class SearchView extends StatelessWidget {
-  SearchView({super.key});
-  var text = TextEditingController();
-
+  const SearchView({super.key});
   @override
   Widget build(BuildContext context) {
+    var text = TextEditingController();
     return BlocProvider(
-      create: (context) => SearchCubit()..getCategories()..getSections(),
+      create: (context) => SearchCubit()..getCategories()..getSections()..getCities(),
       child: BlocConsumer<SearchCubit, SearchStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -35,7 +34,7 @@ class SearchView extends StatelessWidget {
                           type: TextInputType.text,
                           label: "Search",
                           suffix: Icons.search,
-                          suffixPressed: (){cubit.getSearch(text: text);},
+                          suffixPressed: (){cubit.getSearch(text: text.text);},
                           onChange: (text){cubit.getSearch(text: text);}
                         ),
                       ),
@@ -61,7 +60,7 @@ class SearchView extends StatelessWidget {
                 Expanded(
                     child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        child: jobsBuilder(cubit.jobs, cubit, context, state)
+                        child: cubit.jobs!.isNotEmpty?jobsBuilder(cubit.jobs, cubit, context, state,"not mine"):const SizedBox()
                     ),
                 ),
               ],

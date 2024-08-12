@@ -65,6 +65,7 @@ Future<void> pickImage(ImageSource camera) async {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: BlocProvider(
         create: (context) => SignUpEmployyCubit(),
@@ -78,7 +79,7 @@ Future<void> pickImage(ImageSource camera) async {
               );
             } else if (state is SignUpEmployySuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('SIGNUP Success'),
                 ),
               );
@@ -89,21 +90,20 @@ Future<void> pickImage(ImageSource camera) async {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ColorManager.purple6,
-                  ColorManager.purple5,
-                  ColorManager.purple4,
+                  ColorManager.purple4, // Darker purple
+                  ColorManager.purple7, // Lighter purple (adjust as needed)
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
               ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

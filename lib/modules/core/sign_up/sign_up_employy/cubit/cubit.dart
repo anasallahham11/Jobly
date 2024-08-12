@@ -1,19 +1,11 @@
 
-
-
-
-
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_employy/cubit/states.dart';
 import 'package:jobly/utils/constants.dart';
 
-import '../../../../../utils/end_points.dart';
 import '../../../../../utils/helpers/cache_helper.dart';
-import '../../../../../utils/helpers/dio_helper.dart';
-import '../signup_modle_employy.dart';
+
 
 class SignUpEmployyCubit extends Cubit<SignUpEmployyState> {
   SignUpEmployyCubit() : super(SignUpEmployyInitial());

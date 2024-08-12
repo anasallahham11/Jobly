@@ -3,11 +3,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:jobly/modules/core/sign_up/sign_up_employy/signup_employy_view.dart';
+import 'package:jobly/resources/color_manager.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/style_manager.dart';
+import '../../../utils/helpers/cache_helper.dart';
 import '../../../widgets/widgets.dart';
 import '../login/login_screen.dart';
 import '../sign_up/sign_up_fav/signup_fav_view.dart';
@@ -43,6 +45,13 @@ class _OnBoardingScreenState extends State<OnboardingView> {
 
       bool islast =false;
 
+      void submit()
+      {
+        CacheHelper.saveData(key: 'onBoarding', value: true).then((value) {
+          navigateTo(context, LoginPage());
+        });
+      }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,10 +63,10 @@ class _OnBoardingScreenState extends State<OnboardingView> {
           TextButton(
             onPressed: ()
             {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SignupFav()),);
+              submit();
 
             },
-           child: Text(AppStrings.skip,style:getBoldStyle(color: Colors.purple,fontSize: FontSize.s20) )
+           child: Text(AppStrings.skip,style:getBoldStyle(color: ColorManager.purple4,fontSize: FontSize.s20) )
            ),
            
         ],
@@ -94,7 +103,7 @@ class _OnBoardingScreenState extends State<OnboardingView> {
              SmoothPageIndicator(
               controller: boardcontroller, 
               effect:  const ExpandingDotsEffect(
-                activeDotColor: Colors.purple, 
+                activeDotColor: ColorManager.purple4,
                 dotColor: Colors.grey,
                 dotHeight: 10,
                 expansionFactor: 4,
@@ -106,13 +115,13 @@ class _OnBoardingScreenState extends State<OnboardingView> {
               ),
              const Spacer(),
               FloatingActionButton(
-                backgroundColor: Colors.purple,
+                backgroundColor: ColorManager.purple4,
                 onPressed: 
                 ()
                 {
                   if(islast)
                   {
-                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()),);
+                   submit();
                   }
                   boardcontroller.nextPage(
                     duration: const Duration(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jobly/modules/regular/job_details/cubit/job_details_cubit.dart';
 import 'package:jobly/modules/regular/job_details/cubit/job_details_states.dart';
+import 'package:jobly/resources/values_manager.dart';
 import 'package:jobly/utils/constants.dart';
 
 import '../../../resources/color_manager.dart';
@@ -28,38 +29,14 @@ class JobDetailsView extends StatelessWidget {
             listener: (context,state){
               if(state is JobApplySuccessState) {
                 showToast(text: "Applied Successfully", state: ToastStates.SUCCESS);
+                
               }
             },
             builder: (context,state){
               var cubit = JobDetailsCubit.get(context);
-              final List<Map<String, dynamic>> items = [
-                {
-                  'title': 'Salary',
-                  'subtitle': "salaryRange",
-                  'icon': Icons.attach_money,
-                  'isSubtitle': true,
-                },
-                {
-                  'title': 'Type',
-                  'subtitle': "jobType",
-                  'icon': Icons.work,
-                  'isSubtitle': true,
-                },
-                {
-                  'title': 'Work Hour',
-                  'subtitle': '40 hrs/week',
-                  'icon': Icons.access_time,
-                  'isSubtitle': true,
-                },
-                {
-                  'title': 'Experience',
-                  'subtitle': '2 years',
-                  'icon': Icons.school,
-                  'isSubtitle': true,
-                },
-              ];
+
               return Scaffold(
-                appBar: myAppBar(context, '          Job Details', false),
+                appBar: myAppBar(context, 'Job Details', false),
                 backgroundColor: ColorManager.white,
                 body: ConditionalBuilder(
                     condition: state is! JobDetailsLoadingState && cubit.job!=null,
@@ -79,29 +56,42 @@ class JobDetailsView extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       //location
-                      Text("cubit.job.location"),
-                      //gridview
-                      buildGridView(items, (
-                          backgroundColor,
-                          iconColor,
-                          icon,
-                          title,
-                          subtitle,
-                          isSubtitle,
-                          ) {
-                        return customListTile(
-                          backgroundColor,
-                          iconColor,
-                          icon,
-                          title,
-                          subtitle,
-                          isSubtitle,
-                        );
-                      }),
+                      Padding(
+                        padding: const EdgeInsets.all(AppPadding.p18),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          Expanded(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children:[
+                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.work, "Type", cubit.job.jobType??"Undefined Type", true),
+                                  const SizedBox(width: 40,),
+                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.attach_money, "Salary", cubit.job.salaryRange??"Undefined Salary", true),
+                                ]
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children:[
+                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.location_on_rounded, "Location", cubit.job.location.city??"Undefined ", true),
+                                  const SizedBox(width: 40,),
+                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.calendar_month_rounded, "Deadline", cubit.job.applicationDeadline, true),
+                                ]
+                            ),
+                          ),
+
+                        ],),
+                      ),
+
+
                       //job description
-                      titleAndDescription(context),
+                      jobDescription(context, "Category", cubit.job.category),
+                      jobDescription(context, "Section", cubit.job.section),
+                      jobDescription(context, "Requirements",cubit.job.requirements),
                       //company info
-                      companyListTile(context, "${baseUrl}images${cubit.job.publisherPhoto}", cubit.job.companyName),
+                      companyListTile(context,1, "${baseUrl}images${cubit.job.publisherPhoto}", cubit.job.companyName),
                       //apply button
                       myButton(
                         context,

@@ -19,6 +19,24 @@ class FilterErrorState extends SearchStates{
   FilterErrorState(this.error);
 }
 
+class FreelanceLoadingState extends SearchStates{}
+
+class FreelanceSuccessState extends SearchStates{}
+
+class FreelanceErrorState extends SearchStates{
+  final String error;
+  FreelanceErrorState(this.error);
+}
+
+class CitiesLoadingState extends SearchStates{}
+
+class CitiesSuccessState extends SearchStates{}
+
+class CitiesErrorState extends SearchStates{
+  final String error;
+  CitiesErrorState(this.error);
+}
+
 class CategoriesLoadingState extends SearchStates{}
 
 class CategoriesSuccessState extends SearchStates{}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/home/home_layout_view.dart';
+import 'package:jobly/modules/regular/profile/profile_view.dart';
 
 import '../resources/routes_manager.dart';
 import '../resources/theme_manager.dart';

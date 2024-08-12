@@ -1,3 +1,5 @@
+import '../login_model.dart';
+
 abstract class LoginStates{}
 
 
@@ -5,11 +7,14 @@ class LoginIntStates extends LoginStates{}
 
 class LoginLoadingStates extends LoginStates{}
 
-class LoginSuccessStates extends LoginStates{}
+class LoginSuccessStates extends LoginStates{
+  final LoginModel loginModel;
+  LoginSuccessStates(this.loginModel);
+}
 
-class LoginErorrStates extends LoginStates
+class LoginErrorStates extends LoginStates
 {
-  final String erorr;
+  final String error;
 
-  LoginErorrStates(this.erorr);
+  LoginErrorStates(this.error);
 }

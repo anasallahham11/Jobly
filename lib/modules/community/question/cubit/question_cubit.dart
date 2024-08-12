@@ -41,7 +41,7 @@ class QuestionCubit extends Cubit<QuestionStates>{
 
   ///GET ANSWER
   AnswersModel? answersModel;
-  List<dynamic>? answers;
+  List<dynamic>? answers=[];
   void getAnswers(questionId)
   {
     emit(GetAnswerLoadingState());

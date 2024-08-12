@@ -1,2 +1,3 @@
-String? token="1|IDejtIxCRfKE34l6VqO8JKzq2bsavfjroMiYfzajd2c57a3f";
-const String baseUrl= "http://192.168.1.8:8000/";
+String? token;
+bool? onBoardingSkipped;
+const String baseUrl= "http://10.0.2.2:8000/";

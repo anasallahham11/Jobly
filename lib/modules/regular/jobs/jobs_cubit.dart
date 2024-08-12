@@ -27,7 +27,7 @@ class JobsCubit extends Cubit<JobsStates> {
   {
     emit(JobsLoadingState());
     DioHelper.getData(
-      url: GET_MY_JOBS,
+      url: GET_FAV_JOBS,
       token: token,
     ).then((value) {
       print(value?.data);

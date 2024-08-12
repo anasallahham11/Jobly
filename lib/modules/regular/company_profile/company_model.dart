@@ -1,12 +1,12 @@
- // To parse this JSON data, do
+// To parse this JSON data, do
 //
-//     final companyModel = companyModelFromJson(jsonString);
+//     final companyProfileModel = companyProfileModelFromJson(jsonString);
 
 import 'dart:convert';
 
-CompanyProfileModel companyModelFromJson(String str) => CompanyProfileModel.fromJson(json.decode(str));
+CompanyProfileModel companyProfileModelFromJson(String str) => CompanyProfileModel.fromJson(json.decode(str));
 
-String companyModelToJson(CompanyProfileModel data) => json.encode(data.toJson());
+String companyProfileModelToJson(CompanyProfileModel data) => json.encode(data.toJson());
 
 class CompanyProfileModel {
     bool status;
@@ -37,7 +37,7 @@ class Data {
     int userId;
     DateTime dateOfEstablishment;
     int employeNumber;
-    String? commercialRecord;
+    String commercialRecord;
     String companyName;
     String contactPhone;
     String industry;
@@ -48,14 +48,15 @@ class Data {
     DateTime createdAt;
     DateTime updatedAt;
     Address address;
-    List<dynamic>? ratings;
+    String avg;
+    List<Rating> ratings;
 
     Data({
         required this.id,
         required this.userId,
         required this.dateOfEstablishment,
         required this.employeNumber,
-         this.commercialRecord,
+        required this.commercialRecord,
         required this.companyName,
         required this.contactPhone,
         required this.industry,
@@ -66,7 +67,8 @@ class Data {
         required this.createdAt,
         required this.updatedAt,
         required this.address,
-         this.ratings,
+        required this.avg,
+        required this.ratings,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -85,7 +87,8 @@ class Data {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         address: Address.fromJson(json["address"]),
-        ratings: List<dynamic>.from(json["ratings"].map((x) => x)),
+        avg: json["avg"],
+        ratings: List<Rating>.from(json["ratings"].map((x) => Rating.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -101,10 +104,11 @@ class Data {
         "company_website": companyWebsite,
         "contact_email": contactEmail,
         "contact_person": contactPerson,
+        "avg": avg,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "address": address.toJson(),
-        "ratings": List<dynamic>.from(ratings!.map((x) => x)),
+        "ratings": List<dynamic>.from(ratings.map((x) => x.toJson())),
     };
 }
 
@@ -148,6 +152,46 @@ class Address {
     };
 }
 
+class Rating {
+    int id;
+    int companyId;
+    int employeeId;
+    String rating;
+    String comment;
+    DateTime createdAt;
+    DateTime updatedAt;
+
+    Rating({
+        required this.id,
+        required this.companyId,
+        required this.employeeId,
+        required this.rating,
+        required this.comment,
+        required this.createdAt,
+        required this.updatedAt,
+    });
+
+    factory Rating.fromJson(Map<String, dynamic> json) => Rating(
+        id: json["id"],
+        companyId: json["company_id"],
+        employeeId: json["employee_id"],
+        rating: json["rating"],
+        comment: json["comment"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "company_id": companyId,
+        "employee_id": employeeId,
+        "rating": rating,
+        "comment": comment,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+    };
+}
+
 ///response
 /* 
 {
@@ -156,18 +200,18 @@ class Address {
     "data": {
         "id": 1,
         "user_id": 12,
-        "Date_of_Establishment": "2023-01-02",
+       x "Date_of_Establishment": "2023-01-02",
         "employe_number": 309,
-        "Commercial_Record": "company.jpg",
-        "company_name": "Flatley Group",
-        "contact_phone": "+17249123405",
-        "industry": "autem",
-        "company_description": "Sunt qui natus quisquam. Ullam et quibusdam ea. Tenetur esse optio recusandae beatae consequatur ut velit. Consectetur minima quibusdam facere consequatur.",
-        "company_website": "http://www.deckow.net/libero-quasi-explicabo-dignissimos-id-beatae-sed-voluptates",
-        "contact_email": "melyssa57@lesch.com",
+       x "Commercial_Record": "company.jpg",
+       x "company_name": "Flatley Group",
+       x "contact_phone": "+17249123405",
+       x "industry": "autem",
+       x "company_description": "Sunt qui natus quisquam. Ullam et quibusdam ea. Tenetur esse optio recusandae beatae consequatur ut velit. Consectetur minima quibusdam facere consequatur.",
+        x"company_website": "http://www.deckow.net/libero-quasi-explicabo-dignissimos-id-beatae-sed-voluptates",
+       x "contact_email": "melyssa57@lesch.com",
         "contact_person": "Jazmyn Larson",
-        "created_at": "2024-07-02T16:19:15.000000Z",
-        "updated_at": "2024-07-02T16:19:15.000000Z",
+      x  "created_at": "2024-07-02T16:19:15.000000Z",
+      x  "updated_at": "2024-07-02T16:19:15.000000Z",
         "address": {
             "id": 12,
             "user_id": 12,
@@ -177,7 +221,7 @@ class Address {
             "created_at": "2024-07-02T16:19:15.000000Z",
             "updated_at": "2024-07-02T16:19:15.000000Z"
         },
-        "ratings": []
+       x "ratings": []
     }
 }
 */

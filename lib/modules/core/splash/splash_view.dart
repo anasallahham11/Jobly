@@ -8,6 +8,7 @@ import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/constants_manager.dart';
 import '../../../resources/routes_manager.dart';
+import '../../../utils/constants.dart';
 
 
 class SplashView extends StatefulWidget {
@@ -25,8 +26,18 @@ class _SplashViewState extends State<SplashView> {
   }
   _goNext() {
    // Navigator.pushReplacementNamed(context, Routes.homeRoute);
+    if (onBoardingSkipped != null) {
+      if (token != null) {
+        Navigator.pushReplacementNamed(context, Routes.homeRoute);
+      }
+      else {
+        Navigator.pushReplacementNamed(context, Routes.loginRoute);
+      }
+    } else {
+      Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+    }
 
-    Navigator.pushReplacementNamed(context, Routes.homeRoute);
+
   }
   @override
   void initState() {
@@ -38,8 +49,21 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.purple5,
-      body: const Center(child: Image(image: AssetImage(ImageAssets.whiteLogo))),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              ColorManager.purple4, // Darker purple
+              ColorManager.purple7, // Lighter purple (adjust as needed)
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        child: const Center(
+          child: Image(image: AssetImage(ImageAssets.whiteLogo)),
+        ),
+      ),
     );
   }
 

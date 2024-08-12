@@ -39,6 +39,17 @@ class GetQuestionsLatestErrorState extends CommunityStates{
   final String error;
   GetQuestionsLatestErrorState(this.error);
 }
+
+class GetQuestionsCatInitialState extends CommunityStates{}
+
+class GetQuestionsCatLoadingState extends CommunityStates{}
+
+class GetQuestionsCatSuccessState extends CommunityStates{}
+
+class GetQuestionsCatErrorState extends CommunityStates{
+  final String error;
+  GetQuestionsCatErrorState(this.error);
+}
 ///ADD
 class AddQuestionInitialState extends CommunityStates{}
 

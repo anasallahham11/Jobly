@@ -102,7 +102,7 @@ class QuestionView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            answersBuilder(cubit.answers,question, context, cubit, state)
+                            cubit.answers!.isNotEmpty?answersBuilder(cubit.answers,question, context, cubit, state):const Text("No Answers Yet...")
 
                           ],
                         ),

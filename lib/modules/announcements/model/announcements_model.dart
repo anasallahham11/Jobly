@@ -36,11 +36,12 @@ class Datum {
   int id;
   String companyName;
   String companyPhoto;
+  String duration;
   bool isAuth;
   String companyEmail;
   String title;
   String type;
-  DateTime startDate;
+  String startDate;
   String days;
   String time;
   String price;
@@ -50,6 +51,7 @@ class Datum {
     required this.id,
     required this.companyName,
     required this.companyPhoto,
+    required this.duration,
     required this.isAuth,
     required this.companyEmail,
     required this.title,
@@ -65,11 +67,12 @@ class Datum {
     id: json["id"],
     companyName: json["company_name"],
     companyPhoto: json["company_photo"],
+    duration: json["duration"],
     isAuth: json["is_auth"],
     companyEmail: json["company_email"],
     title: json["title"],
     type: json["type"],
-    startDate: DateTime.parse(json["start_date"]),
+    startDate: json["start_date"],
     days: json["days"],
     time: json["time"],
     price: json["price"],
@@ -80,11 +83,12 @@ class Datum {
     "id": id,
     "company_name": companyName,
     "company_photo": companyPhoto,
+    "duration": duration,
     "is_auth": isAuth,
     "company_email": companyEmail,
     "title": title,
     "type": type,
-    "start_date": "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+    "start_date": startDate,
     "days": days,
     "time": time,
     "price": price,

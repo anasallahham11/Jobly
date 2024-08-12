@@ -28,14 +28,10 @@ class SingupUser extends StatelessWidget {
         child: BlocListener<SignUpUserCubit, SignupUserStates>(
           listener: (context, state) {
             if (state is SignupErorrStates) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Login Failed: ${state.erorr}'),
-                ),
-              );
+              showToast(text: "Register Failed : ${state.message}", state: ToastStates.ERROR);
             } else if (state is SignupSuccessStates) {
                  SnackBar(
-                  content: Text('Login sucssec'),
+                  content: Text('Register success'),
                 );
               // Navigate to another screen
              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupEmployy()));
@@ -44,16 +40,14 @@ class SingupUser extends StatelessWidget {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration:  BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-
-                  ColorManager.purple6,
-                  ColorManager.purple5,
-                  ColorManager.purple4,
+                  ColorManager.purple4, // Darker purple
+                  ColorManager.purple7, // Lighter purple (adjust as needed)
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
               ),
             ),
             child: Padding(

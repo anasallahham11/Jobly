@@ -14,9 +14,10 @@ class ColorManager {
   static Color purple1 = const Color(0xffd3caf1);
   static Color purple2 = const Color(0xffc9bce7);
   static Color purple3 = const Color(0xffaa96da);
-  static Color purple4 = const Color(0xff8b70cd);
+  static const Color purple4 = Color(0xff8b70cd);
   static Color purple5 = const Color(0xff6639A6);
   static Color purple6 = const Color(0xff43256d);
+  static const Color purple7 =  Color(0xff36165b);
   static Color purple0 = const Color(0xffe9e8f1);
 
   //LIGHT MODE

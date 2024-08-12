@@ -9,7 +9,8 @@ class SignupSuccessStates extends SignupUserStates{}
 
 class SignupErorrStates extends SignupUserStates
 {
+  final String message;
   final String erorr;
 
-  SignupErorrStates(this.erorr);
+  SignupErorrStates(this.erorr,this.message);
 }

@@ -37,7 +37,7 @@ class JobsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   companiesBuilder(cubit.companies, cubit, context, state),
-                  jobsBuilder(cubit.jobs, cubit, context, state),
+                  jobsBuilder(cubit.jobs, cubit, context, state,"not mine"),
                 ],
               ),
             ),

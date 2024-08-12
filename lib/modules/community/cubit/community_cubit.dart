@@ -29,10 +29,16 @@ class CommunityCubit extends Cubit<CommunityStates>{
 
   ///bringing categories and putting them in a drop down button
   int? dropDownValueCategory;
+  int? dropDownValueCategorySort;
   List<DropdownMenuItem<dynamic>> categoriesItems = [];
   void changeCategoryDropDownButton(int newValue)
   {
     dropDownValueCategory = newValue;
+    emit(CategoriesChangeState());
+  }
+  void changeCategorySortDropDownButton(int newValue)
+  {
+    dropDownValueCategorySort = newValue;
     emit(CategoriesChangeState());
   }
 
@@ -69,14 +75,14 @@ class CommunityCubit extends Cubit<CommunityStates>{
   ///ADD QUESTION
   bool addStatus=false;
   String addMessage='';
-  void addQuestion({required section,required question})
+  void addQuestion({required category,required question})
   {
     emit(AddQuestionLoadingState());
     DioHelper.postData(
       url: ADD_QUESTION,
       token: token,
       data: {
-        'jops_section_id' : section,
+        'jops_category_id' : category,
         'content' : question
       },
     ).then((value) {
@@ -94,7 +100,7 @@ class CommunityCubit extends Cubit<CommunityStates>{
 
   ///GET QUESTION
   QuestionsModel? questionsModel;
-  List<dynamic>? questions;
+  List<dynamic>? questions=[];
   void getQuestionsLatest()
   {
     emit(GetQuestionsLatestLoadingState());
@@ -112,6 +118,25 @@ class CommunityCubit extends Cubit<CommunityStates>{
     }).catchError((error){
       print(error.toString());
       emit(GetQuestionsLatestErrorState(error.toString()));
+    });
+  }
+
+  void getQuestionsCat(id)
+  {
+    emit(GetQuestionsCatLoadingState());
+    DioHelper.getData(
+      url: "$GET_QUESTIONS_CATEGORY/$id",
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      questionsModel = QuestionsModel.fromJson(value?.data);
+      print(questionsModel?.status);
+      print(questionsModel?.message);
+      questions = questionsModel?.data;
+      emit(GetQuestionsCatSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(GetQuestionsCatErrorState(error.toString()));
     });
   }
 

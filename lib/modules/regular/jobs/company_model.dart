@@ -33,20 +33,24 @@ class CompanyModel {
 }
 
 class Datum {
+  int id;
   String companyName;
   String companyImage;
 
   Datum({
+    required this.id,
     required this.companyName,
     required this.companyImage,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    id: json["id"],
     companyName: json["company_name"],
     companyImage: json["company_image"],
   );
 
   Map<String, dynamic> toJson() => {
+    "id": id,
     "company_name": companyName,
     "company_image": companyImage,
   };

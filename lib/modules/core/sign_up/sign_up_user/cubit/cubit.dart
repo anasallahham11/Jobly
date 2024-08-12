@@ -19,6 +19,7 @@ class SignUpUserCubit extends Cubit<SignupUserStates> {
 
   static SignUpUserCubit get(context) => BlocProvider.of(context);
 
+  String? message="";
   void userSignUp({
     required String email,
     required String password,
@@ -39,13 +40,14 @@ class SignUpUserCubit extends Cubit<SignupUserStates> {
       
       var dataResponse= UserSignupModle.fromJson(value?.data);
       token = dataResponse.data?.token;
+      message = dataResponse.message;
       print(token);
       CacheHelper.saveData(key: 'token', value:token );
-     print( CacheHelper.getData(key: 'token'));
+      print( CacheHelper.getData(key: 'token'));
 
       emit(SignupSuccessStates());
     }).catchError((error) {
-      emit(SignupErorrStates(error.toString()));
+      emit(SignupErorrStates(error.toString(),message!));
     });
   }
 }

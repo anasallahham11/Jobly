@@ -19,7 +19,7 @@ class CommunityView extends StatelessWidget {
 
 
     return BlocProvider(
-        create: (BuildContext context) => CommunityCubit()..getQuestionsLatest(),
+        create: (BuildContext context) => CommunityCubit()..getQuestionsLatest()..getCategories(),
         child: BlocConsumer<CommunityCubit, CommunityStates>(
             listener: (context, state) {
               if (state is AddQuestionSuccessState) {
@@ -71,7 +71,12 @@ class CommunityView extends StatelessWidget {
                   actions: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(AppPadding.p14),
-                      child: Image.asset(ImageAssets.trendingIc,width: AppSize.s20,height: AppSize.s16,),
+                      child: InkWell(
+                          onTap:(){
+                            cubit.getQuestionsLatest();
+                            cubit.dropDownValueCategorySort=null;
+                            },
+                          child: Image.asset(ImageAssets.trendingIc,width: AppSize.s20,height: AppSize.s16,)),
                     ),
                   ],
                 ),
@@ -80,17 +85,18 @@ class CommunityView extends StatelessWidget {
                     backgroundColor: ColorManager.purple6,
                     onPressed: () {
                       if(cubit.currentIndex == 0) {
-                        addingDialog(
+                        addingDialogWithDropdown(
                             cubit,
                             context,
                             title: "Add Question :",
                             controller: newQuestionController,
-                            onPressed: (){
-                              cubit.addQuestion(section: 1, question: newQuestionController.text);
+                            onPressed:  (){
+                              cubit.addQuestion(category: cubit.dropDownValueCategory, question: newQuestionController.text);
+                              cubit.dropDownValueCategorySort=null;
+                              cubit.getQuestionsLatest();
                               newQuestionController.clear();
-                            }
+                            },
                         );
-
                       } else {
                         addingDialog(
                             cubit,
@@ -136,9 +142,23 @@ class CommunityView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
+                            if(cubit.currentIndex==0)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 15.0),
+                                child: myDropDownButton(
+                                    value: cubit.dropDownValueCategorySort,
+                                    hint: 'Choose Category',
+                                    function: (newValue) {
+                                      cubit.changeCategorySortDropDownButton(newValue!);
+                                      cubit.getQuestionsCat(cubit.dropDownValueCategorySort);
+                                    },
+                                    items: cubit.categoriesItems
+                                ),
+                              ),
                             cubit.currentIndex==0?
-                            questionsBuilder(cubit.questions, context, cubit, state):
+                            cubit.questions!.isNotEmpty?questionsBuilder(cubit.questions, context, cubit, state):const Center(child: Text("No Questions Yet")):
                             advicesBuilder(cubit.advices, context, cubit, state)
+
                           ],
                         ),
                       ),

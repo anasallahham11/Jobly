@@ -4,6 +4,7 @@ import 'package:jobly/utils/end_points.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/helpers/dio_helper.dart';
+import '../cities_model.dart';
 import '../search_model.dart';
 import '../sections_model.dart';
 import 'search_states.dart';
@@ -22,7 +23,7 @@ class SearchCubit extends Cubit<SearchStates> {
 
   ///SEARCH
   SearchModel? searchModel;
-  List<dynamic>? jobs;
+  List<dynamic>? jobs=[];
 
   void getSearch({required text}) {
     emit(SearchInitialState());
@@ -71,6 +72,25 @@ class SearchCubit extends Cubit<SearchStates> {
     });
   }
 
+  void getFreelance() {
+    emit(FreelanceLoadingState());
+    DioHelper.getData(
+        url: GET_FREELANCE,
+        token: token,
+    ).then((value) {
+      print(value?.data);
+      searchModel = SearchModel.fromJson(value?.data);
+      print(searchModel?.status);
+      print(searchModel?.message);
+      print(searchModel?.data[0].section);
+      jobs = searchModel?.data;
+      emit(FreelanceSuccessState());
+    }).catchError((error) {
+      print(error.toString());
+      emit(FreelanceErrorState(error.toString()));
+    });
+  }
+
   
 
 
@@ -79,15 +99,34 @@ class SearchCubit extends Cubit<SearchStates> {
     MultiSelectItem("part_time", "Part Time"),
     MultiSelectItem("remotely", "Remotely")
   ];
-  List<MultiSelectItem<dynamic>> cityItems = [
-    MultiSelectItem("Damascus", "Damascus"),
-    MultiSelectItem("Lattakia", "Lattakia"),
-    MultiSelectItem("Homs", "Homs"),
-    MultiSelectItem("Aleppo", "Aleppo"),
-    MultiSelectItem("Hama", "Hama"),
-    MultiSelectItem("Tartous", "Tartous"),
-  ];
 
+  ///bringing cities and putting them in a multi select dialog
+  List<MultiSelectItem<dynamic>> cityItems = [];
+
+  CitiesModel? citiesModel;
+  List<dynamic>? cities;
+  void getCities()
+  {
+    emit(CitiesLoadingState());
+    DioHelper.getData(
+      url: GET_CITIES,
+      token: token,
+    ).then((value) {
+      print(value?.data);
+      citiesModel = CitiesModel.fromJson(value?.data);
+      print(citiesModel?.status);
+      print(citiesModel?.message);
+      cities = citiesModel?.data;
+      cityItems = cities!.map((city) {
+        return MultiSelectItem(city.city, city.city);
+      }).toList();
+
+      emit(CitiesSuccessState());
+    }).catchError((error){
+      print(error.toString());
+      emit(CitiesErrorState(error.toString()));
+    });
+  }
 
   ///bringing categories and putting them in a multi select dialog
   List<MultiSelectItem<dynamic>> categoriesItems = [];

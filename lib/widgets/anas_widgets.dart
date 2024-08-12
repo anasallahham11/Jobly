@@ -1,16 +1,23 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:jobly/modules/community/question/question_view.dart';
+import 'package:jobly/modules/regular/employee_profile/employee_profile_view.dart';
 import 'package:jobly/modules/regular/search/cubit/search_cubit.dart';
 import 'package:jobly/resources/assets_manager.dart';
 import 'package:jobly/resources/color_manager.dart';
+import 'package:jobly/resources/routes_manager.dart';
 import 'package:jobly/resources/values_manager.dart';
 import 'package:jobly/utils/constants.dart';
+import 'package:jobly/utils/helpers/cache_helper.dart';
+import 'package:jobly/widgets/widgets.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../modules/announcements/cubit/announcements_states.dart';
 import '../modules/applications/cubit/applications_states.dart';
 import '../modules/community/cubit/community_states.dart';
 import '../modules/community/question/cubit/question_states.dart';
+import '../modules/regular/employee_profile/cubit/employee_profile_cubit.dart';
+import '../modules/regular/profile/cubit/profile_cubit.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
 
@@ -64,6 +71,36 @@ Widget multiSelectionWidget({
   ),
 );
 
+Widget myDropDownButton({
+  required value,
+  required hint,
+  required function,
+  required items,
+
+})=>DropdownButton<dynamic>(
+  value: value,
+  icon: Icon(
+    Icons.keyboard_arrow_down,
+    color: ColorManager.purple2,
+  ),
+  iconSize: 24,
+  elevation: 40,
+  borderRadius: BorderRadius.circular(40),
+  underline: Container(),
+  hint: Padding(
+    padding: const EdgeInsets.all(6.0),
+    child: Text(
+      hint,
+      style: TextStyle(
+          color: ColorManager.primary,
+          fontSize: 16),
+    ),
+  ),
+  //  style: ,
+  onChanged: function,
+  items: items,
+);
+
 Widget highlightedContainer(color, radius, text)=>Container(
   padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s5),
   decoration: BoxDecoration(
@@ -91,35 +128,38 @@ Widget defaultFormField({
   IconData? suffix,
   bool isPassword = false,
 }) =>
-    TextFormField(
-        controller: controller,
-        keyboardType: type,
-        onFieldSubmitted: onSubmit,
-        onChanged: onChange,
-        validator: validate,
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(
-            prefix,
-            color: ColorManager.purple3,
-          ),
-          suffixIcon: suffix != null
-              ? IconButton(
-                  onPressed: suffixPressed,
-                  icon: Icon(suffix),
-                  color: ColorManager.purple6,
-                )
-              : null,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: ColorManager.lightGrey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: ColorManager.purple5),
-          ),
-        ));
+    Padding(
+      padding: const EdgeInsets.all(AppPadding.p5),
+      child: TextFormField(
+          controller: controller,
+          keyboardType: type,
+          onFieldSubmitted: onSubmit,
+          onChanged: onChange,
+          validator: validate,
+          obscureText: isPassword,
+          decoration: InputDecoration(
+            labelText: label,
+            prefixIcon: Icon(
+              prefix,
+              color: ColorManager.purple3,
+            ),
+            suffixIcon: suffix != null
+                ? IconButton(
+                    onPressed: suffixPressed,
+                    icon: Icon(suffix),
+                    color: ColorManager.purple6,
+                  )
+                : null,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: ColorManager.lightGrey),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: ColorManager.purple5),
+            ),
+          )),
+    );
 
 Future<void> addingDialog(cubit,context,{required title,required controller,required onPressed}){
   return showDialog<void>(
@@ -145,6 +185,54 @@ Future<void> addingDialog(cubit,context,{required title,required controller,requ
     },
   );
 }
+Future<void> addingDialogWithDropdown(cubit,context,{required title,required controller,required onPressed}){
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context,StateSetter setState){
+          return AlertDialog(
+            title: Text(title),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                    width: 300,
+                    height: 50,
+                    child:myDropDownButton(
+                        value: cubit.dropDownValueCategory,
+                        hint: 'Choose Category',
+                        function: (newValue) {
+                          cubit.changeCategoryDropDownButton(newValue!);
+                          setState((){});
+                        },
+                        items: cubit.categoriesItems
+                    )
+                ),
+                const SizedBox(height: 10,),
+                SizedBox(
+                  width: 300,
+                  height: 50,
+                  child: defaultFormField(
+                      type: TextInputType.text,
+                      label: 'type here',
+                      controller: controller
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: onPressed,
+                child: const Text('Confirm'),
+              ),
+            ],
+          );
+        }
+      );
+    },
+  );
+}
 
 ///COMMUNITY
 Widget animatedTabBarItem(cubit, index, height, width, color,) => AnimatedContainer(
@@ -155,10 +243,10 @@ Widget animatedTabBarItem(cubit, index, height, width, color,) => AnimatedContai
       decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3), // Shadow color with opacity
-              offset: const Offset(2, 20), // Position of the shadow
-              blurRadius: AppSize.s50, // Blur effect of the shadow
-              spreadRadius: AppSize.s10, // Spread radius of the shadow
+              color: Colors.grey.withOpacity(0.3),
+              offset: const Offset(2, 20),
+              blurRadius: AppSize.s50,
+              spreadRadius: AppSize.s10,
             ),
           ],
           borderRadius: BorderRadius.circular(AppSize.s20),
@@ -180,7 +268,7 @@ Widget buildAnswerItem(answer,question, context, cubit, state,) => Card(
       shadowColor: ColorManager.purple0,
       shape: RoundedRectangleBorder(
         borderRadius:
-            BorderRadius.circular(AppSize.s28), // Change the radius here
+            BorderRadius.circular(AppSize.s28),
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: AppSize.s18,
@@ -191,10 +279,20 @@ Widget buildAnswerItem(answer,question, context, cubit, state,) => Card(
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: AppSize.s20,
-                  backgroundColor: ColorManager.white,
-                  backgroundImage: imageSelector(image: answer.image,defaultImage: ImageAssets.employeeIc),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>  EmployeeProfileScreen(answer.userId),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: AppSize.s20,
+                    backgroundColor: ColorManager.white,
+                    backgroundImage: imageSelector(image: answer.image,defaultImage: ImageAssets.employeeIc),
+                  ),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -239,13 +337,13 @@ Widget buildAnswerItem(answer,question, context, cubit, state,) => Card(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(''),
+                          title: const Text(''),
                           content: SizedBox(
                               width: 40,
                               height: 80,
                               child: Column(
                                 children: [
-                                  SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
                                   InkWell(
                                       onTap:(){
                                         var editedAnswerController = TextEditingController(text: '${answer.content}');
@@ -435,10 +533,20 @@ Widget buildAdviceItem(advice, context, cubit, state,) => Card(
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: AppSize.s20,
-                  backgroundColor: ColorManager.white,
-                  backgroundImage: imageSelector(image: advice.image,defaultImage: ImageAssets.employeeIc),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>  EmployeeProfileScreen(advice.userId),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: AppSize.s20,
+                    backgroundColor: ColorManager.white,
+                    backgroundImage: imageSelector(image: advice.image,defaultImage: ImageAssets.employeeIc),
+                  ),
                 ),
                 const SizedBox(
                   width: AppSize.s14,
@@ -688,10 +796,20 @@ Widget buildQuestionItem(question, context, cubit, state,) => InkWell(
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: AppSize.s20,
-                    backgroundColor: ColorManager.white,
-                    backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EmployeeProfileScreen(1),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: AppSize.s20,
+                      backgroundColor: ColorManager.white,
+                      backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
+                    ),
                   ),
                   const SizedBox(
                     width: AppSize.s14,
@@ -948,10 +1066,20 @@ Widget buildDetailedQuestionItem(question, context, cubit, state,) => Padding(
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: AppSize.s20,
-                backgroundColor: ColorManager.purple4,
-                backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  EmployeeProfileScreen(question.userId),
+                    ),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: AppSize.s20,
+                  backgroundColor: ColorManager.purple4,
+                  backgroundImage: imageSelector(image: question.image,defaultImage: ImageAssets.employeeIc),
+                ),
               ),
               const SizedBox(
                 width: AppSize.s14,
@@ -1117,7 +1245,9 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             style: const TextStyle(height: AppSize.s1_5),
                           ),
                           const SizedBox(width: AppSize.s8),
-                          const Icon(Icons.verified, color: Colors.lightBlue, size: AppSize.s16),
+                          announcement.isAuth?
+                          const Icon(Icons.verified, color: Colors.lightBlue, size: AppSize.s16):
+                          const SizedBox(width: AppSize.s8),
                         ],
                       ),
                     ),
@@ -1140,7 +1270,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             children: [
                               Icon(Icons.calendar_month_outlined, color: ColorManager.purple5),
                               const SizedBox(width: AppSize.s5),
-                               Text('${announcement.time}'),
+                               Text('${announcement.duration}'),
                             ],
                           ),
                           const SizedBox(height: AppSize.s8),
@@ -1156,7 +1286,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                             children: [
                               Icon(Icons.person_outline, color: ColorManager.purple5),
                               const SizedBox(width: AppSize.s5),
-                               Text('${announcement.companyEmail}',),
+                               Expanded(child: Text('${announcement.companyEmail}', overflow: TextOverflow.ellipsis,))
                             ],
                           ),
                         ],
@@ -1171,7 +1301,7 @@ Widget buildAnnouncementItem(announcement, context, cubit, state) {
                           const SizedBox(height: AppSize.s14),
                           Text("From ${announcement.time}"),
                           const SizedBox(height: AppSize.s16),
-                          Text('${announcement.companyEmail}',),
+                          Text('created ${announcement.createdAt}',overflow: TextOverflow.ellipsis,),
                         ],
                       ),
                     ),
@@ -1217,7 +1347,7 @@ Widget announcementsBuilder(announcements, context, cubit, state) => Conditional
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) =>
-          buildQuestionItem(announcements[index], context, cubit, state),
+          buildAnnouncementItem(announcements[index], context, cubit, state),
       separatorBuilder: (context, index) => const SizedBox(
         height: AppSize.s20,
       ),
@@ -1225,6 +1355,96 @@ Widget announcementsBuilder(announcements, context, cubit, state) => Conditional
   fallback: (context) => const Center(child: CircularProgressIndicator()),
 );
 ///APPLICATIONS
+Widget buildOthersApplicationItem(application, context, cubit, state) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
+    child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: AppPadding.p10,horizontal: AppPadding.p10),
+            height: AppSize.s80,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppSize.s20),
+              color: ColorManager.white,
+              boxShadow: [
+                BoxShadow(
+                  color: ColorManager.grey.withOpacity(0.5),
+                  offset: const Offset(2, 2),
+                  blurRadius: AppSize.s5,
+                  spreadRadius: AppSize.s2,
+                ),
+              ],
+            ),
+
+            child: Row(
+              children: [
+                Container(
+                  width: AppSize.s60,
+                  height: AppSize.s60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: ColorManager.purple4,
+                      width: AppSize.s2,
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: (){
+                      navigateTo(context, EmployeeProfileScreen(application.userId));
+                    },
+                    child: CircleAvatar(
+                        radius: AppSize.s350,
+                        backgroundColor: ColorManager.purple4,
+                        backgroundImage: imageSelector(image: application.image,defaultImage: ImageAssets.purpleLogo)
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSize.s16,),
+                Text(application.name,style: getSemiBoldStyle(color: ColorManager.black,fontSize: FontSize.s14),),
+                const Spacer(),
+                InkWell(
+                  onTap: (){
+                    cubit.acceptApplication(application.id);
+                    cubit.getMyJobApplications(application.id);
+                  },
+                  child: Icon(Icons.check_outlined,color: ColorManager.success,),
+                ),
+                const SizedBox(width: AppSize.s16,),
+                InkWell(
+                  onTap: (){
+                    cubit.rejectApplication(application.id);
+                    cubit.getMyJobApplications(application.id);
+                  },
+                  child: Icon(Icons.close,color: ColorManager.error,),
+                ),
+
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: AppSize.s0,
+            right: AppSize.s0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: AppSize.s10, vertical: AppSize.s0),
+              decoration: BoxDecoration(
+                color: ColorManager.grey.withOpacity(0.2),
+                borderRadius:  const BorderRadius.only(
+                  bottomRight: Radius.circular(AppSize.s20),
+                  topLeft: Radius.circular(AppSize.s20),
+                ),
+              ),
+              child: Text(
+                "sent ${application.applicationDate}",
+                style: getRegularStyle(color: ColorManager.grey,fontSize: FontSize.s12),
+              ),
+            ),
+          ),
+
+        ]
+    ),
+  );
+}
 Widget buildApplicationItem(application, context, cubit, state) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: AppMargin.m20),
@@ -1276,7 +1496,7 @@ Widget buildApplicationItem(application, context, cubit, state) {
                 Row(
                   children: [
                     Icon(Icons.location_on_outlined,size: AppSize.s16,color: ColorManager.grey,),
-                    Text(application.location??"No Location",style: getMediumStyle(color: ColorManager.grey),),
+                    Text(application.location?.city??"No Location",style: getMediumStyle(color: ColorManager.grey),),
                   ],
                 ),
               ],
@@ -1321,7 +1541,7 @@ Widget buildApplicationItem(application, context, cubit, state) {
                           TextButton(
                             child: const Text('Delete'),
                             onPressed: () {
-                              cubit.cancelApplication(application.vacancyId);
+                              cubit.cancelApplication(application.id);
                               cubit.getMyApplications();
                               Navigator.of(context).pop();
                             },
@@ -1349,6 +1569,19 @@ Widget buildApplicationItem(application, context, cubit, state) {
     ),
   );
 }
+Widget applicationsOthersBuilder(applications, context, cubit, state) => ConditionalBuilder(
+  condition: state is! ApplicationsLoadingState && applications != null,
+  builder: (context) => ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) =>
+          buildOthersApplicationItem(applications[index], context, cubit, state),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: AppSize.s8,
+      ),
+      itemCount: applications.length),
+  fallback: (context) => const Center(child: CircularProgressIndicator()),
+);
 Widget applicationsBuilder(applications, context, cubit, state) => ConditionalBuilder(
   condition: state is! ApplicationsLoadingState && applications != null,
   builder: (context) => ListView.separated(
@@ -1365,9 +1598,9 @@ Widget applicationsBuilder(applications, context, cubit, state) => ConditionalBu
 Color statusColor(status){
   if(status=="pending") {
     return ColorManager.pending;
-  } else if(status=="accepted") {
+  } else if(status=="Accepted") {
     return ColorManager.success;
-  } else if(status=="rejected") {
+  } else if(status=="Rejected") {
     return ColorManager.error;
   }else {
     return ColorManager.grey;
@@ -1383,43 +1616,39 @@ ImageProvider<Object> imageSelector({required image,required defaultImage}){
 ///FILTER
 Widget filterOptions(cubit,context)=>AlertDialog(
   title: const Text('Filter Options:'),
-  content: SizedBox(
-    width: double.maxFinite,
-    child: Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            multiSelectionWidget(
-                items: cubit.typeItems,
-                title: "Job Types",
-                icon: Icons.access_time,
-                buttonText: "Choose Types",
-                result: SearchCubit.selectedTypes
-            ),
-            multiSelectionWidget(
-                items: cubit.cityItems,
-                title: "Cities",
-                icon: Icons.location_on_outlined,
-                buttonText: "Choose Cities",
-                result: SearchCubit.selectedCities
-            ),
-            multiSelectionWidget(
-                items: cubit.categoriesItems,
-                title: "Categories",
-                icon: Icons.category_outlined,
-                buttonText: "Choose Category",
-                result: SearchCubit.selectedCategories
-            ),
-            multiSelectionWidget(
-                items: cubit.sectionsItems,
-                title: "Sections",
-                icon: Icons.domain,
-                buttonText: "Choose Sections",
-                result: SearchCubit.selectedSections
-            )
-          ],
+  content: SingleChildScrollView(
+    child: Column(
+      children: [
+        multiSelectionWidget(
+            items: cubit.typeItems,
+            title: "Job Types",
+            icon: Icons.access_time,
+            buttonText: "Choose Types",
+            result: SearchCubit.selectedTypes
         ),
-      ),
+        multiSelectionWidget(
+            items: cubit.cityItems,
+            title: "Cities",
+            icon: Icons.location_on_outlined,
+            buttonText: "Choose Cities",
+            result: SearchCubit.selectedCities
+        ),
+        multiSelectionWidget(
+            items: cubit.categoriesItems,
+            title: "Categories",
+            icon: Icons.category_outlined,
+            buttonText: "Choose Category",
+            result: SearchCubit.selectedCategories
+        ),
+        multiSelectionWidget(
+            items: cubit.sectionsItems,
+            title: "Sections",
+            icon: Icons.domain,
+            buttonText: "Choose Sections",
+            result: SearchCubit.selectedSections
+        ),
+        TextButton(onPressed: (){cubit.getFreelance();Navigator.of(context).pop();}, child: const Text("Get Freelance Jobs"))
+      ],
     ),
   ),
   actions: <Widget>[
@@ -1432,6 +1661,378 @@ Widget filterOptions(cubit,context)=>AlertDialog(
     ),
   ],
 );
+///PROFILE
+Widget pointsAndPosts(cubit,context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      //favourite
+      numberAndText(context, cubit.profile.points, 'Points'),
+      //divider
+      dividerVertical(context),
+      //planning to read
+      numberAndText(context, cubit.profile.advices.length, 'Contributions')
+    ],
+  );
+}
+Widget buildTextButton(cubit,context, String text, int index) {
+  return GestureDetector(
+    onTap: () {
+      if(index==1) {
+        cubit.getMyJobs();
+      }
+      cubit.changeColor(index);
+      },
+    child: Container(
+      width: MediaQuery.of(context).size.width * 0.3,
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: cubit.selectedIndex == index
+            ? Theme.of(context).primaryColor
+            : ColorManager.white,
+        borderRadius: BorderRadius.circular(30.0),
+        border: Border.all(color: ColorManager.purple4, width: 2),
+      ),
+      child: Text(
+        textAlign: TextAlign.center,
+        text,
+        style: TextStyle(
+          color: cubit.selectedIndex == index
+              ? ColorManager.white
+              : Colors.black,
+        ),
+      ),
+    ),
+  );
+}
+Widget infoRow(cubit,context,state) =>Padding(
+  padding: const EdgeInsets.symmetric(vertical: 20),
+  child: Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          buildTextButton(cubit, context, 'About Me', 0),
+
+          buildTextButton(cubit, context, 'My Jobs', 1),
+
+          buildTextButton(cubit, context, 'Settings', 2),
+        ],
+      ),
+      const SizedBox(height: 20),
+      cubit.getSelectedWidget(cubit,context,state),
+    ],
+  ),
+);
+Widget footer(cubit,context,state) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: ColorManager.offWhite,
+        // color: Color.fromARGB(255, 245, 245, 245),
+        // borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      child: Column(
+        children: [
+          //points and posts
+          pointsAndPosts(cubit,context),
+          infoRow(cubit,context,state),
+
+        ],
+      ),
+    ),
+  );
+}
+Widget aboutMe(cubit,context) {
+  return Column(
+    children: [
+      //about me
+      jobDescription(context, '',
+          '''${cubit.profile.employee.resume}'''),
+
+      //exp
+      jobDescription(
+        context,
+        '● Work Experience:',''' ${cubit.profile.employee.experience}''',
+      ),
+      //Education
+      jobDescription(
+          context,
+          '●Education:', '''● ${cubit.profile.employee.education}'''),
+      //skills
+      jobDescription(context,
+          '●Skills:', '''${cubit.skills}'''),
+      TextButton(
+        onPressed: () {
+          launchUrl(
+            cubit is ProfileCubit ?
+              Uri.parse('${ProfileCubit.cvFile}'):
+              Uri.parse('${EmployeeProfileCubit.cvFile}'),
+              mode: LaunchMode.externalApplication
+          );
+        },
+        child:  Text(
+                  'Check CV',
+                  style: getSemiBoldStyle(color: ColorManager.darkPrimary,fontSize: FontSize.s16),
+              ),
+      ),
+
+//contact
+      jobDescription(context, 'Contact Information:', '''
+● Name:
+    ${cubit.profile.name}
+
+● Email:
+    ${cubit.profile.email}
+
+● Phone:
+    ${cubit.profile.employee.phoneNumber}
+
+● Location:
+    - Country : ${cubit.profile.address.county}
+    - City : ${cubit.profile.address.city}
+    - Governorate : ${cubit.profile.address.governorate}
+'''),
 
 
 
+
+      //NetworkMediaWidget(),
+    ],
+  );
+}
+Widget settings(context,cubit,state) {
+  return Column(
+    children: [
+      //language
+      settingsTileSwitch(
+        context,
+        cubit,
+        Icons.language_outlined,
+        'Language',
+        cubit.language,
+        const Color.fromARGB(255, 100, 126, 255),
+        const Color.fromARGB(255, 30, 4, 126),
+        true,
+        cubit.isEnglish,
+        cubit.changeLanguage,
+      ),
+      //darkmode
+      settingsTileSwitch(
+        context,
+        cubit,
+        cubit.icon,
+        'Mode',
+        cubit.mode,
+        cubit.iconBackgroundColor,
+        cubit.iconColor,
+        true,
+        cubit.isDark,
+        cubit.changeMode,
+      ),
+      Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ListTile(
+          tileColor: Colors.white,
+          leading: highlightedIcon(Colors.blue, Colors.indigo, Icons.verified_user_rounded,30),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              smallTitle("Verification"),
+              const Text("Send Request"),
+            ],
+          ),
+          trailing:  InkWell(
+            onTap: (){
+              cubit.sendVerification();
+
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.send_rounded, // Right arrow icon
+                color: Colors.black, // Icon color
+              ),
+            ),
+          ),
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ListTile(
+          tileColor: Colors.white,
+          leading: highlightedIcon(Colors.orange, Colors.deepOrange, Icons.verified_user_rounded,30),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              smallTitle("Verification"),
+              const Text("Cancel Request"),
+            ],
+          ),
+          trailing:  InkWell(
+            onTap: (){
+              cubit.cancelVerification();
+
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.cancel_outlined, // Right arrow icon
+                color: Colors.black, // Icon color
+              ),
+            ),
+          ),
+        ),
+      ),
+      //edit profile
+      settingsTileSwitch(
+        context,
+        cubit,
+        Icons.edit,
+        "Edit Profile",
+        '',
+        Colors.amberAccent,
+        Colors.deepOrangeAccent,
+        false,
+        false,
+            (value) {},
+      ),
+      //add video
+      settingsVideoTileSwitch(
+        context,
+        cubit,
+        Icons.video_settings_rounded,
+        'Add Video',
+        '',
+        const Color.fromARGB(255, 255, 100, 100),
+        const Color.fromARGB(255, 255, 255, 255),
+        false,
+        false,
+            (value) {},
+      ),
+
+      //add cv
+      settingsTileSwitch(
+        context,
+        cubit,
+        Icons.picture_as_pdf_outlined,
+        'Add CV',
+        '',
+        const Color.fromARGB(255, 255, 100, 100),
+        const Color.fromARGB(255, 255, 255, 255),
+        false,
+        false,
+            (value) {},
+      ),
+      Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ListTile(
+          tileColor: Colors.white,
+          leading: highlightedIcon(ColorManager.purple2, ColorManager.purple5, Icons.logout_rounded,30),
+          title: smallTitle("Log Out"),
+          trailing:  InkWell(
+            onTap: (){
+              CacheHelper.removeData(key: "token");
+              Navigator.of(context).pushNamedAndRemoveUntil(Routes.loginRoute, (Route<dynamic> route) => false);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_ios_rounded, // Right arrow icon
+                color: Colors.black, // Icon color
+              ),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(
+        height: 30,
+      )
+    ],
+  );
+}
+Future<void> showUploadCvDialog(BuildContext context,cubit) {
+  return showDialog<void>(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Upload CV'),
+          content:  const Text("Select your CV file..."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Select PDF'),
+              onPressed: ()  {
+                cubit.selectFile();
+                print(cubit.fileName);
+              },
+            ),
+            TextButton(
+                child:const Text ('Upload'),
+                onPressed: () {
+                  cubit.sendFile(
+                    filePath: cubit.filePath,
+                    fileName: cubit.fileName,
+                  );
+
+                })
+
+          ],
+        );
+      }
+  );
+}
+Future<void> showUploadVideoDialog(BuildContext context,cubit) {
+  return showDialog<void>(
+      context: context,
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Upload Personal Video'),
+          content:  const Text("Select your video file..."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Select video'),
+              onPressed: ()  {
+                cubit.selectFile();
+                print(cubit.fileName);
+              },
+            ),
+            TextButton(
+                child:const Text ('Upload'),
+                onPressed: () {
+                  cubit.sendVideo(
+                    filePath: cubit.filePath,
+                    fileName: cubit.fileName,
+                  );
+                })
+
+          ],
+        );
+      }
+  );
+}

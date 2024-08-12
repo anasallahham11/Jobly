@@ -16,7 +16,7 @@ class ApplicationsCubit extends Cubit<ApplicationsStates>{
 
   ///GET APPLICATIONS
   MyApplicationsModel? myApplicationsModel;
-  List<dynamic>? applications;
+  List<dynamic>? applications=[];
   void getMyApplications()
   {
   emit(ApplicationsLoadingState());

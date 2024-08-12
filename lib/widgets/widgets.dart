@@ -1,24 +1,39 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:jobly/modules/regular/edit_profile/edit_profile_view.dart';
+import 'package:jobly/modules/regular/job_applications/job_applications_view.dart';
 import 'package:jobly/modules/regular/job_details/job_details_view.dart';
+import 'package:jobly/modules/regular/profile/cubit/profile_cubit.dart';
 import 'package:jobly/modules/regular/profile/profile_view.dart';
 import 'package:jobly/modules/regular/search/search_view.dart';
 import 'package:jobly/resources/color_manager.dart';
 import 'package:jobly/utils/constants.dart';
+import 'package:jobly/widgets/anas_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../modules/regular/company_profile/company_profile_view.dart';
 import '../modules/regular/company_profile/cubit/company_profile_cubit.dart';
+import '../modules/regular/employee_profile/cubit/employee_profile_cubit.dart';
 import '../modules/regular/jobs/jobs_cubit.dart';
 import '../modules/regular/jobs/jobs_states.dart';
+import '../resources/assets_manager.dart';
 import '../resources/font_manager.dart';
 import '../resources/style_manager.dart';
+import '../resources/values_manager.dart';
 
 Widget buildJobItem(
     job,
     context,
     cubit,
+    type
     ) {
   return InkWell(
-    onTap: () => navigateTo(context, JobDetailsView(id: job.vacancyId,)),
+    onTap: () {
+      if(type=="mine") {
+        navigateTo(context, JobApplicationsView(job.vacancyId,));
+      }else{
+        navigateTo(context, JobDetailsView(id: job.vacancyId,));
+      }
+    } ,
     child: Container(
       margin: const EdgeInsets.all(15),
       padding: const EdgeInsets.all(8),
@@ -35,7 +50,7 @@ Widget buildJobItem(
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              circularImage(context, 'http://192.168.1.8:8000/images/${job.publisherPhoto}', MediaQuery.of(context).size.width * 0.05,),
+              circularImage(context, '${baseUrl}images/${job.publisherPhoto}', MediaQuery.of(context).size.width * 0.05,),
               //company logo
               Expanded(
                 child: Column(
@@ -43,13 +58,18 @@ Widget buildJobItem(
                   children: [
                     Text(job.description),
                     Text(
-                      '${job.companyName} - ${job.location}',
+                      '${job.companyName} - ${job.location?.city??"Undefined"}',
                       style:  TextStyle(
                         color: ColorManager.purple5,),
                     ),
                   ],
                 ),
               ),
+              if(type=="mine")
+              IconButton(onPressed: (){
+                cubit.deleteMyJob(job.vacancyId);
+                cubit.getMyJobs();
+              }, icon: Icon(Icons.remove_circle_outline_sharp,color: ColorManager.error,)),
               Text(
                 "#${job.vacancyId}",
                 style:  TextStyle(
@@ -63,8 +83,10 @@ Widget buildJobItem(
                   const Color.fromARGB(255, 201, 231, 255), Colors.blue),
               highlightedText(job.section,
                   const Color.fromARGB(255, 196, 255, 205), Colors.green),
-              const Expanded(child: SizedBox()),
-              Text("${job.salaryRange}"),
+              const Spacer(),
+              highlightedText(job.salaryRange,
+                  const Color.fromARGB(150, 255, 255, 150), Colors.orangeAccent),
+
             ],
           ),
         ],
@@ -74,13 +96,13 @@ Widget buildJobItem(
 }
 
 
-Widget jobsBuilder(jobs,cubit,context,state)=>ConditionalBuilder(
+Widget jobsBuilder(jobs,cubit,context,state,type)=>ConditionalBuilder(
   condition: state is! JobsLoadingState && jobs != null,
   builder: (context) => ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) =>
-          buildJobItem(jobs[index], context, cubit),
+          buildJobItem(jobs[index], context, cubit,type),
       separatorBuilder: (context, index) => const SizedBox(
         height: 8,
       ),
@@ -96,7 +118,9 @@ Widget buildCompanyItem(
     cubit
     ) {
   return InkWell(
-    onTap: () {},
+    onTap: () {
+      navigateTo(context, CompanyProfileScreen(company.id));
+    },
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SizedBox(
@@ -104,15 +128,17 @@ Widget buildCompanyItem(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            circularImage(
-              context,
-              "${baseUrl}images/${company.companyImage}",
-              MediaQuery.of(context).size.width * 0.07,
+            CircleAvatar(
+              radius: AppSize.s40,
+              backgroundColor: ColorManager.white,
+              backgroundImage: imageSelector(image: company.companyImage,defaultImage: ImageAssets.companyIc),
             ),
             Text(
               company.companyName,
               softWrap: true,
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -320,7 +346,7 @@ Widget customListTile(
             backgroundColor,
             iconColor,
             icon,
-            30,
+            40,
           ),
           // const Color.fromARGB(255, 255, 180, 231),
           // const Color.fromARGB(255, 156, 0, 164),
@@ -566,23 +592,23 @@ Widget backButtonrounded(BuildContext context) {
 
 //lists
 //holds the company widgets in it
-Widget companyHolder(context) {
-  return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.13,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: companyData.length,
-      itemBuilder: (context, index) {
-        final company = companyData[index];
-        return companyWidget(
-          context,
-          company['image']!,
-          company['text']!,
-        );
-      },
-    ),
-  );
-}
+// Widget companyHolder(context) {
+//   return SizedBox(
+//     height: MediaQuery.of(context).size.height * 0.13,
+//     child: ListView.builder(
+//       scrollDirection: Axis.horizontal,
+//       itemCount: companyData.length,
+//       itemBuilder: (context, index) {
+//         final company = companyData[index];
+//         return companyWidget(
+//           context,
+//           company['image']!,
+//           company['text']!,
+//         );
+//       },
+//     ),
+//   );
+// }
 //job vacancy widget
 Widget jobsVertical(List<Job> jobs) {
   return Expanded(
@@ -618,8 +644,7 @@ Widget jobsHorizontal(BuildContext context, List<Job> jobs) {
 //
 Widget buildGridView(
     List items,
-    Widget Function(Color, Color, IconData, String, String, bool)
-        gridItemBuilder) {
+    Widget Function(Color, Color, IconData, String, String, bool) gridItemBuilder) {
   return SizedBox(
     height: 140,
     child: Padding(
@@ -688,12 +713,12 @@ Widget reviews(BuildContext context, String image) {
 //tiles
 Widget settingsTileSwitch(
   BuildContext context,
+  cubit,
   IconData icon,
   String title,
   String status,
   Color background,
   Color iconColor,
-  Widget widget,
   bool isSwitch,
   bool isSwitchOn,
   Function(bool)? switchFunction, // Parameter for switch function
@@ -720,11 +745,16 @@ Widget settingsTileSwitch(
               value: isSwitchOn,
             )
           : InkWell(
-              onTap: switchFunction == null
-                  ? () {}
-                  : () {
-                      navigateTo(context, widget);
-                    },
+              onTap: (){
+                title!="Edit Profile"?
+                showUploadCvDialog(context, cubit):
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileView(cubit.profile),
+                  ),
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -741,12 +771,62 @@ Widget settingsTileSwitch(
   );
 }
 
-Widget companyListTile(context, String imageUrl, String companyName) {
+Widget settingsVideoTileSwitch(
+    BuildContext context,
+    cubit,
+    IconData icon,
+    String title,
+    String status,
+    Color background,
+    Color iconColor,
+    bool isSwitch,
+    bool isSwitchOn,
+    Function(bool)? switchFunction, // Parameter for switch function
+    ) {
+  return Container(
+    margin: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: ListTile(
+      tileColor: Colors.white,
+      leading: highlightedIcon(background, iconColor, icon,30),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          smallTitle(title),
+          Text(status),
+        ],
+      ),
+      trailing: isSwitch
+          ? Switch(
+        onChanged: switchFunction,
+        value: isSwitchOn,
+      )
+          : InkWell(
+        onTap: (){
+          showUploadVideoDialog(context, cubit);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 245, 245, 245),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: const Icon(
+            Icons.arrow_forward_ios_rounded, // Right arrow icon
+            color: Colors.black, // Icon color
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget companyListTile(context,int id, String imageUrl, String companyName) {
   return ListTile(
-      onTap: () {
-        navigateTo(context,
-            CompanyProfileScreen(imageUrl: imageUrl, ));
-      },
+
       subtitle: const Text('⭐4.2 | 400 Reviews'),
       title: Text(companyName),
       leading: circularImage(
@@ -800,7 +880,8 @@ Widget titleAndDescription(context) {
       jobDescription(context, 'Role Category:', '● Software Development'),
       //Education
       jobDescription(context, 'Education :',
-          '''● Bachelor's Degree in Computer Science, Engineering, or a related field (Master's or Ph.D. preferred).
+          '''Education :
+          ● Bachelor's Degree in Computer Science, Engineering, or a related field (Master's or Ph.D. preferred).
 ● Certifications in relevant technologies or methodologies (e.g., AWS Certification, Agile Certification) are a plus.'''),
     ],
   );
@@ -811,6 +892,7 @@ Widget titleAndDescription(context) {
 //the company widget in the all jobs screen
 Widget companyWidget(
   context,
+  int id,
   String imageUrl,
   String text,
 ) {
@@ -820,10 +902,7 @@ Widget companyWidget(
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CompanyProfileScreen(
-            imageUrl: imageUrl,
-          
-          ),
+          builder: (context) => CompanyProfileScreen(id),
         ),
       );
     },
@@ -1013,10 +1092,13 @@ Widget myDrawer(BuildContext context) {
 
 class CompanyProfileHeader extends StatelessWidget {
   final BuildContext context;
-  final String profileImage;
+  final String? profileImage;
   final String backgroundImage;
   final String name;
+  final int isVerified;
   final bool isProfile;
+  final bool isEmployee;
+  final String avg;
 
   const CompanyProfileHeader({
     super.key,
@@ -1024,7 +1106,10 @@ class CompanyProfileHeader extends StatelessWidget {
     required this.profileImage,
     required this.backgroundImage,
     required this.name,
+    required this.isVerified,
     this.isProfile = true,
+    this.isEmployee=false,
+    this.avg="0.0"
   });
 
   @override
@@ -1038,8 +1123,8 @@ class CompanyProfileHeader extends StatelessWidget {
               : MediaQuery.of(context).size.height * 0.45,
           child: Align(
             alignment: Alignment.topCenter,
-            child: Image.network(
-              backgroundImage,
+            child: Image.asset(
+              ImageAssets.employeeBG,
               fit: BoxFit.cover,
               width: double.infinity,
               height: isProfile
@@ -1064,6 +1149,7 @@ class CompanyProfileHeader extends StatelessWidget {
               ),
             ),
           ),
+
         // Profile or Company Image
         isProfile
             ? Positioned(
@@ -1079,17 +1165,26 @@ class CompanyProfileHeader extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            profileImage,
+                          child: profileImage!=null
+                              ? Image.network(
+                            profileImage!,
                             fit: BoxFit.cover,
-                          ),
+                          )
+                              :Image.asset(ImageAssets.employeeIc),
                         ),
                       ),
                     ),
-                    Text(
-                      name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 20),
+                    Row(
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 20),
+                        ),
+                        isVerified==1?
+                        const Icon(Icons.verified_rounded,color: Colors.lightBlue,):
+                        const SizedBox()
+                      ],
                     ),
                   ],
                 ),
@@ -1097,7 +1192,7 @@ class CompanyProfileHeader extends StatelessWidget {
             : Positioned(
                 bottom: -4,
                 left: 10,
-                child: circularImage(context, profileImage, 50),
+                child: circularImage(context, profileImage!, 50),
               ),
 
         // Optional Back Button
@@ -1107,9 +1202,13 @@ class CompanyProfileHeader extends StatelessWidget {
           Positioned(
             left: MediaQuery.of(context).size.width * 0.4,
             bottom: 10,
-            child: Text(
-              name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            child: Row(
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                ),
+              ],
             ),
           ),
         isProfile
@@ -1117,9 +1216,30 @@ class CompanyProfileHeader extends StatelessWidget {
                 bottom: 45,
                 right: MediaQuery.of(context).size.width * 0.25,
                 child: InkWell(
+                  onTap: () {
+                    launchUrl(
+                      isEmployee?
+                      Uri.parse('${EmployeeProfileCubit.videoFile}'):
+                      Uri.parse('${ProfileCubit.videoFile}'),
+                      mode: LaunchMode.platformDefault
+                  );
+                    },
                     child: highlightedIcon(Theme.of(context).primaryColor,
                         Colors.white, Icons.play_arrow_rounded,30)))
             : const Text(''),
+        if (!isProfile)
+          const Positioned(
+            bottom: 70,
+            left: 5,
+            child: Icon(Icons.star_rate_rounded,color: Colors.yellow,size: 55,),
+          ),
+        if (!isProfile)
+          Positioned(
+            bottom: 87,
+            left: 22,
+            child: Text(avg,style: TextStyle(color: ColorManager.black,fontSize: 14,fontWeight: FontWeight.bold),),
+          ),
+
       ],
     );
   }
@@ -1230,7 +1350,7 @@ Widget seeMoreText(
   return SizedBox(
     width: 400,
     child: RichText(
-      maxLines: 3,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
       text: TextSpan(
         children: [

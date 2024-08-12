@@ -44,11 +44,22 @@ dependencies:
   multi_select_flutter:
   file_picker:
   video_player:
+  chewie:
+  url_launcher:
+  open_file:
+
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons:
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon_logo.png"
+  adaptive_icon_background: "assets/images/icon_logo.png"
+  adaptive_icon_foreground: "assets/images/icon_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,10 +81,12 @@ flutter:
     - assets/images/up-arrow.png
     - assets/images/answers.png
     - assets/images/employee.png
+    - assets/images/company.png
     - assets/images/fire.png
     - assets/images/tradinos.jpeg
     - assets/images/dots.png
     - assets/images/report.png
+    - assets/images/employeeBG.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

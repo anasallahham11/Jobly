@@ -1,11 +1,11 @@
-class LoginModle {
+class LoginModel {
   bool? status;
   String? message;
   Data? data;
 
-  LoginModle({this.status, this.message, this.data});
+  LoginModel({this.status, this.message, this.data});
 
-  LoginModle.fromJson(Map<String, dynamic> json) {
+  LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;

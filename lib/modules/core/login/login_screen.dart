@@ -7,6 +7,8 @@ import '../../../resources/assets_manager.dart';
 import '../../../resources/color_manager.dart';
 import '../../../resources/strings_manager.dart';
 import '../../../resources/values_manager.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/helpers/cache_helper.dart';
 import '../../../widgets/anas_widgets.dart';
 import '../../home/home_layout_view.dart';
 import '../sign_up/sign_up_user/singup_user_view.dart';
@@ -14,27 +16,32 @@ import '../sign_up/sign_up_user/singup_user_view.dart';
 
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController _mobileNumberController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
     return Scaffold(
      
       body: BlocProvider(
         create: (context) => LoginCubit(),
         child: BlocListener<LoginCubit, LoginStates>(
           listener: (context, state) {
-            if (state is LoginErorrStates) {
+            if (state is LoginErrorStates) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Login Failed: ${state.erorr}'),
+                  content: Text('Login Failed: ${state.error}'),
                 ),
               );
             } else if (state is LoginSuccessStates) {
-                 SnackBar(
-                  content: Text('Login sucssec'),
+              CacheHelper.saveData(key: 'token', value: state.loginModel.data?.token).then((value) {
+                token= state.loginModel.data?.token;
+              });
+                 const SnackBar(
+                  content: Text('Login success'),
                 );
+
               // Navigate to another screen
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomeLayoutView()));
             }
@@ -42,16 +49,14 @@ class LoginPage extends StatelessWidget {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration:  BoxDecoration(
+            decoration:  const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-            
-                  ColorManager.purple6,
-                  ColorManager.purple5,
                   ColorManager.purple4,
+                  ColorManager.purple7,
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
               ),
             ),
             child: Padding(
@@ -66,7 +71,7 @@ class LoginPage extends StatelessWidget {
                         clipBehavior: Clip.none,
                         children: [
 
-                          Card(   
+                          Card(
                             child: Container(
                             width: 300, // العرض
                             height: 500, // الطول
@@ -74,31 +79,39 @@ class LoginPage extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                      
+
                                 const Image(image: AssetImage(ImageAssets.purpleLogo)),
                                 const SizedBox(height: AppSize.s16),
-    
-                                  defaultFormField(controller: _mobileNumberController, type:TextInputType.emailAddress, label: AppStrings.emaill,prefix: Icons.email),
+
+                                  defaultFormField(controller: _emailController, type:TextInputType.emailAddress, label: AppStrings.emaill,prefix: Icons.email),
                                   const SizedBox(height: AppSize.s16),
-                                  defaultFormField(controller: _passwordController, type:TextInputType.text, label: AppStrings.password,isPassword: true,prefix: Icons.password),
+                                  defaultFormField(controller: _passwordController, type:TextInputType.text, label: AppStrings.password,isPassword: true,prefix: Icons.lock,),
                                   const SizedBox(height: AppSize.s16),
                                  const  SizedBox(height: 16),
                                   BlocBuilder<LoginCubit, LoginStates>(
                                     builder: (context, state) {
+                                      var cubit=LoginCubit.get(context);
                                       if (state is LoginLoadingStates) {
                                         return const CircularProgressIndicator();
                                       }
-                              
-                                      return ElevatedButton(
+
+                                      return MaterialButton(
                                         onPressed: () {
-                                          final email = _mobileNumberController.text;
-                                          final password = _passwordController.text;
-                                          BlocProvider.of<LoginCubit>(context).userLogin(email: email, password: password);
+                                          cubit.userLogin(email: _emailController.text, password: _passwordController.text);
                                         },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: ColorManager.white, // Set the button's background color to white
-                                          )      ,
-                                        child:  Text(AppStrings.SIGNIN,style: TextStyle(color:ColorManager.purple6,),),
+                                        child:  Container(
+                                          width: 100,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: ColorManager.primary,
+                                          ),
+                                          child: Text(
+                                            AppStrings.signIn,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(color: ColorManager.white),
+                                          ),
+                                        ),
                                       );
                                     },
                                   ),
@@ -106,7 +119,7 @@ class LoginPage extends StatelessWidget {
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => SingupUser()));
-                                      
+
                                       // Handle register
                                     },
                                     child:  Text(AppStrings.account,style: TextStyle(color: ColorManager.purple6,),),
@@ -115,7 +128,7 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                     Positioned(
+                          Positioned(
                           top: -40,
                           left: 120,
                           child: Container(

@@ -1,48 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:jobly/modules/regular/add_job/add_job_view.dart';
 import 'package:jobly/modules/regular/profile/cubit/profile_states.dart';
 import 'package:jobly/utils/constants.dart';
-import 'package:video_player/video_player.dart';
 import '../../../resources/color_manager.dart';
-import '../../../widgets/rami_widgets.dart';
+import '../../../widgets/anas_widgets.dart';
 import '../../../widgets/widgets.dart';
-import '../edit_profile/edit_profile_view.dart';
 import 'cubit/profile_cubit.dart';
 
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
-    
     return BlocProvider(
       create: (context) => ProfileCubit()..getProfileDetails(),
       child: BlocConsumer<ProfileCubit, ProfileStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if(state is SendVerificationSuccessState){
+            showToast(text: state.message, state: state.status?ToastStates.SUCCESS:ToastStates.ERROR);
+          }else if(state is CancelVerificationSuccessState){
+            showToast(text: state.message, state: state.status?ToastStates.SUCCESS:ToastStates.ERROR);
+          }else if(state is DeleteMyJobSuccessState){
+            showToast(text: "Deleted Successfully", state: ToastStates.SUCCESS);
+          }
+        },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SafeArea(child: SizedBox()),
-                CompanyProfileHeader(
-                  context: context,
-                  profileImage:
-                      "$baseUrl/images/Employees/${ProfileCubit.get(context).employeeModel?.data.employee.image.filename}",
-                  backgroundImage:
-                      "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
-                  name: '${ProfileCubit.get(context).employeeModel?.data.name}',
-                  isProfile: true,
-                ),
-                
-                footer(context),
-              
-              ],
+          var cubit = ProfileCubit.get(context);
+          return Scaffold(
+            floatingActionButton: FloatingActionButton(
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddJobView(),
+                    ),
+                  );
+                },
+                backgroundColor: ColorManager.purple6,
+                child: Icon(Icons.add,color: ColorManager.purple2,)
+            ),
+            body: SingleChildScrollView(
+              child:
+              cubit.profile == null ?
+                  const Center(child: CircularProgressIndicator()):
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SafeArea(child: SizedBox()),
+                  CompanyProfileHeader(
+                    context: context,
+                    profileImage:
+                    cubit.profile.employee.image!=null?
+                    "${baseUrl}images/Employees/${cubit.profile.employee.image.filename}" :
+                    null,
+                    backgroundImage:
+                        "https://live.staticflickr.com/65535/49675583756_a078ac45a9_b.jpg",
+                    name: '${cubit.profile.name}',
+                    isVerified: cubit.profile.authentication,
+                    isProfile: true,
+                  ),
+
+                  footer(cubit,context,state),
+
+
+                ],
+              ),
             ),
           );
         },
@@ -51,216 +76,72 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-Widget pointsAndPosts(context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      //favourite
-      numberAndText(context, 87, 'Points'),
-      //divider
-      dividerVertical(context),
-      //planning to read
-      numberAndText(context, 8768, 'Posts')
-    ],
-  );
-}
-
-Widget infoRow(context) {
-  return BlocBuilder<ProfileCubit, ProfileStates>(
-    builder: (context, state) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildTextButton(context, 'About Me', 0),
-                
-                buildTextButton(context, 'Settings', 2),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ProfileCubit.get(context).getSelectedWidget(context),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-Widget buildTextButton(context, String text, int index) {
-  return GestureDetector(
-    onTap: () => ProfileCubit.get(context).changeColor(index),
-    child: Container(
-      width: MediaQuery.of(context).size.width * 0.3,
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        color: ProfileCubit.get(context).selectedIndex == index
-            ? Theme.of(context).primaryColor
-            : ColorManager.white,
-        borderRadius: BorderRadius.circular(30.0),
-        border: Border.all(color: ColorManager.purple4, width: 2),
-      ),
-      child: Text(
-        textAlign: TextAlign.center,
-        text,
-        style: TextStyle(
-          color: ProfileCubit.get(context).selectedIndex == index
-              ? ColorManager.white
-              : Colors.black,
-        ),
-      ),
-    ),
-  );
-}
-
-Widget footer(context) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-         color: ColorManager.offWhite,
-        // color: Color.fromARGB(255, 245, 245, 245),
-        // borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-      child: Column(
-        children: [
-          //points and posts
-          pointsAndPosts(context),
-          infoRow(context),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget aboutMe(context) {
-  return Column(
-    children: [
-      //about me
-      jobDescription(context, '',
-          '''${ProfileCubit.get(context).employeeModel?.data.employee.resume}'''),
-
-      //exp
-      jobDescription(
-        context,
-'● Work Experience:',''' ${ProfileCubit.get(context).employeeModel?.data.employee.experience}''',
-      ),
-      //Education
-      jobDescription(
-          context, 
-'●Education:', '''● ${ProfileCubit.get(context).employeeModel?.data.employee.education}'''),
-      //skills
-      jobDescription(context,
-'●Skills:', '''${ProfileCubit.get(context).employeeModel?.data.employee.skills}'''),
-
-//contact
-      jobDescription(context, 'Contact Information:', '''
-● Name:
-    ${ProfileCubit.get(context).employeeModel?.data.name}
-
-● Email:
-    ${ProfileCubit.get(context).employeeModel?.data.email}
-
-● Phone:
-    ${ProfileCubit.get(context).employeeModel?.data.employee.phoneNumber}
-
-● Location:
-    ${ProfileCubit.get(context).employeeModel?.data.address}
-'''),
-
-
-    Text("● viedo"),
-
-    NetworkMediaWidget(),
-
-
-    
-
-    ],
-  );
-}
 
 
 
-Widget settings(context) {
-  return Column(
-    children: [
-      //language
-      settingsTileSwitch(
-        context,
-        Icons.language_outlined,
-        'Language',
-        ProfileCubit.get(context).language,
-        const Color.fromARGB(255, 100, 126, 255),
-        const Color.fromARGB(255, 30, 4, 126),
-        const EditProfileScreen(),
-        true,
-        ProfileCubit.get(context).isEnglish,
-        ProfileCubit.get(context).changeLanguage,
-      ),
-      //darkmode
-      settingsTileSwitch(
-        context,
-        ProfileCubit.get(context).icon,
-        'Mode',
-        ProfileCubit.get(context).mode,
-        ProfileCubit.get(context).iconBackgroundColor,
-        ProfileCubit.get(context).iconColor,
-        const EditProfileScreen(),
-        true,
-        ProfileCubit.get(context).isDark,
-        ProfileCubit.get(context).changeMode,
-      ),
-      //edit profile
-      settingsTileSwitch(
-        context,
-        Icons.edit,
-        'Edit Profile',
-        '',
-        const Color.fromARGB(255, 52, 255, 69),
-        const Color.fromARGB(255, 0, 106, 21),
-        const EditProfileScreen(),
-        false,
-        false,
-        (value) {},
-      ),
-      //add video
-      settingsTileSwitch(
-        context,
-        Icons.video_settings_rounded,
-        'Add Video',
-        '',
-        const Color.fromARGB(255, 255, 100, 100),
-        const Color.fromARGB(255, 214, 214, 214),
-         showUploadDialog(context),
-        false,
-        false,
-        (value) {},
-      ),
 
-      //add cv
-        settingsTileSwitch(
-        context,
-        Icons.picture_as_pdf_outlined,
-        'Add CV',
-        '',
-        const Color.fromARGB(255, 255, 100, 100),
-        const Color.fromARGB(255, 214, 214, 214),
-        showUploadCvDialog(context),
-        false,
-        false,
-        (value) {},
-      ),
-    ],
-  );
-}
 
-class NetworkMediaWidget extends StatefulWidget {
-  @override
-  NetworkMediaWidgetState createState() => NetworkMediaWidgetState();
-}
 
+
+
+
+
+
+
+// class NetworkMediaWidget extends StatefulWidget {
+//   @override
+//   NetworkMediaWidgetState createState() => NetworkMediaWidgetState();
+// }
+
+//
+// class NetworkMediaWidget extends StatefulWidget {
+//   @override
+//   _NetworkMediaWidgetState createState() => _NetworkMediaWidgetState();
+// }
+//
+// class _NetworkMediaWidgetState extends State<NetworkMediaWidget> {
+//   VideoPlayerController? _videoPlayerController;
+//   ChewieController? _chewieController;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initializeVideoPlayer();
+//   }
+//
+//   Future<void> _initializeVideoPlayer() async {
+//     // Replace with your video URL
+//
+//     _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse("${baseUrl}videos/videos/${ProfileCubit.get(context).profile.employee.video.filename}"));
+//
+//     await _videoPlayerController!.initialize();
+//     _chewieController = ChewieController(
+//       videoPlayerController: _videoPlayerController!,
+//       aspectRatio: _videoPlayerController!.value.aspectRatio,
+//       autoPlay: false,
+//       looping: false,
+//     );
+//
+//     setState(() {});
+//   }
+//
+//   @override
+//   void dispose() {
+//     _videoPlayerController?.dispose();
+//     _chewieController?.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return _videoPlayerController != null && _videoPlayerController!.value.isInitialized
+//         ? Chewie(
+//       controller: _chewieController!,
+//     )
+//         : Center(
+//       child: CircularProgressIndicator(),
+//     );
+//   }
+// }
+//
 

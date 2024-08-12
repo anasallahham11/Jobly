@@ -9,7 +9,7 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/end_points.dart';
 import '../../../../utils/helpers/cache_helper.dart';
 import '../../../../utils/helpers/dio_helper.dart';
-import '../login_modle.dart';
+import '../login_model.dart';
 
 
 
@@ -18,6 +18,7 @@ class LoginCubit extends Cubit<LoginStates> {
 
   static LoginCubit get(context) => BlocProvider.of(context);
 
+  late LoginModel loginModel;
   void userLogin({
     required String email,
     required String password,
@@ -33,15 +34,11 @@ class LoginCubit extends Cubit<LoginStates> {
     ).then((value) {
       print("rami");
       print(value?.data);
-      var dataResponse= LoginModle.fromJson(value?.data);
-      token = dataResponse.data?.token;
-      
-      CacheHelper.saveData(key: 'token', value:token );
-     print( CacheHelper.getData(key: 'token'));
+      loginModel=LoginModel.fromJson(value?.data);
 
-      emit(LoginSuccessStates());
+      emit(LoginSuccessStates(loginModel!));
     }).catchError((error) {
-      emit(LoginErorrStates(error.toString()));
+      emit(LoginErrorStates(error.toString()));
     });
   }
 }

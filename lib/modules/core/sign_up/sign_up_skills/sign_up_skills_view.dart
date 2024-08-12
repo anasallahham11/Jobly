@@ -66,15 +66,14 @@ class _SingupSkillState extends State<SingupSkill> {
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ColorManager.purple6,
-                  ColorManager.purple5,
-                  ColorManager.purple4,
+                  ColorManager.purple4, // Darker purple
+                  ColorManager.purple7, // Lighter purple (adjust as needed)
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
               ),
             ),
             child: Padding(

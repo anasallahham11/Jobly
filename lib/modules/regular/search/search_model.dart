@@ -45,8 +45,8 @@ class Datum {
   String status;
   String requirements;
   String? salaryRange;
-  DateTime applicationDeadline;
-  dynamic location;
+  String applicationDeadline;
+  Location? location;
 
   Datum({
     required this.companyName,
@@ -62,7 +62,7 @@ class Datum {
     required this.requirements,
      this.salaryRange,
     required this.applicationDeadline,
-     this.location,
+    required this.location,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -78,8 +78,8 @@ class Datum {
     status: json["status"],
     requirements: json["requirements"],
     salaryRange: json["salary_range"],
-    applicationDeadline: DateTime.parse(json["application_deadline"]),
-    location: json["location"],
+    applicationDeadline: json["application_deadline"],
+    location: json["location"] == null ? null : Location.fromJson(json["location"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -95,7 +95,47 @@ class Datum {
     "status": status,
     "requirements": requirements,
     "salary_range": salaryRange,
-    "application_deadline": "${applicationDeadline.year.toString().padLeft(4, '0')}-${applicationDeadline.month.toString().padLeft(2, '0')}-${applicationDeadline.day.toString().padLeft(2, '0')}",
-    "location": location,
+    "application_deadline": applicationDeadline,
+    "location": location?.toJson(),
   };
 }
+class Location {
+  int id;
+  int vacancyId;
+  String county;
+  String city;
+  String governorate;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Location({
+    required this.id,
+    required this.vacancyId,
+    required this.county,
+    required this.city,
+    required this.governorate,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) => Location(
+    id: json["id"],
+    vacancyId: json["vacancy_id"],
+    county: json["county"],
+    city: json["city"],
+    governorate: json["Governorate"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "vacancy_id": vacancyId,
+    "county": county,
+    "city": city,
+    "Governorate": governorate,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+  };
+}
+

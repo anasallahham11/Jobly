@@ -43,8 +43,7 @@ class ApplicationsView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            applicationsBuilder(cubit.applications, context, cubit, state),
-
+                            cubit.applications!.isNotEmpty?applicationsBuilder(cubit.applications, context, cubit, state):const Center(child: Text("No Applications Yet...")),
                           ],
                         ),
                       ),

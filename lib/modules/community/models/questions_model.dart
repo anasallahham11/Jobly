@@ -33,6 +33,7 @@ class QuestionsModel {
 }
 
 class Datum {
+  int userId;
   int id;
   String name;
   dynamic image;
@@ -45,6 +46,7 @@ class Datum {
   bool isLiked;
 
   Datum({
+    required this.userId,
     required this.id,
     required this.name,
     required this.image,
@@ -58,6 +60,7 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    userId: json["user_id"],
     id: json["id"],
     name: json["name"],
     image: json["image"],
@@ -71,6 +74,7 @@ class Datum {
   );
 
   Map<String, dynamic> toJson() => {
+    "user_id": userId,
     "id": id,
     "name": name,
     "image": image,

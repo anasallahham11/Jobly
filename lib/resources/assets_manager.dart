@@ -25,9 +25,14 @@ static const String onboarding3 = "$IMAGE_PATH/on3.jpg";
   static const String upArrowIc = "$IMAGE_PATH/up-arrow.png";
   static const String answersIc = "$IMAGE_PATH/answers.png";
   static const String employeeIc = "$IMAGE_PATH/employee.png";
+  static const String companyIc = "$IMAGE_PATH/company.png";
   static const String trendingIc = "$IMAGE_PATH/fire.png";
   static const String dotsIc = "$IMAGE_PATH/dots.png";
   static const String reportIc = "$IMAGE_PATH/report.png";
+
+
+
+  static const String employeeBG = "$IMAGE_PATH/employeeBG.png";
 
 
 
