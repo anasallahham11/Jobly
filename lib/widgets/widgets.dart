@@ -435,7 +435,7 @@ Widget highlightedText(String text, Color background, Color textColor) {
 
 Widget numberAndText(context, int number, String text) {
   return SizedBox(
-    width: MediaQuery.of(context).size.width * 0.2,
+    width: MediaQuery.of(context).size.width * 0.3,
     child: Column(
       children: [
         Text(

@@ -28,7 +28,7 @@ class SingupUser extends StatelessWidget {
         child: BlocListener<SignUpUserCubit, SignupUserStates>(
           listener: (context, state) {
             if (state is SignupErorrStates) {
-              showToast(text: "Register Failed : ${state.message}", state: ToastStates.ERROR);
+              showToast(text: "Register Failed : Password must be 8 at least", state: ToastStates.ERROR);
             } else if (state is SignupSuccessStates) {
                  SnackBar(
                   content: Text('Register success'),

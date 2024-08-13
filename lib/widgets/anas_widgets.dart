@@ -1482,7 +1482,7 @@ Widget buildApplicationItem(application, context, cubit, state) {
               child: CircleAvatar(
                 radius: AppSize.s350,
                 backgroundColor: ColorManager.purple4,
-                backgroundImage: imageSelector(image: application.publisherPhoto,defaultImage: ImageAssets.purpleLogo)
+                backgroundImage: imageSelector(image: application.publisherPhoto,defaultImage: ImageAssets.employeeIc)
               ),
             ),
             const SizedBox(width: AppSize.s16,),

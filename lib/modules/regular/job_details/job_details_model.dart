@@ -79,7 +79,7 @@ class Data {
     requirements: json["requirements"],
     salaryRange: json["salary_range"],
     applicationDeadline: json["application_deadline"],
-    location: Location.fromJson(json["location"]),
+    location: json["location"] != null ? Location.fromJson(json["location"]) : null,
   );
 
   Map<String, dynamic> toJson() => {

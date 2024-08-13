@@ -270,10 +270,10 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
   {
     emit(AddFavouriteLoadingState());
     DioHelper.postData(
-      url: ADD_QUESTION,
+      url: ADD_FAVOURITE,
       token: token,
       data: {
-        'jops_section_id' : section,
+        'job_section_id' : section,
 
       },
     ).then((value) {

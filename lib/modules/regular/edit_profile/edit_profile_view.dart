@@ -6,6 +6,7 @@ import 'package:jobly/utils/constants.dart';
 import 'package:jobly/widgets/anas_widgets.dart';
 import 'package:jobly/widgets/widgets.dart';
 
+import '../../../resources/assets_manager.dart';
 import 'cubit/edit_profile_cubit.dart';
 import 'cubit/edit_profile_states.dart';
 
@@ -37,7 +38,7 @@ class EditProfileView extends StatelessWidget {
             showToast(text: "Skill Added Successfully", state: ToastStates.SUCCESS);
           }else if(state is AddLocationSuccessState){
             showToast(text: "Location Added Successfully", state: ToastStates.SUCCESS);
-          }else if(state is EditProfileSuccessState){
+          }else if(state is AddFavouriteSuccessState){
             showToast(text: "Favourite Added Successfully", state: ToastStates.SUCCESS);
           }
         },
@@ -61,10 +62,13 @@ class EditProfileView extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.4,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
+                          child:profile.employee.image!=null
+                              ? Image.network(
                             "${baseUrl}images/Employees/${profile.employee.image.filename}",
                             fit: BoxFit.cover,
-                          ),
+                          )
+                              :Image.asset(ImageAssets.employeeIc),
+
                         ),
                       ),
                     ),
@@ -159,7 +163,7 @@ class EditProfileView extends StatelessWidget {
                     ),
                     myButton(
                       context,
-                      'ADD FAVOURITE',
+                      'Add Favourite',
                           (){
                         cubit.addFavourite(section: cubit.dropDownValueSection);
 

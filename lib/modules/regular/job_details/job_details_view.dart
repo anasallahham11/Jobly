@@ -75,7 +75,7 @@ class JobDetailsView extends StatelessWidget {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children:[
-                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.location_on_rounded, "Location", cubit.job.location.city??"Undefined ", true),
+                                  customListTile(ColorManager.purple2, ColorManager.purple6, Icons.location_on_rounded, "Location", cubit.job.location==null?"Undefined ":cubit.job.location.city, true),
                                   const SizedBox(width: 40,),
                                   customListTile(ColorManager.purple2, ColorManager.purple6, Icons.calendar_month_rounded, "Deadline", cubit.job.applicationDeadline, true),
                                 ]
